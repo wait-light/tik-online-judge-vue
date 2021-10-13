@@ -4,10 +4,12 @@ const routes = [{
     path: "/",
     component: () =>
         import("@/components/reception/TikHome.vue"),
+
     children: [{
         path: "",
         component: () =>
             import("@/components/reception/TikContent.vue"),
+        redirect: "problem-collection",
         children: [{
             path: "problemlist/:id",
             component: () =>
@@ -21,6 +23,14 @@ const routes = [{
             path: "/problem-collection",
             component: () =>
                 import("@/view/reception/TikProblemCollections.vue")
+        }, {
+            path: "/problemDetail/:collectionid",
+            component: () =>
+                import("@/view/reception/AddProblemDetail.vue")
+        }, {
+            path: "/problemDetail/update/:problemid",
+            component: () =>
+                import("@/view/reception/AddProblemDetail.vue")
         }
         ]
     }],

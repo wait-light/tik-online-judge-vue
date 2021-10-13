@@ -174,18 +174,18 @@ public class Main{
     }
 }`,
       },
-      {
-        value: 2,
-        label: "C++",
-        mode: "text/x-c++src",
-        template: `#include <iostream>
-using namespace std;
-int main()
-{
+//       {
+//         value: 2,
+//         label: "C++",
+//         mode: "text/x-c++src",
+//         template: `#include <iostream>
+// using namespace std;
+// int main()
+// {
     
-    return 0;
-}`,
-      },
+//     return 0;
+// }`,
+//       },
     ],
     language: 0,
   }),
@@ -202,21 +202,21 @@ int main()
     codemirror.setSize("auto", "100%");
     this.language = this.languages[0].value;
     this.languageChange(this.language);
-    codemirror.on("changes", (instance, changes) => {
-      //配置提示显示的情况
-      var pattern = new RegExp(
-        "^[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？\\\\\\s]$"
-      );
-      if (changes[0].origin == "+delete") {
-        if (!pattern.test(changes[0].removed) && changes[0].removed != " ") {
-          codemirror.showHint();
-        }
-      } else if (changes[0].origin == "+input") {
-        if (!pattern.test(changes[0].text)) {
-          codemirror.showHint();
-        }
-      }
-    });
+    // codemirror.on("changes", (instance, changes) => {
+    //   //配置提示显示的情况
+    //   var pattern = new RegExp(
+    //     "^[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？\\\\\\s]$"
+    //   );
+    //   if (changes[0].origin == "+delete") {
+    //     if (!pattern.test(changes[0].removed) && changes[0].removed != " ") {
+    //       codemirror.showHint();
+    //     }
+    //   } else if (changes[0].origin == "+input") {
+    //     if (!pattern.test(changes[0].text)) {
+    //       codemirror.showHint();
+    //     }
+    //   }
+    // });
   },
   beforeUnmount() {
     this.destroy();

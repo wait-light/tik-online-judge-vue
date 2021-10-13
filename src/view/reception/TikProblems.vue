@@ -6,7 +6,16 @@
       style="width: 80%"
       :problems="problems"
     ></tik-problem-list>
-    <el-pagination class="pagination" layout="prev, pager, next" :total="1000">
+    <el-pagination
+      :hide-on-single-page="hideOnSinglePage"
+      @size-change="pageSizeChange"
+      @current-change="pageChange"
+      :current-page="pageInfo.page"
+      :page-sizes="pageInfo.pageSizes"
+      :page-size="pageInfo.pageSize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pageInfo.total"
+    >
     </el-pagination>
   </div>
 </template>
@@ -28,16 +37,36 @@ export default {
     return {
       collectionId: 0,
       problems: [],
+      pageInfo: {
+        pageSize: 1,
+        page: 1,
+        total: 0,
+        pageSizes: [10, 20, 30, 50, 100],
+      },
+      hideOnSinglePage: true,
     };
   },
   methods: {
     async loadData() {
       let result = await getList(
-        "/executor/problem-collection/" + this.collectionId
+        "/executor/problem-collection/" + this.collectionId,
+        this.pageInfo.page,
+        this.pageInfo.pageSize
       );
       if (result.success) {
         this.problems = result.list;
+        this.pageInfo.pageSize = result.pageSize;
+        this.pageInfo.page = result.page;
+        this.pageInfo.total = result.total;
       }
+    },
+    async pageChange(page) {
+      this.pageInfo.page = page;
+      this.loadData();
+    },
+    async pageSizeChange(pageSize) {
+      this.pageInfo.pageSize = pageSize;
+      this.loadData();
     },
   },
   mounted() {

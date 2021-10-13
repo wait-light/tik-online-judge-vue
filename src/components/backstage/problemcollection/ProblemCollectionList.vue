@@ -37,10 +37,11 @@
             </el-table-column>
             <el-table-column prop="beginTime" label="开启时间"></el-table-column>
             <el-table-column prop="endTime" label="结束时间"></el-table-column>
-            <el-table-column label="操作" fixed="right" width="150">
+            <el-table-column label="操作" fixed="right" width="250">
                 <template #default="scope">
                     <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
                     <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
+                    <el-button size="mini" @click="$router.push(`/problemDetail/${scope.row.id}`)" type="info">添加问题</el-button>
                 </template>
             </el-table-column>
     </el-table>

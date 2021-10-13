@@ -5,9 +5,16 @@
     @mousemove="boxWidthDrag"
   >
     <el-tabs type="card" :style="{ width: leftBoxWidth }">
-    <el-dialog v-model="submitDetail" title="Shipping address">
-      <span>asdasd</span>
-    </el-dialog>
+      <el-dialog
+        v-if="user.login"
+        v-model="submitDetail.open"
+        v-loading="submitDetail.open"
+        title="源码"
+      >
+        <textarea style="width: 100%; height: 50vh">{{
+          submitDetail.content
+        }}</textarea>
+      </el-dialog>
       <el-tab-pane label="问题详情">
         <div class="problem-detail-description el-tab-pane-box">
           <el-skeleton v-if="!problem.name" :rows="10" animated />
@@ -28,7 +35,7 @@
           </div>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="提交">
+      <el-tab-pane label="提交" v-if="user.login">
         <div class="el-tab-pane-box submit-box">
           <el-button @click="submit">提交</el-button>
           <el-button @click="loadSubmitResults">刷新记录</el-button>
@@ -38,9 +45,12 @@
               <el-collapse-item
                 v-for="submitResult in submitResults"
                 :key="submitResult.submitId"
-              >   
+              >
                 <template #title>
-                  <el-button style="margin-right: 10px" @click="submitDetail = true" size="mini"
+                  <el-button
+                    style="margin-right: 10px"
+                    @click="getSubmitDetail(submitResult.submitId)"
+                    size="mini"
                     >查看详情</el-button
                   >
                   <span class="tips">提交时间：</span>
@@ -97,6 +107,7 @@
 <script>
 import TikCodeEditor from "@/components/common/TikCodeEditor.vue";
 import { ElMessage } from "element-plus";
+import { mapState } from "vuex";
 import {
   getOne,
   update,
@@ -116,10 +127,21 @@ export default {
       submitResults: [],
       draging: false,
       submitResults: [],
-      submitDetail: false,
+      submitDetail: {
+        open: false,
+        content: "",
+      },
     };
   },
   methods: {
+    getSubmitDetail(id) {
+      this.submitDetail.open = true;
+      getOne(`/executor/submit/${id}`).then((result) => {
+        if (result.success) {
+          this.submitDetail.content = result.dto.content;
+        }
+      });
+    },
     openDrag() {
       this.draging = true;
     },
@@ -180,10 +202,6 @@ export default {
           type: "danger",
         });
       }
-
-      // if (result.success) {
-      //   this.loadSubmitResults();
-      // }
     },
     judgeId() {
       let id = Number(this.$route.params.id);
@@ -218,13 +236,18 @@ export default {
     rightBoxWidth() {
       return `${100 - this.leftWidth}vw`;
     },
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
   },
   async mounted() {
     if (this.judgeId()) {
       await this.loadData();
     }
     document.title = `题目【${this.problem.name}】`;
-    this.loadSubmitResults();
+    if (this.user.login) {
+      this.loadSubmitResults();
+    }
   },
 };
 </script>

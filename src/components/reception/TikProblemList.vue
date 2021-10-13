@@ -15,8 +15,8 @@
         }}</el-link>
       </template>
     </el-table-column>
-    <el-table-column prop="ratio" label="Ratio(AC/Submit)" width="180">
-    </el-table-column>
+    <!-- <el-table-column prop="ratio" label="Ratio(AC/Submit)" width="180">
+    </el-table-column> -->
     <el-table-column prop="updateTime" label="时间" width="100">
       <template #default="scope">
         {{ new Date(scope.row.updateTime).toSimpleString() }}

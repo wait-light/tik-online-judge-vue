@@ -17,7 +17,17 @@
             <el-form-item label="验证码" prop="code">
               <el-row>
                 <el-col :xs="24" :sm="18">
-                  <el-input v-model="entity.code"></el-input>
+                  <el-input
+                    v-model="entity.code"
+                    @keyup.enter="
+                      submitForm(
+                        'emailform',
+                        'EMAIL',
+                        this.entity.email,
+                        this.entity.code
+                      )
+                    "
+                  ></el-input>
                 </el-col>
                 <el-col :xs="24" :sm="6">
                   <el-button type="success" @click="sendCode"
@@ -31,7 +41,7 @@
               type="primary"
               @click="
                 submitForm(
-                  'passwordform',
+                  'emailform',
                   'EMAIL',
                   this.entity.email,
                   this.entity.code
@@ -53,7 +63,18 @@
               <el-input v-model="entity.username"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-              <el-input v-model="entity.password"></el-input>
+              <el-input
+                v-model="entity.password"
+                show-password
+                @keyup.enter="
+                  submitForm(
+                    'passwordform',
+                    'PASSWORD',
+                    this.entity.username,
+                    this.entity.password
+                  )
+                "
+              ></el-input>
             </el-form-item>
             <el-button
               style="margin-right: 10px"
@@ -79,13 +100,36 @@
 
 <script>
 import { commonajaxWithData, getOne } from "@/js/common_data_operation.js";
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
+import { mapState, mapMutations } from "vuex";
+
 export default {
+  mounted() {
+  },
+  computed: {
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
+  },
   methods: {
+    ...mapMutations("user", ["login"]),
     submitForm(formName, loginType, principal, credentials) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          commonajaxWithData("/");
+          let data = {
+            loginType,
+            principal,
+            credentials,
+          };
+          commonajaxWithData("/user/index/login", "post", data, true).then(
+            (res) => {
+              if (res.success) {
+                this.$router.push("/");
+                this.login(res.token);
+              }
+            }
+          );
+          return true;
         } else {
           return false;
         }
@@ -95,19 +139,7 @@ export default {
     sendCode() {
       const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
       if (mailReg.test(this.entity.email)) {
-        this.getOne("/user/index/code/" + this.entity.email).then((res) => {
-          if (res.success) {
-            ElMessage({
-              message: res.msg,
-              type: "success",
-            });
-          } else {
-            ElMessage({
-              message: res.msg,
-              type: "error",
-            });
-          }
-        });
+        this.getOne("/user/index/code/" + this.entity.email, true);
       } else {
         ElMessage({
           message: "邮箱格式不正确",
@@ -119,7 +151,8 @@ export default {
   data() {
     const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
     const usernameReg = /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/;
-    const passwordReg = /^[a-zA-Z]w{5,17}$/;
+    // const passwordReg = /^[a-zA-Z]w{5,17}$/;
+    const passwordReg = /^[a-zA-Z0-9_]{3,17}$/;
     const checkEmail = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("邮箱不能为空"));
@@ -135,10 +168,10 @@ export default {
         return callback(new Error("密码不能为空"));
       }
       if (passwordReg.test(value)) {
-        callback();
+        return callback();
       } else {
         callback(
-          new Error("以字母开头，长度在6~18之间，只能包含字母、数字和下划线")
+          new Error("以字母开头，长度在5~18之间，只能包含字母、数字和下划线")
         );
       }
     };

@@ -12,9 +12,9 @@
             <el-form-item label="是否启用">
                 <el-switch v-model="newEntity.status" active-color="#13ce66" inactive-color="#ccc"></el-switch>
             </el-form-item>
-            <el-form-item label="创建人">
+            <!-- <el-form-item label="创建人">
                 <el-input v-model="newEntity.createUserId"></el-input>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="是否公开集">
                 <el-switch v-model="newEntity.publicCollection" active-color="#13ce66" inactive-color="#ccc"></el-switch>
             </el-form-item>

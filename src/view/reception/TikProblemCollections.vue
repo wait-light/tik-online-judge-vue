@@ -13,6 +13,8 @@
         </el-icon>
         <el-link :href="'/problemlist/' + item.id">{{ item.name }}</el-link>
         <span class="endtime" v-if="item.beginTime >= item.endTime">长期</span>
+        <span class="endtime" v-else-if="new Date() > new Date(item.endTime)">已过期</span
+        >
         <span class="endtime" v-else
           >{{ new Date(item.beginTime).toSimpleString() }} 到
           {{ new Date(item.endTime).toSimpleString() }}</span
