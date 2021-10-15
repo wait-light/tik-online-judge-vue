@@ -1,10 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import backstage from '@/router/backstage'
 const routes = [{
+    path: "/redirect",
+    component: () =>
+        import("@/view/redirect.vue"),
+}, {
     path: "/",
     component: () =>
         import("@/components/reception/TikHome.vue"),
-
     children: [{
         path: "",
         component: () =>
@@ -31,12 +34,19 @@ const routes = [{
             path: "/problemDetail/update/:problemid",
             component: () =>
                 import("@/view/reception/AddProblemDetail.vue")
+        },
+        {
+            path: "/addSolution/:problemId",
+            component: () =>
+                import("@/view/reception/AddSolution.vue")
+        },{
+            path: "/solution/:solutionId",
+            component: () =>
+                import("@/view/reception/Solution.vue")
         }
         ]
     }],
-
-}
-    , {
+}, {
     path: "/login",
     component: () =>
         import("@/view/reception/Login.vue")

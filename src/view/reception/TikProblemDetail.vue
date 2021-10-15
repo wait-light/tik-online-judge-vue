@@ -11,9 +11,10 @@
         v-loading="submitDetail.open"
         title="源码"
       >
-        <textarea style="width: 100%; height: 50vh">{{
-          submitDetail.content
-        }}</textarea>
+        <el-button type="info" size="mini" @click="copyCode"
+          >点击复制</el-button
+        >
+        <pre class="code-box">{{ submitDetail.content }}</pre>
       </el-dialog>
       <el-tab-pane label="问题详情">
         <div class="problem-detail-description el-tab-pane-box">
@@ -23,22 +24,27 @@
               {{ problem.name }}
             </h1>
             <h3>题目描述</h3>
-            <p>{{ problem.problemDescribe }}</p>
+            <md-editor v-model="problem.problemDescribe" :previewOnly="true" />
+            <!-- <p>{{ problem.problemDescribe }}</p> -->
             <h3>输入描述</h3>
-            <p>{{ problem.inputDescrible }}</p>
+            <md-editor v-model="problem.inputDescrible" :previewOnly="true" />
+            <!-- <p>{{ problem.inputDescrible }}</p> -->
             <h3>输出描述</h3>
-            <p>{{ problem.outputDescrible }}</p>
+            <md-editor v-model="problem.outputDescrible" :previewOnly="true" />
+            <!-- <p>{{ problem.outputDescrible }}</p> -->
             <h3>样例输入</h3>
-            <p class="data-io">{{ problem.input }}</p>
+            <!-- <md-editor v-model="problem.input" :previewOnly="true" /> -->
+            <pre class="data-io">{{ problem.input }}</pre>
             <h3>样例输出</h3>
-            <p class="data-io">{{ problem.output }}</p>
+            <!-- <md-editor v-model="problem.output" :previewOnly="true" /> -->
+            <pre class="data-io">{{ problem.output }}</pre>
           </div>
         </div>
       </el-tab-pane>
       <el-tab-pane label="提交" v-if="user.login">
         <div class="el-tab-pane-box submit-box">
-          <el-button @click="submit">提交</el-button>
-          <el-button @click="loadSubmitResults">刷新记录</el-button>
+          <el-button @click="submit" type="success">提交</el-button>
+          <el-button @click="loadSubmitResults" type="info">刷新记录</el-button>
           <h4 class="title">提交记录</h4>
           <div style="box-shadow: 5px 6px 5px #eee">
             <el-collapse accordion>
@@ -86,11 +92,20 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="题解">
-        <div class="el-tab-pane-box submit-box"></div>
+        <div class="el-tab-pane-box submit-box">
+          <el-button
+            v-if="user.login"
+            type="primary"
+            size="mini"
+            @click="$router.push('/addSolution/' + problem.id)"
+            >写题解</el-button
+          >
+          <tik-solution-list :problemId="problem.id"></tik-solution-list>
+        </div>
       </el-tab-pane>
-      <el-tab-pane label="排行">
+      <!-- <el-tab-pane label="排行">
         <div class="el-tab-pane-box submit-box"></div>
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
 
     <div @mousedown="openDrag" @mouseup="cloasDrag" class="box-size-slider">
@@ -105,20 +120,22 @@
 </template>
 
 <script>
+import MdEditor from "md-editor-v3";
+import "md-editor-v3/lib/style.css";
 import TikCodeEditor from "@/components/common/TikCodeEditor.vue";
 import { ElMessage } from "element-plus";
 import { mapState } from "vuex";
 import {
   getOne,
-  update,
-  getList,
-  deleteById,
   save,
   commonajaxWithData,
 } from "@/js/common_data_operation.js";
+import TikSolutionList from "@/components/reception/TikSolutionList.vue";
 export default {
   components: {
     TikCodeEditor,
+    MdEditor,
+    TikSolutionList,
   },
   data() {
     return {
@@ -134,6 +151,13 @@ export default {
     };
   },
   methods: {
+    copyCode() {
+      navigator.clipboard.writeText(this.submitDetail.content);
+      ElMessage({
+        message: "已复制",
+        type: "success",
+      });
+    },
     getSubmitDetail(id) {
       this.submitDetail.open = true;
       getOne(`/executor/submit/${id}`).then((result) => {
@@ -254,12 +278,17 @@ export default {
 
 <style lang="sass" scoped>
 @import '@/sass/_variables'
+.code-box
+  padding: 10px
+  box-shadow: $box-shadow
+  width: 100%
+  height: 50vh
 .problem-detail
   text-align: center
   height: 100%
 .problem-detail-box
   display: flex
-  height: calc( 100% - 50px )
+  height: calc( 100% - 52px )
 .problem-editor-submit-box
   height: 100%
 .problem-editor-submit-box

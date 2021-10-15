@@ -1,7 +1,9 @@
 <template>
   <div class="tik-header">
     <div class="tik-header-left">
-      <tik-logo></tik-logo>
+      <tik-logo
+        @click="$router.push({ path: '/redirect', query: { path: '' } })"
+      ></tik-logo>
       <div class="tik-header-left-buttons">
         <router-link class="primary" to="/problem-collection">题集</router-link>
         <!-- <router-link to="/">讨论</router-link> -->

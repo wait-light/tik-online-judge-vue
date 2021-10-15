@@ -27,7 +27,7 @@ export default async function commonajax(url, methods = "get", data, enableMessa
     request = request.then((result) => {
         let data = result.data
         if (enableMessage) {
-            if (data.code == import.meta.env.VITE_DATA_CODE_SUCCESS) {
+            if (data.success) {
                 ElMessage({
                     message: data.msg,
                     type: 'success'

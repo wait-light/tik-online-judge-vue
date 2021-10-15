@@ -3,12 +3,12 @@
             <el-form-item label="名称">
                 <el-input v-model="newEntity.name"></el-input>
             </el-form-item>
-            <el-form-item label="创建时间">
+            <!-- <el-form-item label="创建时间">
                 <el-date-picker v-model="newEntity.createTime" type="datetime" placeholder="选择日期时间"></el-date-picker>
             </el-form-item>
             <el-form-item label="更新时间">
                 <el-date-picker v-model="newEntity.updateTime" type="datetime" placeholder="选择日期时间"></el-date-picker>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="是否启用">
                 <el-switch v-model="newEntity.status" active-color="#13ce66" inactive-color="#ccc"></el-switch>
             </el-form-item>

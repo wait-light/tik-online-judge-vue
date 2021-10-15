@@ -15,9 +15,9 @@
           </el-menu-item-group>
         </el-sub-menu>
         <el-menu-item index="/backstage/problem">问题管理</el-menu-item>
-        <el-menu-item index="/backstage/problemdata">问题数据管理</el-menu-item>
+        <!-- <el-menu-item index="/backstage/problemdata">问题数据管理</el-menu-item>
         <el-menu-item index="/backstage/submit">提交管理</el-menu-item>
-        <el-menu-item index="/backstage/tag">标签管理</el-menu-item>
+        <el-menu-item index="/backstage/tag">标签管理</el-menu-item> -->
         <el-menu-item index="/backstage/problemcollection"
           >问题集管理</el-menu-item
         >

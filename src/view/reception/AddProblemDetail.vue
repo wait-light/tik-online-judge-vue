@@ -1,5 +1,5 @@
 <template>
-  <h4 style="text-align: center">问题添加/修改</h4>
+  <h4 style="text-align: center">{{ typeDescribe }}</h4>
   <el-form
     :rules="rules"
     class="container"
@@ -35,13 +35,15 @@
       <el-button v-if="!problem.id" type="primary" @click="addProblem"
         >添加</el-button
       >
-      <el-button v-if="problem.id" type="warning">修改</el-button>
+      <el-button v-if="problem.id" type="warning" @click="updateProblem"
+        >修改</el-button
+      >
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-import { commonajaxWithData } from "@/js/common_data_operation.js";
+import { commonajaxWithData, getOne } from "@/js/common_data_operation.js";
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 export default {
@@ -93,18 +95,47 @@ export default {
         status: true,
         collectionId: 0,
       },
+      typeDescribe: "问题添加",
     };
   },
   mounted() {
     if (this.$route.params.collectionid) {
       this.type = "add";
+      this.typeDescribe = "问题添加";
       this.problem.collectionId = this.$route.params.collectionid;
     } else if (this.$route.params.problemid) {
       this.type = "update";
-      this.problem.problemid = this.$route.params.problemid;
+      this.problem.id = this.$route.params.problemid;
+      this.typeDescribe = "问题修改";
+      this.loadProblemData();
     }
   },
   methods: {
+    loadProblemData() {
+      getOne("/executor/problem/" + this.problem.id).then((res) => {
+        if (res.success) {
+          this.problem = res.dto;
+        }
+      });
+    },
+    updateProblem() {
+      this.$refs["problem"].validate((valid) => {
+        if (valid) {
+          commonajaxWithData(
+            `/executor/problem/${this.problem.id}`,
+            "put",
+            this.problem
+          ).then((result) => {
+            if (result.success) {
+              this.$router.push("/problem/" + this.problem.id);
+            }
+          });
+          return true;
+        } else {
+          return false;
+        }
+      });
+    },
     addProblem() {
       this.$refs["problem"].validate((valid) => {
         if (valid) {

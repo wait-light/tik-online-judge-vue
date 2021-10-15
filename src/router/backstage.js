@@ -21,29 +21,32 @@ export default {
         component: () =>
             import("@/components/backstage/problem/ProblemList.vue")
     },
-    {
-        path: "problemdata",
-        component: () =>
-            import("@/components/backstage/problemdata/ProblemDataList.vue")
-    },
+    // {
+    //     path: "problemdata",
+    //     component: () =>
+    //         import("@/components/backstage/problemdata/ProblemDataList.vue")
+    // },
     {
         path: "submit",
         component: () =>
             import("@/components/backstage/submit/SubmitList.vue")
     },
-    {
-        path: "tag",
-        component: () =>
-            import("@/components/backstage/tag/TagList.vue")
-    },
+    // {
+    //     path: "tag",
+    //     component: () =>
+    //         import("@/components/backstage/tag/TagList.vue")
+    // },
     {
         path: "problemcollection",
         component: () =>
             import("@/components/backstage/problemcollection/ProblemCollectionList.vue")
-    },
-    {
-        path: "problemcollectionitem",
-        component: () =>
-            import("@/components/backstage/problemcollectionitem/ProblemCollectionItemList.vue")
-    }]
+    }
+    // ,
+    // {
+    //     path: "problemcollectionitem",
+    //     component: () =>
+    //         import("@/components/backstage/problemcollectionitem/ProblemCollectionItemList.vue")
+    // }
+]
+    
 }
