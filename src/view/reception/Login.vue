@@ -104,8 +104,7 @@ import { ElMessage } from "element-plus";
 import { mapState, mapMutations } from "vuex";
 
 export default {
-  mounted() {
-  },
+  mounted() {},
   computed: {
     ...mapState("user", {
       user: (state) => state.user,
@@ -121,14 +120,38 @@ export default {
             principal,
             credentials,
           };
-          commonajaxWithData("/user/index/login", "post", data, true).then(
-            (res) => {
+          if (loginType == "EMAIL") {
+            commonajaxWithData(
+              "/auth/anonymous/index/email_login",
+              "post",
+              {
+                email:principal,
+                code:credentials
+              },
+              true
+            ).then((res) => {
               if (res.success) {
                 this.$router.push("/");
                 this.login(res.token);
               }
-            }
-          );
+            });
+          } else if (loginType == "PASSWORD") {
+            commonajaxWithData(
+              "/auth/anonymous/index/username_login",
+              "post",
+              {
+                username:principal,
+                password:credentials
+              },
+              true
+            ).then((res) => {
+              if (res.success) {
+                this.$router.push("/");
+                this.login(res.token);
+              }
+            });
+          }
+
           return true;
         } else {
           return false;
@@ -139,7 +162,7 @@ export default {
     sendCode() {
       const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
       if (mailReg.test(this.entity.email)) {
-        this.getOne("/user/index/code/" + this.entity.email, true);
+        this.getOne("/auth/index/code/" + this.entity.email, true);
       } else {
         ElMessage({
           message: "邮箱格式不正确",

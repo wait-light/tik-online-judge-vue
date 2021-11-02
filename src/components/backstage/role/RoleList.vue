@@ -128,14 +128,14 @@ export default {
       this.roleMenu.open = false;
     },
     async prepareDelete(id) {
-      let result = await deleteById("/user/role", id);
+      let result = await deleteById("/auth/role", id);
       if (result.success) {
         this.loadData();
       }
     },
 
     async loadData() {
-      let result = await getList("/user/role/list");
+      let result = await getList("/auth/role/list");
       if (result.success) {
         this.roles = result.list;
       }

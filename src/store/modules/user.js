@@ -13,7 +13,7 @@ const getters = {}
 // actions
 const actions = {
     loginMessage(context) {
-        getOne("/user/index/titile-info").then(res => {
+        getOne("/auth/verified/title-info").then(res => {
             if (res.success) {
                 context.commit("updateDetail", res.user)
             }

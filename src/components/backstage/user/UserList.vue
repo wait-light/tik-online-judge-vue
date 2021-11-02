@@ -62,7 +62,7 @@
         commonajaxWithData,
     } from "@/js/backstage/common/common_data_operation.js";
     import UserAddOrUpdate
-        from "@/components/backstage/user/UserAddOrUpdate.vue";
+        from "@/components/backstage/auth/UserAddOrUpdate.vue";
 
     export default {
         components: {
@@ -94,7 +94,7 @@
                 this.prepareEntity.open = true
             },
             async prepareDelete(entity) {
-                let result = await deleteById("/user/user", entity.uid);
+                let result = await deleteById("/auth/user", entity.uid);
                 if (result.success) {
                     this.loadData();
                 }
@@ -109,7 +109,7 @@
             },
             async loadData() {
                 this.prepareEntity.open = false
-                let result =await getList("/user/user/list",this.pageInfo.page,this.pageInfo.pageSize);
+                let result =await getList("/auth/user/list",this.pageInfo.page,this.pageInfo.pageSize);
                 if(result.success){
                     this.table = result.list;
                     this.pageInfo.pageSize = result.pageSize

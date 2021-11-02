@@ -59,28 +59,28 @@ export default {
   },
   methods: {
     async getMenuTree() {
-      let result = await commonajaxWithData("/user/menu/tree/");
+      let result = await commonajaxWithData("/auth/menu/tree/");
       if (result.success) {
         this.menuTree = result.dto;
       }
     },
     async prepareSave() {
       this.newRole.roleMenus = this.$refs.tree.getCheckedKeys();
-      let result = await save("/user/role", this.newRole);
+      let result = await save("/auth/role", this.newRole);
       if (result.success) {
         this.$emit("reloadRoles");
       }
     },
     async prepareUpdate() {
       this.newRole.roleMenus = this.$refs.tree.getCheckedKeys();
-      let result = await update("/user/role", this.newRole.id, this.newRole);
+      let result = await update("/auth/role", this.newRole.id, this.newRole);
       if (result.success) {
         this.$emit("reloadRoles");
       }
     },
     async getRoleMenus(){
       if (this.newRole && this.newRole.id && this.newRole.id != 0) {
-        let result = await commonajaxWithData(`/user/role-menu/menu/${this.newRole.id}`);
+        let result = await commonajaxWithData(`/auth/role-menu/menu/${this.newRole.id}`);
         if (result.success) {
           this.roleMenus = result.dto;
         }

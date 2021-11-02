@@ -62,13 +62,13 @@
         },
         methods: {
             async prepareSave(){
-                let result = await save("/user/user",this.newEntity)
+                let result = await save("/auth/user",this.newEntity)
                 if(result.success){
                     this.$emit("reloadData");
                 }
             },
             async prepareUpdate(){
-                let result = await update("/user/user",this.newEntity.uid,this.newEntity)
+                let result = await update("/auth/user",this.newEntity.uid,this.newEntity)
                 if(result.success){
                     this.$emit("reloadData");
                 }

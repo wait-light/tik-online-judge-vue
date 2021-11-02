@@ -119,7 +119,7 @@ const out = {
   },
   methods: {
     async getMenus() {
-      let result = await commonajaxWithData("/user/menu/tree/");
+      let result = await commonajaxWithData("/auth/menu/tree/");
       if (result.success) {
         let rootMenu = [
           {
@@ -156,14 +156,14 @@ const out = {
     },
     async prepareUpdate() {
       this.prepareMenu();
-      let result = await update("/user/menu", this.newMenu.id, this.newMenu);
+      let result = await update("/auth/menu", this.newMenu.id, this.newMenu);
       if (result.success) {
         this.$emit("updateMenus");
       }
     },
     async prepareSave() {
       this.prepareMenu();
-      let result = await save("/user/menu/", this.newMenu, true);
+      let result = await save("/auth/menu/", this.newMenu, true);
       if (result.success) {
         this.$emit("updateMenus");
       }

@@ -1,4 +1,5 @@
 <template>
+  <el-empty v-if="total <= 0" description="还没人发布题解"></el-empty>
   <ul
     infinite-scroll-delay="100"
     :infinite-scroll-disabled="!hasNextPage"
@@ -49,7 +50,6 @@ export default {
   methods: {
     getSolutions() {
       if (this.hasNextPage && this.problemId) {
-        console.log("asdasd");
         getList(
           `/executor/solution/solutions/${this.problemId}`,
           this.page,
@@ -72,28 +72,28 @@ export default {
 <style lang="sass" scoped>
 @import '@/sass/_variables'
 .infinite-list
-    height: 300px
-    padding: 0
-    margin: 10px -10px
-    list-style: none
+  height: 300px
+  padding: 0
+  margin: 10px -10px
+  list-style: none
 .infinite-list-item
-    display: flex
-    padding: 5px 15px
-    align-items: center
-    border-bottom: 1px solid var(--el-border-color-base)
-    height: 50px
-    cursor: pointer
-    margin: 0px
-    color: black
-    display: block
-    div
-        font-size: 16px
-        margin-bottom: 5px
+  display: flex
+  padding: 5px 15px
+  align-items: center
+  border-bottom: 1px solid var(--el-border-color-base)
+  height: 50px
+  cursor: pointer
+  margin: 0px
+  color: black
+  display: block
+  div
+    font-size: 16px
+    margin-bottom: 5px
     span
-        color: $secondary-color
-        font-size: 12px
+      color: $secondary-color
+      font-size: 12px
 .infinite-list-item:hover
-    background: $auxiliary-color
+  background: $auxiliary-color
 a
-    text-decoration: none
+  text-decoration: none
 </style>

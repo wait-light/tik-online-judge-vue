@@ -95,13 +95,13 @@ export default {
       this.prepareMenu.open = true;
     },
     async getMenu() {
-      let result = await commonajaxWithData("/user/menu/tree/");
+      let result = await commonajaxWithData("/auth/menu/tree/");
       if (result.success) {
         this.menus = result.dto;
       }
     },
     async deleteMenu(id) {
-      let result = await deleteById("/user/menu", id);
+      let result = await deleteById("/auth/menu", id);
       if (result.success) {
         this.reloadDate();
       }
