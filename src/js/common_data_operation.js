@@ -60,12 +60,84 @@ export default async function commonajax(url, methods = "get", data, enableMessa
     });
     return request
 }
+/*
+请求地址 ， 请求类型，请求数据，是否开启消息提示
+*/
+export async function commonajaxDataNoProcess(url, methods = "get", data, enableMessage = false) {
+    if (!url) {
+        throw "must be has url"
+    }
+    var request
+
+    if (methods === "get") {
+        let params = data
+        request = axios({
+            url: url,
+            method: 'GET',
+            params: params
+        })
+    } else if (methods === "post") {
+        request = axios.post(url, data)
+    } else if (methods === "delete") {
+        let params = data
+        request = axios.delete(url, params)
+    } else if (methods === "put") {
+        request = axios.put(url, data)
+    }
+    request = request.then((result) => {
+        let data = result.data
+        if (enableMessage) {
+            if (data.success) {
+                ElMessage({
+                    message: data.msg,
+                    type: 'success'
+                })
+            } else {
+                ElMessage({
+                    message: data.msg,
+                    type: 'error'
+                })
+            }
+        }
+        return result
+    }).catch((err) => {
+        if (enableMessage) {
+            ElMessage({
+                message: err.message,
+                type: 'error'
+            })
+            //开发模式显示错误
+        }
+        if (import.meta.env.MODE == "development") {
+            console.log(err)
+            if (!enableMessage) {
+                ElMessage({
+                    message: err.message,
+                    type: 'error'
+                })
+            }
+        }
+    });
+    return request
+}
 export async function commonajaxWithData(url, methods = "get", data, enableMessage = false) {
     let outData
     await commonajax(url, methods, data, enableMessage).then(res => {
         outData = res
     })
     return outData
+}
+export async function putData(url, data, enableMessage = false) {
+    return commonajax(url, "put", data, enableMessage)
+}
+export async function getData(url, data, enableMessage = false) {
+    return commonajax(url, "get", data, enableMessage)
+}
+export async function deleteData(url, data, enableMessage = false) {
+    return commonajax(url, "delete", data, enableMessage)
+}
+export async function postData(url, data, enableMessage = false) {
+    return commonajax(url, "post", data, enableMessage)
 }
 //删除默认开启提示，以及删除确认
 export async function deleteById(url, id, enableMessage = true, tip = true) {

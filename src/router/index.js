@@ -39,10 +39,23 @@ const routes = [{
             path: "/addSolution/:problemId",
             component: () =>
                 import("@/view/reception/AddSolution.vue")
-        },{
+        }, {
             path: "/solution/:solutionId",
             component: () =>
                 import("@/view/reception/Solution.vue")
+        }, {
+            path: "/personCenter",
+            component: () =>
+                import("@/view/reception/PersonCenter.vue"),
+            redirect: "/personCenter/account",
+            children: [
+                {
+                    path: "account",
+                    component: () =>
+                        import("@/components/reception/person_center/Account.vue"),
+                }
+
+            ]
         }
         ]
     }],

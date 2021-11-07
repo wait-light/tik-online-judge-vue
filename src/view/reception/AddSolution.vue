@@ -67,7 +67,7 @@ export default {
   methods: {
     hasSolution() {
       commonajaxWithData(
-        `/executor/solution/hasSolution/${this.solution.problemId}`,
+        `/social/solution/hasSolution/${this.solution.problemId}`,
         "get",
         null,
         false
@@ -82,7 +82,7 @@ export default {
     },
     getSolution() {
       commonajaxWithData(
-        `/executor/solution/${this.solution.id}`,
+        `/social/solution/${this.solution.id}`,
         "get",
         null,
         false
@@ -96,7 +96,7 @@ export default {
       this.$refs["solution"].validate((valid) => {
         if (valid) {
           commonajaxWithData(
-            `/executor/solution`,
+            `/social/solution`,
             "post",
             this.solution,
             true
@@ -115,7 +115,7 @@ export default {
       this.$refs["solution"].validate((valid) => {
         if (valid) {
           commonajaxWithData(
-            `/executor/solution/${this.solution.id}`,
+            `/social/solution/${this.solution.id}`,
             "put",
             this.solution,
             true

@@ -51,7 +51,7 @@ export default {
     getSolutions() {
       if (this.hasNextPage && this.problemId) {
         getList(
-          `/executor/solution/solutions/${this.problemId}`,
+          `/social/solution/solutions/${this.problemId}`,
           this.page,
           this.pageSize
         ).then((result) => {

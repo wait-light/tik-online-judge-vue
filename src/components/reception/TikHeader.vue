@@ -13,7 +13,9 @@
 
     <div class="tik-header-right">
       <div class="avater-box">
-        <el-avatar :size="30" :src="user.avatar" v-if="user.login"></el-avatar>
+        <router-link to="/personCenter">
+          <el-avatar :size="30" :src="user.avatar" v-if="user.login"></el-avatar
+        ></router-link>
       </div>
 
       <router-link to="/login"
@@ -63,6 +65,7 @@ export default {
   height: 50px
   margin-right: 10px
   padding-top: 10px
+  cursor: pointer
   // box-sizing: border-box
   // margin: 20px
 .tik-header

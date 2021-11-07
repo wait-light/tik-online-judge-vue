@@ -39,7 +39,7 @@ export default {
       return new Date(dateString).toSimpleString();
     },
     getSolution() {
-      getOne(`/executor/solution/${this.solution.id}`).then((result) => {
+      getOne(`/social/solution/${this.solution.id}`).then((result) => {
         if (result.success) {
           console.log(result);
           this.solution = result.dto;
