@@ -62,7 +62,7 @@
         commonajaxWithData,
     } from "@/js/backstage/common/common_data_operation.js";
     import UserAddOrUpdate
-        from "@/components/backstage/auth/UserAddOrUpdate.vue";
+        from "@/components/backstage/user/UserAddOrUpdate.vue";
 
     export default {
         components: {

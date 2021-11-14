@@ -63,6 +63,10 @@ const routes = [{
     path: "/login",
     component: () =>
         import("@/view/reception/Login.vue")
+}, {
+    path: "/passwordrest",
+    component: () =>
+        import("@/view/reception/PasswordReset.vue")
 }
     , backstage]
 const router = createRouter({

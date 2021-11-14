@@ -268,7 +268,7 @@ export default {
     if (this.judgeId()) {
       await this.loadData();
     }
-    document.title = `题目【${this.problem.name}】`;
+    // document.title = `题目【${this.problem.name}】`;
     if (this.user.login) {
       this.loadSubmitResults();
     }

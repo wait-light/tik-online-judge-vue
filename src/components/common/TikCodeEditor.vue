@@ -164,7 +164,7 @@ export default {
       //   template: ``,
       // },
       {
-        value: 1,
+        value: 0,
         label: "Java",
         mode: "text/x-java",
         template: `import java.util.Scanner;

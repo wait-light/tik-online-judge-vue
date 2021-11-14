@@ -1,9 +1,9 @@
 <template>
   <div class="login_container">
     <div class="login_box">
-      <h1>登录</h1>
+      <h1>密码修改</h1>
       <el-tabs type="card" v-model="loginType">
-        <el-tab-pane label="验证码" name="email">
+        <el-tab-pane label="邮箱验证" name="email">
           <el-form
             ref="emailform"
             label-width="80px"
@@ -17,17 +17,7 @@
             <el-form-item label="验证码" prop="code">
               <el-row>
                 <el-col :xs="24" :sm="18">
-                  <el-input
-                    v-model="entity.code"
-                    @keyup.enter="
-                      submitForm(
-                        'emailform',
-                        'EMAIL',
-                        this.entity.email,
-                        this.entity.code
-                      )
-                    "
-                  ></el-input>
+                  <el-input v-model="entity.code"></el-input>
                 </el-col>
                 <el-col :xs="24" :sm="6">
                   <el-button
@@ -40,22 +30,24 @@
                 </el-col>
               </el-row>
             </el-form-item>
+            <el-form-item label="新密码" prop="newPassword">
+              <el-input show-password v-model="entity.newPassword"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="repeatPassword">
+              <el-input
+                show-password
+                v-model="entity.repeatPassword"
+              ></el-input>
+            </el-form-item>
             <el-button
               style="margin-right: 10px"
               type="primary"
-              @click="
-                submitForm(
-                  'emailform',
-                  'EMAIL',
-                  this.entity.email,
-                  this.entity.code
-                )
-              "
-              >登录/注册</el-button
+              @click="updatePasswordByEmaild"
+              >修改</el-button
             >
           </el-form>
         </el-tab-pane>
-        <el-tab-pane label="密码" name="password">
+        <el-tab-pane label="密码验证" name="password">
           <el-form
             ref="passwordform"
             label-width="80px"
@@ -67,31 +59,22 @@
               <el-input v-model="entity.username"></el-input>
             </el-form-item>
             <el-form-item label="密码" prop="password">
+              <el-input v-model="entity.password" show-password></el-input>
+            </el-form-item>
+            <el-form-item label="新密码" prop="newPassword">
+              <el-input show-password v-model="entity.newPassword"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="repeatPassword">
               <el-input
-                v-model="entity.password"
                 show-password
-                @keyup.enter="
-                  submitForm(
-                    'passwordform',
-                    'PASSWORD',
-                    this.entity.username,
-                    this.entity.password
-                  )
-                "
+                v-model="entity.repeatPassword"
               ></el-input>
             </el-form-item>
             <el-button
               style="margin-right: 10px"
               type="primary"
-              @click="
-                submitForm(
-                  'passwordform',
-                  'PASSWORD',
-                  this.entity.username,
-                  this.entity.password
-                )
-              "
-              >登录</el-button
+              @click="updatePasswordByUsername"
+              >修改</el-button
             >
           </el-form>
         </el-tab-pane>
@@ -107,6 +90,7 @@ import {
   commonajaxWithData,
   getOne,
   postData,
+  putData,
 } from "@/js/common_data_operation.js";
 import { ElMessage } from "element-plus";
 import { mapState, mapMutations } from "vuex";
@@ -125,52 +109,6 @@ export default {
   },
   methods: {
     ...mapMutations("user", ["login"]),
-    submitForm(formName, loginType, principal, credentials) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          let data = {
-            loginType,
-            principal,
-            credentials,
-          };
-          if (loginType == "EMAIL") {
-            commonajaxWithData(
-              "/auth/anonymous/index/email_login",
-              "post",
-              {
-                email: principal,
-                code: credentials,
-              },
-              true
-            ).then((res) => {
-              if (res.success) {
-                this.$router.push("/");
-                this.login(res.token);
-              }
-            });
-          } else if (loginType == "PASSWORD") {
-            commonajaxWithData(
-              "/auth/anonymous/index/username_login",
-              "post",
-              {
-                username: principal,
-                password: credentials,
-              },
-              true
-            ).then((res) => {
-              if (res.success) {
-                this.$router.push("/");
-                this.login(res.token);
-              }
-            });
-          }
-
-          return true;
-        } else {
-          return false;
-        }
-      });
-    },
     getOne,
     sendCode() {
       const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
@@ -202,10 +140,50 @@ export default {
         });
       }
     },
+    updatePasswordByEmail() {
+      this.$refs["emailform"].validate((valid) => {
+        if (!valid) {
+          return false;
+        }
+        putData(
+          "/auth/anonymous/index/password/email",
+          {
+            email: this.entity.email,
+            code: this.entity.code,
+            newPassword: this.entity.newPassword,
+          },
+          true
+        ).then((res) => {
+          if (res.success) {
+            this.$router.push("/login");
+          }
+        });
+      });
+    },
+    updatePasswordByUsername() {
+      this.$refs["passwordform"].validate((valid) => {
+        if (!valid) {
+          return false;
+        }
+        putData(
+          "/auth/anonymous/index/password/username",
+          {
+            username: this.entity.username,
+            password: this.entity.password,
+            newPassword: this.entity.newPassword,
+          },
+          true
+        ).then((res) => {
+          if (res.success) {
+            this.$router.push("/login");
+          }
+        });
+      });
+    },
   },
   data() {
     const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-    const usernameReg = /^[a-zA-Z0-9_\.\@]{5,25}$/;
+    const usernameReg = /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/;
     // const passwordReg = /^[a-zA-Z]w{5,17}$/;
     const passwordReg = /^[a-zA-Z0-9_]{3,17}$/;
     const checkEmail = (rule, value, callback) => {
@@ -226,7 +204,7 @@ export default {
         return callback();
       } else {
         callback(
-          new Error("以字母开头，长度在5~25之间，只能包含字母、数字和下划线")
+          new Error("以字母开头，长度在5~18之间，只能包含字母、数字和下划线")
         );
       }
     };
@@ -237,8 +215,17 @@ export default {
       if (usernameReg.test(value)) {
         callback();
       } else {
-        callback(new Error("长度在5-25之间，不能包括特殊符号，允许邮箱格式的账号"));
+        callback(new Error("字母开头，长度在5-16之间，允许字母数字下划线"));
       }
+    };
+    const repeatPassword = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error("重复密码不能为空"));
+      }
+      if (value != this.entity.newPassword) {
+        return callback(new Error("重复密码不一致"));
+      }
+      callback();
     };
 
     return {
@@ -271,6 +258,20 @@ export default {
             required: true,
             trigger: "blur",
             validator: checkPassword,
+          },
+        ],
+        newPassword: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: checkPassword,
+          },
+        ],
+        repeatPassword: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: repeatPassword,
           },
         ],
       },
