@@ -6,6 +6,7 @@
       ></tik-logo>
       <div class="tik-header-left-buttons">
         <router-link class="primary" to="/problem-collection">题集</router-link>
+        <router-link class="primary" to="/groups">群组</router-link>
         <!-- <router-link to="/">讨论</router-link> -->
         <!-- <router-link to="/backstage">后台</router-link> -->
       </div>
@@ -87,7 +88,7 @@ export default {
   height: 50px
   color: $secondary-color
 .tik-header-left
-  margin-left: 150px
+  margin-left: 80px
   display: flex
   span
     font-size: 30px
@@ -95,7 +96,7 @@ export default {
     margin-left: 50px
     position: absolute
     top: 10px
-  .primary
+  .tik-header-left-buttons
     margin-left: 120px
   a
     display: inline-block

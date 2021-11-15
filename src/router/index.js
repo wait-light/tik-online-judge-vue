@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import backstage from '@/router/backstage'
+import group from '@/router/group'
+import groups from '@/router/groups'
 const routes = [{
     path: "/redirect",
     component: () =>
@@ -56,14 +58,15 @@ const routes = [{
                 }
 
             ]
-        }
+        }, group, groups
         ]
     }],
 }, {
     path: "/login",
     component: () =>
         import("@/view/reception/Login.vue")
-}, {
+}
+    , {
     path: "/passwordrest",
     component: () =>
         import("@/view/reception/PasswordReset.vue")

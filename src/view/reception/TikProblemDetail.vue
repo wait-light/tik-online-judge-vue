@@ -17,82 +17,21 @@
         <pre class="code-box">{{ submitDetail.content }}</pre>
       </el-dialog>
       <el-tab-pane label="问题详情">
-        <div class="problem-detail-description el-tab-pane-box">
-          <el-skeleton v-if="!problem.name" :rows="10" animated />
-          <div v-if="problem.name">
-            <h1>
-              {{ problem.name }}
-            </h1>
-            <h3>题目描述</h3>
-            <md-editor v-model="problem.problemDescribe" :previewOnly="true" />
-            <!-- <p>{{ problem.problemDescribe }}</p> -->
-            <h3>输入描述</h3>
-            <md-editor v-model="problem.inputDescrible" :previewOnly="true" />
-            <!-- <p>{{ problem.inputDescrible }}</p> -->
-            <h3>输出描述</h3>
-            <md-editor v-model="problem.outputDescrible" :previewOnly="true" />
-            <!-- <p>{{ problem.outputDescrible }}</p> -->
-            <h3>样例输入</h3>
-            <!-- <md-editor v-model="problem.input" :previewOnly="true" /> -->
-            <pre class="data-io">{{ problem.input }}</pre>
-            <h3>样例输出</h3>
-            <!-- <md-editor v-model="problem.output" :previewOnly="true" /> -->
-            <pre class="data-io">{{ problem.output }}</pre>
-          </div>
-        </div>
+        <problem-detail
+          v-if="problem.id"
+          :problemId="problem.id"
+        ></problem-detail>
       </el-tab-pane>
-      <el-tab-pane label="提交" v-if="user.login">
-        <div class="el-tab-pane-box submit-box">
-          <el-button @click="submit" type="success">提交</el-button>
-          <el-button @click="loadSubmitResults" type="info">刷新记录</el-button>
-          <h4 class="title">提交记录</h4>
-          <div style="box-shadow: 5px 6px 5px #eee">
-            <el-collapse accordion>
-              <el-collapse-item
-                v-for="submitResult in submitResults"
-                :key="submitResult.submitId"
-              >
-                <template #title>
-                  <el-button
-                    style="margin-right: 10px"
-                    @click="getSubmitDetail(submitResult.submitId)"
-                    size="mini"
-                    >查看详情</el-button
-                  >
-                  <span class="tips">提交时间：</span>
-                  {{ new Date(submitResult.createTime).toLocaleString() }}
-                  <el-tag class="submit-tag" :type="resultType(submitResult)">{{
-                    resultTypeString(submitResult)
-                  }}</el-tag>
-                </template>
-                <el-table
-                  :header-cell-style="{ textAlign: 'center' }"
-                  :cell-style="{ textAlign: 'center' }"
-                  :data="submitResult.judgeResults"
-                  style="width: 100%; margin-bottom: 20px"
-                >
-                  <el-table-column type="expand">
-                    <template #default="props">
-                      <span class="tips"> 错误信息 ：</span>
-                      {{ props.row.errorOutput }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="executionTime" label="执行时间(ms)" />
-                  <el-table-column label="运行结果">
-                    <template #default="scope">
-                      <el-tag size="mini" :type="judgeStatusType(scope.row)">{{
-                        scope.row.judgeStatus
-                      }}</el-tag>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </el-collapse-item>
-            </el-collapse>
-          </div>
-        </div>
+      <el-tab-pane style="padding:10px;" label="提交" v-if="user.login">
+        <el-button @click="submit" type="success">提交</el-button>
+        <el-button @click="loadSubmitResults" type="info">刷新记录</el-button>
+        <problem-submit-list
+          v-if="problem.id"
+          :problemId="problem.id"
+        ></problem-submit-list>
       </el-tab-pane>
       <el-tab-pane label="题解">
-        <div class="el-tab-pane-box submit-box">
+        <div class="el-tab-pane-box" style="padding: 5px 15px;">
           <el-button
             v-if="user.login"
             type="primary"
@@ -123,6 +62,8 @@
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
 import TikCodeEditor from "@/components/common/TikCodeEditor.vue";
+import ProblemDetail from "@/components/reception/problem/ProblemDetail.vue";
+import ProblemSubmitList from "@/components/reception/problem/ProblemSubmitList.vue";
 import { ElMessage } from "element-plus";
 import { mapState } from "vuex";
 import {
@@ -136,6 +77,8 @@ export default {
     TikCodeEditor,
     MdEditor,
     TikSolutionList,
+    ProblemDetail,
+    ProblemSubmitList,
   },
   data() {
     return {
@@ -151,62 +94,17 @@ export default {
     };
   },
   methods: {
-    copyCode() {
-      navigator.clipboard.writeText(this.submitDetail.content);
-      ElMessage({
-        message: "已复制",
-        type: "success",
-      });
-    },
-    getSubmitDetail(id) {
-      this.submitDetail.open = true;
-      getOne(`/executor/submit/${id}`).then((result) => {
-        if (result.success) {
-          this.submitDetail.content = result.dto.content;
-        }
-      });
-    },
     openDrag() {
       this.draging = true;
     },
     cloasDrag() {
       this.draging = false;
     },
-    judgeStatusType(judge) {
-      if (!judge.judgeStatus) {
-        return "info";
-      }
-      if (judge.judgeStatus == "ACCEPT") {
-        return "success";
-      }
-      if (judge.judgeStatus == "PRESENTATION_ERROR") {
-        return "warning";
-      }
-      return "danger";
-    },
-    resultType(submit) {
-      if (!submit.status) {
-        return "info";
-      }
-      if (submit.status == "ACCEPT") {
-        return "success";
-      }
-      if (submit.status == "PRESENTATION_ERROR") {
-        return "warning";
-      }
-      return "danger";
-    },
     resultTypeString(submit) {
       if (!submit.status) {
         return "等待测评";
       }
       return submit.status;
-    },
-    async loadData() {
-      let result = await getOne("/executor/problem/" + this.problem.id);
-      if (result.success) {
-        this.problem = result.dto;
-      }
     },
     async submit() {
       let submit = {
@@ -265,13 +163,7 @@ export default {
     }),
   },
   async mounted() {
-    if (this.judgeId()) {
-      await this.loadData();
-    }
-    // document.title = `题目【${this.problem.name}】`;
-    if (this.user.login) {
-      this.loadSubmitResults();
-    }
+    this.judgeId()
   },
 };
 </script>
@@ -294,6 +186,7 @@ export default {
 .problem-editor-submit-box
   display: flex
   flex-direction: column
+  
 .problem-detail-description
   padding: 0 15px
   .data-io
@@ -326,12 +219,6 @@ export default {
     -moz-user-select: none
     font-weight: 1000
     color: #aaa
-.submit-box
-  // display: flex
-  padding: 5px 15px
-  // flex-direction: column
-.submit-tag
-  margin-left: 15px
 .tips
   // font-weight: 1000
   color: $minor-color
