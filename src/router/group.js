@@ -1,8 +1,10 @@
 export default {
-    path: "/group",
+    path: "/group/:groupId(\\d+)",
     component: () =>
         import("@/view/reception/Group.vue"),
-    redirect: "/group/tasks",
+    redirect: to => {
+        return `/group/${to.params.groupId}/tasks`;
+    },
     children: [
         {
             path: "tasks",
@@ -18,6 +20,17 @@ export default {
             component: () =>
                 import("@/components/reception/group/GroupTaskDetail.vue"),
         },
+        {
+            path: "invite",
+            component: () =>
+                import("@/components/reception/group/GroupInvite.vue")
+        },
+        {
+            path:"task/edit",
+            component:()=>
+            import("@/components/reception/group/GroupTaskAdd.vue")
+            
+        }
 
     ]
 }

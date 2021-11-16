@@ -40,18 +40,26 @@
                 </el-col>
               </el-row>
             </el-form-item>
-            <el-button
-              style="margin-right: 10px"
-              type="primary"
-              @click="
-                submitForm(
-                  'emailform',
-                  'EMAIL',
-                  this.entity.email,
-                  this.entity.code
-                )
-              "
-              >登录/注册</el-button
+            <el-form-item>
+              <el-button
+                style="margin-right: 10px"
+                type="primary"
+                @click="
+                  submitForm(
+                    'emailform',
+                    'EMAIL',
+                    this.entity.email,
+                    this.entity.code
+                  )
+                "
+                >登录/注册</el-button
+              >
+            </el-form-item>
+            <el-checkbox v-model="agree" label="同意"></el-checkbox>
+            <el-link
+              style="margin-top: -8px; margin-left: 8px"
+              href="/user-agreement"
+              >《服务条款》</el-link
             >
           </el-form>
         </el-tab-pane>
@@ -125,7 +133,7 @@ export default {
   },
   methods: {
     ...mapMutations("user", ["login"]),
-    submitForm(formName, loginType, principal, credentials) {
+    async submitForm(formName, loginType, principal, credentials) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let data = {
@@ -164,7 +172,6 @@ export default {
               }
             });
           }
-
           return true;
         } else {
           return false;
@@ -206,7 +213,6 @@ export default {
   data() {
     const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
     const usernameReg = /^[a-zA-Z0-9_\.\@]{5,25}$/;
-    // const passwordReg = /^[a-zA-Z]w{5,17}$/;
     const passwordReg = /^[a-zA-Z0-9_]{3,17}$/;
     const checkEmail = (rule, value, callback) => {
       if (!value) {
@@ -237,7 +243,9 @@ export default {
       if (usernameReg.test(value)) {
         callback();
       } else {
-        callback(new Error("长度在5-25之间，不能包括特殊符号，允许邮箱格式的账号"));
+        callback(
+          new Error("长度在5-25之间，不能包括特殊符号，允许邮箱格式的账号")
+        );
       }
     };
 
@@ -245,6 +253,7 @@ export default {
       loginType: "email",
       entity: {},
       codeSecond: 0,
+      agree: false,
       rules: {
         email: [
           {

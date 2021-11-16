@@ -7,6 +7,7 @@ export default async function commonajax(url, methods = "get", data, enableMessa
     if (!url) {
         throw "must be has url"
     }
+    methods = methods.toLocaleLowerCase()
     var request
 
     if (methods === "get") {

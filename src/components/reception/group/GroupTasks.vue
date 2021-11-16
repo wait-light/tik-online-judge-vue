@@ -2,7 +2,11 @@
   <div class="demo-collapse">
     <el-collapse v-model="activeName">
       <el-collapse-item title="进行中" name="1">
-        <router-link to="/group/task" v-for="item in 5" :key="item">
+        <router-link
+          :to="`/group/${$route.params.groupId}/task`"
+          v-for="item in 5"
+          :key="item"
+        >
           <div class="task-item">
             <span class="cicle">任务</span>
             <!-- <el-image
@@ -28,7 +32,7 @@
 export default {
   data() {
     return {
-      activeName:"1"
+      activeName: "1",
     };
   },
 };
@@ -48,8 +52,8 @@ a
   text-decoration-line: none
   border-bottom: 1px solid var(--el-border-color-base)
   &:hover
-      background: $auxiliary-color
-      cursor: pointer
+    background: $auxiliary-color
+    cursor: pointer
   p
     font-size: 1.45em
     color: $minor-color

@@ -1,5 +1,5 @@
 <template>
-  <div class="groups">
+  <div class="groups" v-if="groups && groups.length > 0">
     <el-card
       class="group-item"
       v-for="item in groups"
@@ -12,11 +12,12 @@
       ></div>
       <div style="padding: 14px">
         <div class="bottom">
-          <router-link to="/group">{{ item.name }}</router-link>
+          <router-link :to="`/group/${item.id}`">{{ item.name }}</router-link>
         </div>
       </div>
     </el-card>
   </div>
+  <el-empty class="groups" v-else description="未加入任何群组"></el-empty>
 </template>
 <script>
 import { getData } from "@/js/common_data_operation";

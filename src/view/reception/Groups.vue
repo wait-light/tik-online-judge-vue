@@ -9,12 +9,16 @@
       >
         <el-radio-button label="我的群组"></el-radio-button>
         <el-radio-button label="受邀信息"></el-radio-button>
-        <el-radio-button
-          label="创建群组"
+        <label
           @click="groupAdd.open = true"
-        ></el-radio-button>
+          class="el-radio-button--medium"
+          aria-checked="false"
+          tabindex="-1"
+          ><span class="el-radio-button__inner">创建群组</span></label
+        >
       </el-radio-group>
     </div>
+
     <el-dialog v-model="groupAdd.open" title="创建群组">
       <group-add-or-update></group-add-or-update>
     </el-dialog>
@@ -38,6 +42,7 @@ export default {
   },
   methods: {
     change(label) {
+      console.log(this.type);
       if (label === "我的群组") {
         this.$router.push("/groups/list");
       } else if (label === "受邀信息") {

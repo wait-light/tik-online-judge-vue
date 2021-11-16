@@ -1,17 +1,14 @@
 <template>
   <el-row style="padding: 0">
     <el-col :span="3" class="menu-container">
-      <el-card shadow="never" >
-        <img
-          src="https://w.wallhaven.cc/full/g7/wallhaven-g75r7d.jpg"
-          class="image"
-        />
-        <h1>18计算机科学与技术1班</h1>
+      <el-card shadow="never">
+        <img :src="group.avatar" class="image" />
+        <h1>{{ group.name }}</h1>
       </el-card>
 
       <ul>
         <router-link
-          to="/group/tasks"
+          :to="`/group/${$route.params.groupId}/tasks`"
           custom
           v-slot="{ href, isActive, navigate }"
         >
@@ -20,7 +17,7 @@
           </li>
         </router-link>
         <router-link
-          to="/group/resource"
+          :to="`/group/${$route.params.groupId}/resource`"
           custom
           v-slot="{ href, isActive, navigate }"
         >
@@ -29,20 +26,55 @@
           </li>
         </router-link>
       </ul>
+      <el-divider></el-divider>
+      <ul>
+        <router-link
+          :to="`/group/${$route.params.groupId}/invite`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">邀请</a>
+          </li>
+        </router-link>
+        <router-link
+          :to="`/group/${$route.params.groupId}/task/edit`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">任务发布</a>
+          </li>
+        </router-link>
+      </ul>
     </el-col>
     <el-col :span="21" class="content-container">
-     <router-view></router-view>
+      <router-view></router-view>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  components: {},
-  setup() {},
-});
+import { getData } from "@/js/common_data_operation";
+export default {
+  data() {
+    return {
+      group: {},
+    };
+  },
+  mounted() {
+    this.loadData(this.$route.params.groupId);
+  },
+  methods: {
+    loadData(id) {
+      getData(`/social/group/${id}`).then((res) => {
+        if (res.success) {
+          this.group = res.dto;
+        }
+      });
+    },
+  },
+};
 </script>
 <style lang="sass" scoped>
 @import "@/sass/_variables"

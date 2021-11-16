@@ -138,6 +138,7 @@ export default {
     height: calc( 100vh - 116px )
     overflow: auto
 .submit-box
-  // display: flex
   padding: 5px 15px
+.submit-tag
+  margin-left: 10px
 </style>

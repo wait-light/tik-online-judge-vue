@@ -3,6 +3,9 @@ import backstage from '@/router/backstage'
 import group from '@/router/group'
 import groups from '@/router/groups'
 const routes = [{
+    path:"/user-agreement",
+    component:()=>import("@/view/AutoRegister.vue")
+},{
     path: "/redirect",
     component: () =>
         import("@/view/redirect.vue"),
@@ -16,12 +19,12 @@ const routes = [{
             import("@/components/reception/TikContent.vue"),
         redirect: "problem-collection",
         children: [{
-            path: "problemlist/:id",
+            path: "problemlist/:id(\\d+)",
             component: () =>
                 import("@/view/reception/TikProblems.vue")
         },
         {
-            path: "/problem/:id",
+            path: "/problem/:id(\\d+)",
             component: () =>
                 import("@/view/reception/TikProblemDetail.vue")
         }, {
@@ -29,20 +32,20 @@ const routes = [{
             component: () =>
                 import("@/view/reception/TikProblemCollections.vue")
         }, {
-            path: "/problemDetail/:collectionid",
+            path: "/problemDetail/:collectionid(\\d+)",
             component: () =>
                 import("@/view/reception/AddProblemDetail.vue")
         }, {
-            path: "/problemDetail/update/:problemid",
+            path: "/problemDetail/update/:problemid(\\d+)",
             component: () =>
                 import("@/view/reception/AddProblemDetail.vue")
         },
         {
-            path: "/addSolution/:problemId",
+            path: "/addSolution/:problemId(\\d+)",
             component: () =>
                 import("@/view/reception/AddSolution.vue")
         }, {
-            path: "/solution/:solutionId",
+            path: "/solution/:solutionId(\\d+)",
             component: () =>
                 import("@/view/reception/Solution.vue")
         }, {
@@ -71,7 +74,9 @@ const routes = [{
     component: () =>
         import("@/view/reception/PasswordReset.vue")
 }
-    , backstage]
+    , backstage,
+// 将匹配所有内容并将其放在 `$route.params.pathMatch` 下
+{ path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import("@/view/NotFound.vue") }]
 const router = createRouter({
     // 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
     history: createWebHistory(),
