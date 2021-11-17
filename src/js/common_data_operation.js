@@ -135,7 +135,20 @@ export async function getData(url, data, enableMessage = false) {
     return commonajax(url, "get", data, enableMessage)
 }
 export async function deleteData(url, data, enableMessage = false) {
-    return commonajax(url, "delete", data, enableMessage)
+    return ElMessageBox.confirm('将永久删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+    })
+        .then(() => {
+            return commonajax(url, "delete", data, enableMessage)
+        })
+        .catch(() => {
+            return {
+                code: 500,
+                msg: "删除取消"
+            }
+        });
 }
 export async function postData(url, data, enableMessage = false) {
     return commonajax(url, "post", data, enableMessage)

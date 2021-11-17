@@ -16,7 +16,7 @@ export default {
                 import("@/components/reception/group/GroupResource.vue"),
         },
         {
-            path: "task",
+            path: "task/:taskId(\\d+)",
             component: () =>
                 import("@/components/reception/group/GroupTaskDetail.vue"),
         },
@@ -26,10 +26,28 @@ export default {
                 import("@/components/reception/group/GroupInvite.vue")
         },
         {
-            path:"task/edit",
-            component:()=>
-            import("@/components/reception/group/GroupTaskAdd.vue")
-            
+            path: "task/manager",
+            component: () =>
+                import("@/components/reception/group/GroupTaskManager.vue")
+
+        },
+        {
+            path: "task",
+            component: () =>
+                import("@/components/reception/group/GroupTaskAdd.vue"),
+        },
+        {
+            path: "problems",
+            component: () =>
+                import("@/components/reception/group/GroupProblem.vue")
+        }, {
+            path: "problem",
+            component: () =>
+                import("@/components/reception/group/GroupProblemAdd.vue")
+        }, {
+            path: "problem/:problemId(\\d+)",
+            component: () =>
+                import("@/components/reception/group/GroupProblemAdd.vue")
         }
 
     ]

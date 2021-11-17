@@ -38,12 +38,21 @@
           </li>
         </router-link>
         <router-link
-          :to="`/group/${$route.params.groupId}/task/edit`"
+          :to="`/group/${$route.params.groupId}/problems`"
           custom
           v-slot="{ href, isActive, navigate }"
         >
           <li :class="[isActive && 'active-class']" @click="navigate">
-            <a :href="href">任务发布</a>
+            <a :href="href">题库</a>
+          </li>
+        </router-link>
+        <router-link
+          :to="`/group/${$route.params.groupId}/task/manager`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">任务管理</a>
           </li>
         </router-link>
       </ul>
