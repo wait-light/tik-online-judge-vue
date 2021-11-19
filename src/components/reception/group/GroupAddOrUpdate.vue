@@ -1,19 +1,19 @@
 <template>
-  <el-form v-model="newEntity" label-position="right" label-width="80px">
-    <el-form-item label="群组名称">
+  <el-form
+    ref="groupForm"
+    :model="newEntity"
+    label-position="right"
+    label-width="80px"
+    :rules="rules"
+  >
+    <el-form-item label="群组名称" prop="name">
       <el-input v-model="newEntity.name"></el-input>
     </el-form-item>
-    <el-form-item label="图片">
-      <el-upload
-        class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-      >
-        <img v-if="newEntity.avatar" :src="newEntity.avatar" class="avatar" />
-        <el-icon v-else class="avatar-uploader-icon"><plus /></el-icon>
-      </el-upload>
+    <el-form-item label="封面">
+      <img-uploader
+        ref="uploder"
+        @uploadCallback="uploadCallBack"
+      ></img-uploader>
     </el-form-item>
     <el-form-item>
       <el-button @click="prepareSave" v-if="!newEntity.id" type="success"
@@ -30,23 +30,63 @@
 </template>
 
 <script>
-import { Plus } from "@element-plus/icons";
 import { update, postData } from "@/js/common_data_operation.js";
+import ImgUploader from "@/components/common/ImgUploader.vue";
+import { ElMessage } from "element-plus";
 export default {
   components: {
-    Plus,
+    ImgUploader,
   },
   props: {
     entity: Object,
   },
   data() {
+    const nameReg = /^[\u0391-\uFFE5a-zA-Z0-9\\(\\)]{2,50}$/;
+    const checkName = (rule, value, callback) => {
+      if (!this.newEntity.name) {
+        callback(new Error("群名不能为空"));
+      }
+      if (!nameReg.test(this.newEntity.name)) {
+        callback(new Error("群名长度应为2-50,可使用中文英文数字和括号"));
+      } else {
+        callback();
+      }
+    };
     return {
       newEntity: {},
+      rules: {
+        name: [
+          {
+            validator: checkName,
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
+    uploadCallBack(url) {
+      if (url) {
+        this.newEntity.avatar = url;
+        postData("/social/user-group", this.newEntity, true).then((res) => {
+          if (res.success) {
+            this.$router.push(`/group/${res.groupId}`);
+          }
+        }, true);
+      } else {
+        ElMessage({
+          message: "图片上传有误",
+          type: "error",
+        });
+      }
+    },
     async prepareSave() {
-      let result = await postData("/social/group", this.newEntity, true);
+      this.$refs.groupForm.validate((valid) => {
+        if (!valid) {
+          return;
+        }
+        this.$refs.uploder.submitUpload();
+      });
     },
     async prepareUpdate() {
       let result = await update(
@@ -54,21 +94,6 @@ export default {
         this.newEntity.id,
         this.newEntity
       );
-    },
-    handleAvatarSuccess(res, file) {
-      this.newEntity.avatar = URL.createObjectURL(file.raw);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("图片格式不符合要求");
-      }
-      if (!isLt2M) {
-        this.$message.error("图片大小不能超过2MB!");
-      }
-      return isJPG && isLt2M;
     },
   },
   watch: {

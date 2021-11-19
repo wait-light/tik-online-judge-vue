@@ -1,12 +1,16 @@
 <template>
-  <el-form ref="task" v-model="task" label-width="80px">
-    <el-form-item label="标题">
+  <el-form ref="taskForm" :rules="taskRules" :model="task" label-width="80px">
+    <el-form-item label="标题" prop="name">
       <el-input v-model="task.name"></el-input>
     </el-form-item>
     <el-form-item label="描述">
-      <el-input type="textarea" :rows="8" v-model="task.taskIntroduce"></el-input>
+      <el-input
+        type="textarea"
+        :rows="8"
+        v-model="task.taskIntroduce"
+      ></el-input>
     </el-form-item>
-    <el-form-item label="开始时间">
+    <el-form-item label="开始时间" prop="beginTime">
       <el-date-picker
         v-model="task.beginTime"
         type="datetime"
@@ -14,7 +18,7 @@
       >
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="截止时间">
+    <el-form-item label="截止时间" prop="endTime">
       <el-date-picker
         v-model="task.endTime"
         type="datetime"
@@ -36,7 +40,7 @@
       >
     </el-form-item>
     <el-form-item>
-      <el-button type="warning" size="small">发布</el-button>
+      <el-button @click="submit" type="warning" size="small">发布</el-button>
     </el-form-item>
     <el-dialog
       @opened="toggleRowSelection"
@@ -86,10 +90,10 @@
       </el-table>
       <el-pagination
         :hide-on-single-page="true"
-        @size-change="loadProblemList"
+        @size-change="sizeChange"
         @current-change="loadProblemList"
         :current-page="pageInfo.page"
-        :page-sizes="pageInfo.pageSizes"
+        :page-sizes="[10, 20, 30, 50]"
         :page-size="pageInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageInfo.total"
@@ -99,25 +103,112 @@
   </el-form>
 </template>
 <script>
+import { ElMessageBox, ElMessage } from "element-plus";
 import {
   getData,
   postData,
   putData,
   deleteData,
+  getList,
 } from "@/js/common_data_operation";
 export default {
+  components: { ElMessageBox, ElMessage },
   data() {
+    const checkDate = (rule, value, callback) => {
+      if (!this.task.beginTime || !this.task.endTime) {
+        callback();
+      } else {
+        if (this.task.endTime <= this.task.beginTime) {
+          callback(new Error("开始时间必须小于截止时间"));
+        }
+      }
+    };
     return {
       pageInfo: { total: 0, pageSize: 10, page: 1 },
-      task: {},
+      task: {
+        title: "",
+        beginTime: "",
+        endTime: "",
+      },
       dialogOpen: false,
       collections: [],
       problems: [],
       collection: "",
       selectedProblem: new Map(),
+      taskRules: {
+        name: [
+          { required: true, trigger: "blur", message: "标题不能为空" },
+          { trigger: "" },
+        ],
+        beginTime: [
+          {
+            required: true,
+            trigger: "blur",
+            message: "开始时间不能为空",
+          },
+          {
+            trigger: "blur",
+            validator: checkDate,
+          },
+        ],
+        endTime: [
+          { required: true, trigger: "blur", message: "截止时间不能为空" },
+        ],
+      },
     };
   },
   methods: {
+    async submit() {
+      this.$refs.taskForm.validate(async (valid) => {
+        if (valid) {
+          let problems = [];
+          let canSubmit = true;
+          this.selectedProblem.forEach((name, id) => {
+            problems.push(id);
+          });
+          if (problems.length <= 0) {
+            canSubmit = false;
+            await ElMessageBox.confirm("未选择任何问题，是否发布?", "Warning", {
+              confirmButtonText: "确认",
+              cancelButtonText: "取消",
+              type: "warning",
+            })
+              .then(() => {
+                canSubmit = true;
+              })
+              .catch((res) => {});
+          }
+          if (canSubmit) {
+            ElMessageBox.confirm("确认发布?", "Warning", {
+              confirmButtonText: "确认",
+              cancelButtonText: "取消",
+              type: "warning",
+            })
+              .then(() => {
+                postData(
+                  `/social/group-task-manager/${this.$route.params.groupId}`,
+                  {
+                    taskIntroduce: this.task.taskIntroduce,
+                    name: this.task.name,
+                    beginTime: this.task.beginTime,
+                    endTime: this.task.endTime,
+                    problems,
+                  },
+                  true
+                ).then((res) => {
+                  if (res.success) {
+                    this.$router.push(
+                      `/group/${this.$route.params.groupId}/task/manager`
+                    );
+                  }
+                });
+              })
+              .catch((res) => {});
+          }
+        }
+        return valid;
+      });
+    },
     cancelTag(tagId) {
       this.selectedProblem.delete(tagId);
     },
@@ -136,14 +227,23 @@ export default {
         this.selectedProblem.delete(item);
       });
     },
-    loadProblemList() {
-      getData(
-        `/executor/problem-collection/collection/${this.collection}`
+    sizeChange(newSize) {
+      this.pageInfo.pageSize = newSize;
+      this.loadProblemList();
+    },
+    loadProblemList(current) {
+      if (current) {
+        this.pageInfo.page = current;
+      }
+      getList(
+        `/executor/problem-collection/collection/${this.collection}`,
+        this.pageInfo.page,
+        this.pageInfo.pageSize
       ).then((result) => {
         if (result.success) {
           this.problems = result.list;
           this.pageInfo.pageSize = result.pageSize;
-          this.pageInfo.page = result.page;
+          this.pageInfo.page = result.currentPage;
           this.pageInfo.total = result.total;
           this.toggleRowSelection();
         }
@@ -177,14 +277,13 @@ export default {
     },
   },
   mounted() {
-    // this.loadCollections();
   },
 };
 </script>
 
 <style lang='sass' scoped>
 .collection-item
-    margin-right: 6px
+  margin-right: 6px
 .problem-add-button
-    float: right
+  float: right
 </style>

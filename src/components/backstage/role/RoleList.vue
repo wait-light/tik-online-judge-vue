@@ -5,7 +5,6 @@
   <el-table
     :data="roles"
     height="calc( 100% - 63px )"
-    border
     style="width: 100%"
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"

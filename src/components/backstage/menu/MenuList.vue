@@ -7,7 +7,6 @@
     :data="menus"
     style="width: 100%; margin-bottom: 20px"
     row-key="id"
-    border
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"
     :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"

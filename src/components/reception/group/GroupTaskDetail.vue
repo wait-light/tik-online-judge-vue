@@ -1,43 +1,108 @@
 <template>
   <el-card class="task-describe">
-    <h1>形势与政策2021年秋天</h1>
+    <h1>{{ task.name }}</h1>
+    <span class="time"
+      >任务时间：{{ new Date(task.beginTime).toLocaleString() }} 到
+      {{ new Date(task.endTime).toLocaleString() }}</span
+    >
     <el-divider></el-divider>
-    <div class="avatar-container">
-      <el-avatar size="medium"></el-avatar>
-      <span>某某老师</span>
-    </div>
-    <span class="time">{{ new Date().toLocaleString() }}</span>
+    <user-title :uid="task.createUserId"></user-title>
+    <span class="time">发布时间：{{ new Date().toLocaleString() }}</span>
     <div>
       <p style="word-wrap: break-word">
-        今天下午在规定时间内完成考试，一定要提交试卷，没提交试卷就没有成绩！考试只能选用一种工具：要么用电脑要么用手机，否则造成考试数据丟失后果自负。相互转告！
+        {{ task.taskIntroduce }}
       </p>
     </div>
   </el-card>
-  <el-card class="task-detail">
+  <p>完成情况：{{ finishCount }} / {{ problems.length }}</p>
+  <el-card v-if="problemItemDisplay" class="task-detail">
     <router-link
       class="task-item"
-      v-for="item in 10"
+      v-for="item in problems"
       :key="item"
-      to="/problem/1"
+      :to="`/problem/${item}`"
     >
-      <cicle-success v-if="item % 2"></cicle-success>
+      <cicle-success
+        v-if="problemFinishStatus && problemFinishStatus[item]"
+      ></cicle-success>
       <cicle-wrong v-else></cicle-wrong>
-      <!-- <el-avatar
-        src="https://mooc2-ans.chaoxing.com/images/courselist/icon_yiwanc.png"
-        size="small"
-      ></el-avatar> -->
-      <p>{{ item * 411 + "" + item + item + item }}</p>
+      <p>{{ problemMap[item] }}</p>
     </router-link>
   </el-card>
+  <el-empty v-else description="没有任务"></el-empty>
 </template>
 
 <script>
 import CicleSuccess from "@/components/common/CicleSuccess.vue";
 import CicleWrong from "@/components/common/CicleWrong.vue";
+import UserTitle from "@/components/common/UserTitle.vue";
+import {
+  commonajaxWithData,
+  stringifyGet,
+  getData,
+} from "@/js/common_data_operation";
 export default {
   components: {
     CicleSuccess,
     CicleWrong,
+    UserTitle,
+  },
+  data() {
+    return {
+      task: {},
+      problems: [],
+      problemMap: {},
+      problemItemDisplay: false,
+      problemFinishStatus: {},
+      finishCount: 0,
+    };
+  },
+  methods: {
+    loadData() {
+      getData(
+        `/social/task/${this.$route.params.groupId}/${this.$route.params.taskId}`
+      ).then((res) => {
+        if (res.success) {
+          this.task = res.task;
+          this.problems = res.problems;
+          if (res.problems && res.problems.length > 0) {
+            this.loadProblemName();
+            this.loadProblemIsFinished();
+          }
+        }
+      });
+    },
+    loadProblemName() {
+      stringifyGet("/executor/problem/problem-name", {
+        pid: this.problems,
+      }).then((res) => {
+        if (res.success) {
+          this.problemMap = res.dto;
+          if (res.dto) {
+            this.problemItemDisplay = true;
+          }
+        }
+      });
+    },
+    loadProblemIsFinished() {
+      stringifyGet("/executor/user/problem/status", {
+        pid: this.problems,
+      }).then((res) => {
+        if (res.success) {
+          this.problemFinishStatus = res.dto;
+          let finishCount = 0;
+          for (let i in res.dto) {
+            if (res.dto[i]) {
+              finishCount++;
+            }
+          }
+          this.finishCount = finishCount;
+        }
+      });
+    },
+  },
+  mounted() {
+    this.loadData();
   },
 };
 </script>
@@ -50,7 +115,6 @@ export default {
 .task-detail
   margin-top: 20px
 .avatar-container
-  width: 200px
   display: inline-block
   // height: 36px
   span
@@ -59,7 +123,7 @@ export default {
     vertical-align: middle
 .time
   color: $secondary-color
-  font-size: 10px
+  font-size: 8px
 .task-item
   padding: 10px
   border-radius: $large-radius

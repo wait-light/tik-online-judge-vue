@@ -1,8 +1,56 @@
 import axios from "@/js/http.js"
 import { ElMessage, ElMessageBox } from 'element-plus'
+import qs from 'qs'
 /*
 请求地址 ， 请求类型，请求数据，是否开启消息提示
 */
+export const http = axios
+export const multipartForm = (url, data) => {
+    return axios.post(url, data, {
+        headers: { "Content-Type": "multipart/form-data" }
+    })
+}
+export function stringifyGet(url, data, enableMessage = false) {
+    let str = qs.stringify(data, { indices: false })
+    return axios.get(url + "?" + str,)
+        .then(result => {
+            let data = result.data
+            if (enableMessage) {
+                if (data.success) {
+                    ElMessage({
+                        message: data.msg,
+                        type: 'success'
+                    })
+                } else {
+                    ElMessage({
+                        message: data.msg,
+                        type: 'error'
+                    })
+                }
+            }
+            return data
+        })
+        .
+
+        catch(err => {
+            if (enableMessage) {
+                ElMessage({
+                    message: err.message,
+                    type: 'error'
+                })
+                //开发模式显示错误
+            }
+            if (import.meta.env.MODE == "development") {
+                console.log(err)
+                if (!enableMessage) {
+                    ElMessage({
+                        message: err.message,
+                        type: 'error'
+                    })
+                }
+            }
+        })
+}
 export default async function commonajax(url, methods = "get", data, enableMessage = false) {
     if (!url) {
         throw "must be has url"
@@ -11,17 +59,17 @@ export default async function commonajax(url, methods = "get", data, enableMessa
     var request
 
     if (methods === "get") {
-        let params = data
-        request = axios({
-            url: url,
-            method: 'GET',
-            params: params
-        })
+        request = axios.get(url, data)
+        // let params = data
+        // request = axios({
+        //     url: url,
+        //     method: 'GET',
+        //     data: params
+        // })
     } else if (methods === "post") {
         request = axios.post(url, data)
     } else if (methods === "delete") {
-        let params = data
-        request = axios.delete(url, params)
+        request = axios.delete(url, data)
     } else if (methods === "put") {
         request = axios.put(url, data)
     }

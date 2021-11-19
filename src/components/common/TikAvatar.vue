@@ -12,6 +12,7 @@ export default {
 
 <style lang='sass' scoped>
 .avatar-container
+  margin: 3px 6px
   display: inline-block
   span
     margin-left: 10px

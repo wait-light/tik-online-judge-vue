@@ -22,16 +22,23 @@
           :problemId="problem.id"
         ></problem-detail>
       </el-tab-pane>
-      <el-tab-pane style="padding:10px;" label="提交" v-if="user.login">
-        <el-button @click="submit" type="success">提交</el-button>
-        <el-button @click="loadSubmitResults" type="info">刷新记录</el-button>
+      <el-tab-pane
+        class="el-tab-pane-box"
+        style="padding: 10px"
+        label="提交"
+        v-if="user.login"
+      >
+        <el-button @click="submit" type="success" size="small">提交</el-button>
+        <el-button @click="reloadSubmit" type="info" size="small">刷新记录</el-button>
         <problem-submit-list
+        style="margin-top:10px;"
+          ref="submit"
           v-if="problem.id"
           :problemId="problem.id"
         ></problem-submit-list>
       </el-tab-pane>
       <el-tab-pane label="题解">
-        <div class="el-tab-pane-box" style="padding: 5px 15px;">
+        <div class="el-tab-pane-box" style="padding: 5px 15px">
           <el-button
             v-if="user.login"
             type="primary"
@@ -69,7 +76,6 @@ import { mapState } from "vuex";
 import {
   getOne,
   save,
-  commonajaxWithData,
 } from "@/js/common_data_operation.js";
 import TikSolutionList from "@/components/reception/TikSolutionList.vue";
 export default {
@@ -94,6 +100,9 @@ export default {
     };
   },
   methods: {
+    reloadSubmit() {
+      this.$refs.submit.loadSubmitResults();
+    },
     openDrag() {
       this.draging = true;
     },
@@ -163,7 +172,7 @@ export default {
     }),
   },
   async mounted() {
-    this.judgeId()
+    this.judgeId();
   },
 };
 </script>
@@ -186,7 +195,7 @@ export default {
 .problem-editor-submit-box
   display: flex
   flex-direction: column
-  
+
 .problem-detail-description
   padding: 0 15px
   .data-io
@@ -198,8 +207,8 @@ export default {
   h3
     font-size: 15px
 .el-tab-pane-box
-  height: calc( 100vh - 116px )
-  overflow: auto
+  height: calc( 100vh - 126px )
+  overflow: scroll
 .box-size-slider
   background: #ddd
   cursor: col-resize

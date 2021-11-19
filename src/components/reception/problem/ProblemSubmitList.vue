@@ -9,7 +9,6 @@
       <el-button type="info" size="mini" @click="copyCode">点击复制</el-button>
       <pre class="code-box">{{ submitDetail.content }}</pre>
     </el-dialog>
-    <h4 class="title">提交记录</h4>
     <div style="box-shadow: 5px 6px 5px #eee">
       <el-collapse accordion>
         <el-collapse-item
@@ -80,11 +79,12 @@ export default {
         type: "success",
       });
     },
-    async loadSubmitResults() {
-      let result = await getOne("/executor/judge-result/" + this.problemId);
-      if (result.success) {
-        this.submitResults = result.array;
-      }
+    loadSubmitResults() {
+      getOne("/executor/judge-result/" + this.problemId).then((result) => {
+        if (result.success) {
+          this.submitResults = result.array;
+        }
+      });
     },
     resultType(submit) {
       if (!submit.status) {
@@ -135,8 +135,8 @@ export default {
 
 <style lang='sass' scoped>
 .el-tab-pane-box
-    height: calc( 100vh - 116px )
-    overflow: auto
+  height: calc( 100vh - 116px )
+  overflow: auto
 .submit-box
   padding: 5px 15px
 .submit-tag

@@ -10,7 +10,6 @@
   <el-table
     :data="table"
     height="calc( 100% - 101px )"
-    border
     style="width: 100%"
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"

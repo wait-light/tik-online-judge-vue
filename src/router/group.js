@@ -37,6 +37,11 @@ export default {
                 import("@/components/reception/group/GroupTaskAdd.vue"),
         },
         {
+            path: "task/:taskId(\\d+)/manager",
+            component: () =>
+                import("@/components/reception/group/GroupTaskAdd.vue"),
+        },
+        {
             path: "problems",
             component: () =>
                 import("@/components/reception/group/GroupProblem.vue")

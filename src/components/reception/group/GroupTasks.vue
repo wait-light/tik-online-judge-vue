@@ -2,38 +2,132 @@
   <div class="demo-collapse">
     <el-collapse v-model="activeName">
       <el-collapse-item title="进行中" name="1">
-        <router-link
-          :to="`/group/${$route.params.groupId}/task`"
-          v-for="item in 5"
-          :key="item"
-        >
-          <div class="task-item">
-            <span class="cicle">任务</span>
-            <!-- <el-image
+        <div v-if="tasking && tasking.length > 0">
+          <router-link
+            :to="`/group/${$route.params.groupId}/task/${item.id}`"
+            v-for="item in tasking"
+            :key="item.id"
+          >
+            <div class="task-item">
+              <span class="cicle">任务</span>
+              <!-- <el-image
               style="width: 50px; height: 50px"
               src="https://w.wallhaven.cc/full/k7/wallhaven-k7lpe6.png"
               fit="cover"
             ></el-image> -->
-            <p>第{{ item }}周作业</p>
-            <span class="task-item-time">{{
-              new Date().toLocaleString()
-            }}</span>
-          </div>
-        </router-link>
+              <p>{{ item.name }}</p>
+              <div>
+                <span class="task-item-time">
+                  开始时间：{{ item.endTime.toLocaleString() }}
+                </span>
+                <br />
+                <span class="task-item-time">
+                  结束时间：{{ item.endTime.toLocaleString() }}
+                </span>
+              </div>
+            </div>
+          </router-link>
+        </div>
+         <el-empty v-else description="什么任务也没有"></el-empty>
+      </el-collapse-item>
+      <el-collapse-item title="未开始" name="3">
+        <div v-if="notStart && notStart.length > 0">
+          <router-link
+            :to="`/group/${$route.params.groupId}/task/${item.id}`"
+            v-for="item in notStart"
+            :key="item.id"
+          >
+            <div class="task-item">
+              <span class="cicle">任务</span>
+              <!-- <el-image
+              style="width: 50px; height: 50px"
+              src="https://w.wallhaven.cc/full/k7/wallhaven-k7lpe6.png"
+              fit="cover"
+            ></el-image> -->
+              <p>{{ item.name }}</p>
+              <div>
+                <span class="task-item-time">
+                  开始时间：{{ item.endTime.toLocaleString() }}
+                </span>
+                <br />
+                <span class="task-item-time">
+                  结束时间：{{ item.endTime.toLocaleString() }}
+                </span>
+              </div>
+            </div>
+          </router-link>
+        </div>
+        <el-empty v-else description="什么任务也没有"></el-empty>
       </el-collapse-item>
       <el-collapse-item title="已过期" name="2">
-        <el-empty description="什么任务也没有"></el-empty>
+        <div v-if="expiredTask && expiredTask.length > 0">
+          <router-link
+            :to="`/group/${$route.params.groupId}/task/${item.id}`"
+            v-for="item in expiredTask"
+            :key="item.id"
+          >
+            <div class="task-item">
+              <span class="cicle">任务</span>
+              <!-- <el-image
+              style="width: 50px; height: 50px"
+              src="https://w.wallhaven.cc/full/k7/wallhaven-k7lpe6.png"
+              fit="cover"
+            ></el-image> -->
+              <p>{{ item.name }}</p>
+              <div>
+                <span class="task-item-time">
+                  开始时间：{{ new Date(item.endTime).toLocaleString() }}
+                </span>
+                <br />
+                <span class="task-item-time">
+                  结束时间：{{ item.endTime.toLocaleString() }}
+                </span>
+              </div>
+            </div>
+          </router-link>
+        </div>
+        <el-empty v-else description="什么任务也没有"></el-empty>
       </el-collapse-item>
     </el-collapse>
   </div>
 </template>
 
 <script>
+import { getData } from "@/js/common_data_operation";
 export default {
   data() {
     return {
       activeName: "1",
+      expiredTask: [],
+      notStart: [],
+      tasking: [],
     };
+  },
+  methods: {
+    loadData() {
+      getData(`/social/task/group/${this.$route.params.groupId}/tasks`).then(
+        (res) => {
+          if (res.success) {
+            let now = new Date();
+            for (let index = 0; index < res.dto.length; index++) {
+              const element = res.dto[index];
+              element.endTime = new Date(element.endTime);
+              element.beginTime = new Date(element.beginTime);
+              if (element.endTime < now) {
+                this.expiredTask.push(element);
+              } else if (element.beginTime <= now <= element.endTime) {
+                this.tasking.push(element);
+              } else if (this.beginTime < now) {
+                this.notStart.push(element);
+              }
+            }
+          }
+        }
+      );
+    },
+  },
+  mounted() {
+    this.loadData();
   },
 };
 </script>

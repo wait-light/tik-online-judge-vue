@@ -27,8 +27,17 @@ export default {
       });
     },
   },
+  watch: {
+    uid(newId, oldId) {
+      if (newId) {
+        this.loadData();
+      }
+    },
+  },
   mounted() {
-    this.loadData();
+    if (this.uid) {
+      this.loadData();
+    }
   },
 };
 </script>

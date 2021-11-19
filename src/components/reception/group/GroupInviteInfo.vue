@@ -35,7 +35,7 @@
 <script>
 import { getData, putData } from "@/js/common_data_operation";
 import GroupTitle from "@/components/reception/group/GroupTitle.vue";
-import UserTitle from "@/components/common/UserTtile.vue";
+import UserTitle from "@/components/common/UserTitle.vue";
 export default {
   components: {
     GroupTitle,

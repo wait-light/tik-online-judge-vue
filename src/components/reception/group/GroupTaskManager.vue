@@ -7,31 +7,45 @@
 
   <!-- <el-empty v-if="tasks" description="未发布任何任务"></el-empty> -->
   <router-link
-    :to="`/group/${$route.params.groupId}/task`"
-    v-for="item in 5"
+    :to="`/group/${$route.params.groupId}/task/${item.id}`"
+    v-for="item in tasks"
     :key="item"
     custom
-    v-slot="{ href, route, navigate }"
+    v-slot="{ href, navigate }"
   >
     <div class="task-item" @click="navigate">
-      <a :href="href">asdss</a>
-      <!-- <span class="cicle">任务</span> -->
-      <!-- <el-image
-              style="width: 50px; height: 50px"
-              src="https://w.wallhaven.cc/full/k7/wallhaven-k7lpe6.png"
-              fit="cover"
-            ></el-image> -->
-      <p>第{{ item }}周作业</p>
-      <!-- <span class="task-item-time">{{ new Date().toLocaleString() }}</span> -->
-      <!-- <button @click="a = 2">asdasd</button> -->
+      <a :href="href">{{ item.name }}</a>
       <div>
-        <el-button size="mini" type="warning" @click="stop">修改</el-button>
-        <el-button size="mini" type="danger" @click="stop">删除</el-button>
+        <div
+          style="
+            display: inline-block;
+            margin-right: 20px;
+            vertical-align: middle;
+          "
+        >
+          <span class="task-item-time"
+            >开始时间：{{ new Date(item.beginTime).toLocaleString() }}</span
+          >
+          <br />
+          <span class="task-item-time"
+            >截止时间：{{ new Date(item.endTime).toLocaleString() }}</span
+          >
+        </div>
+
+        <!-- <el-button size="mini" type="warning" @click.stop="updateTask(item.id)"
+          >修改</el-button
+        > -->
+        <el-button size="mini" type="danger" @click.stop="deleteTask(item.id)"
+          >删除</el-button
+        >
       </div>
     </div>
   </router-link>
 </template>
 <script>
+import { getData, deleteData } from "@/js/common_data_operation";
+// import { ElMessageBox } from "element-plus";
+
 export default {
   data() {
     return {
@@ -39,9 +53,35 @@ export default {
     };
   },
   methods: {
-    stop(event) {
-      event.stopPropagation();
+    stop(event) {},
+    loadData() {
+      getData(`/social/group-task-manager/${this.$route.params.groupId}`).then(
+        (res) => {
+          if (res.success) {
+            this.tasks = res.dto;
+          }
+        }
+      );
     },
+    updateTask(taskId) {
+      this.$router.push(
+        `/group/${this.$route.params.groupId}/task/${taskId}/manager`
+      );
+    },
+    deleteTask(taskId) {
+      deleteData(
+        `/social/group-task-manager/${this.$route.params.groupId}/${taskId}`,
+        null,
+        true
+      ).then(res=>{
+        if(res.success){
+          this.loadData()
+        }
+      });
+    },
+  },
+  mounted() {
+    this.loadData();
   },
 };
 </script>
@@ -67,6 +107,8 @@ export default {
     line-height: 50px
     padding: 0
     margin: 0
+  a,div
+    align-self: center
 .cicle
   display: inline-block
   text-align: center
