@@ -1,4 +1,5 @@
 <template>
+
   <el-form ref="invite" :model="invite" label-width="120px">
     <el-form-item label="受邀人">
       <el-input
@@ -14,24 +15,25 @@
 </template>
 
 <script lang="ts">
-import { postData } from "@/js/common_data_operation"
+import { postData } from "@/js/common_data_operation";
+
 export default {
   data() {
     return {
       invite: {
-          invitees:"",
-          groupId:0
+        invitees: "",
+        groupId: 0,
       },
     };
   },
   methods: {
     invitePost() {
-      postData("/social/invite/",this.invite,true)
+      postData("/social/invite/", this.invite, true);
     },
   },
-  mounted(){
-      this.invite.groupId = this.$route.params.groupId
-  }
+  mounted() {
+    this.invite.groupId = this.$route.params.groupId;
+  },
 };
 </script>
 <style lang="sass" scoped>

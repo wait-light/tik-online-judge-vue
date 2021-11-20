@@ -1,11 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { mapGetters } from 'vuex'
 import backstage from '@/router/backstage'
 import group from '@/router/group'
 import groups from '@/router/groups'
+import store from '@/store/index'
+import isReleasePath from '@/router/release'
 const routes = [{
-    path:"/user-agreement",
-    component:()=>import("@/view/AutoRegister.vue")
-},{
+    path: "/user-agreement",
+    component: () => import("@/view/AutoRegister.vue")
+}, {
     path: "/redirect",
     component: () =>
         import("@/view/redirect.vue"),
@@ -81,5 +84,15 @@ const router = createRouter({
     // 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
     history: createWebHistory(),
     routes, // `routes: routes` 的缩写
+})
+//登录拦截
+router.beforeEach((to, from, next) => {
+    if (!store.getters["user/isLogin"] && isReleasePath(to.fullPath)) {
+        return next()
+    } else if (!store.getters["user/isLogin"]) {
+        return next({ path: "/login" })
+    } else {
+        return next()
+    }
 })
 export default router

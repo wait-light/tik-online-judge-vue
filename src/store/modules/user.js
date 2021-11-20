@@ -8,7 +8,11 @@ const state = () => ({
     }
 })
 // getters
-const getters = {}
+const getters = {
+    isLogin: state => {
+        return state.user.login
+    }
+}
 
 // actions
 const actions = {

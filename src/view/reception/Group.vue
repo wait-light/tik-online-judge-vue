@@ -55,6 +55,15 @@
             <a :href="href">任务管理</a>
           </li>
         </router-link>
+         <router-link
+          :to="`/group/${$route.params.groupId}/user-manager`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">人员管理</a>
+          </li>
+        </router-link>
       </ul>
     </el-col>
     <el-col :span="21" class="content-container">

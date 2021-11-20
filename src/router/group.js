@@ -53,6 +53,10 @@ export default {
             path: "problem/:problemId(\\d+)",
             component: () =>
                 import("@/components/reception/group/GroupProblemAdd.vue")
+        }, {
+            path: "user-manager",
+            component: () =>
+                import("@/components/reception/group/UserManager.vue")
         }
 
     ]

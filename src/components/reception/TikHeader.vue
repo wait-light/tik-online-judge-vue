@@ -36,6 +36,7 @@
 <script>
 import TikLogo from "@/components/common/TikLogo.vue";
 import { mapMutations, mapState, mapActions } from "vuex";
+import UserTitle from "@/components/common/UserTitle.vue";
 export default {
   methods: {
     ...mapMutations("user", ["logout"]),
@@ -48,6 +49,7 @@ export default {
   },
   components: {
     TikLogo,
+    UserTitle,
   },
   mounted() {
     if (this.user.login) {

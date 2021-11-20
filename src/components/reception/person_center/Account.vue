@@ -1,5 +1,29 @@
 <template>
   <h1 class="title">账号</h1>
+  <el-dialog v-model="avatar.edit" title="修改头像" width="300px">
+    <div style="text-align: center">
+      <uploder ref="uploder" @uploadCallback="uploadCallback"></uploder>
+      <el-button style="margin-top: 10px" type="primary" @click="updateAvatar"
+        >确认</el-button
+      >
+    </div>
+  </el-dialog>
+  <el-form
+    :inline="true"
+    class="person_form"
+    label-position="left"
+    :model="account"
+    label-width="120px"
+  >
+    <el-form-item label="头像">
+      <user-title
+       class="avatar"
+        @click="this.avatar.edit = true"
+        :uid="user.uid"
+        :showName="false"
+      ></user-title>
+    </el-form-item>
+  </el-form>
   <el-form
     :inline="true"
     class="person_form"
@@ -123,8 +147,12 @@
 <script>
 import { putData, getData, postData } from "@/js/common_data_operation";
 import { ElMessage } from "element-plus";
+import UserTitle from "@/components/common/UserTitle.vue";
+import { mapState } from "vuex";
+import uploder from "@/components/common/ImgUploader.vue";
 const emailReg = /^([a-zA-Z\d])(\w|\-)+@[a-zA-Z\d]+\.[a-zA-Z]{2,4}$/;
 export default {
+  components: { UserTitle, uploder },
   data() {
     const checkEmail = (rule, value, callback) => {
       if (!value) {
@@ -137,10 +165,14 @@ export default {
       }
     };
     return {
+      avatar: {
+        edit: false,
+        src: "",
+      },
       account: {
         nickname: {
-          value: "asdasdasd",
-          tempValue: "asdasdasd",
+          value: "",
+          tempValue: "",
           edit: false,
         },
         email: "",
@@ -177,6 +209,9 @@ export default {
     };
   },
   computed: {
+    ...mapState("user", {
+      user: (state) => state.user,
+    }),
     nickname() {
       if (this.account.email) {
         return this.account.email;
@@ -195,6 +230,24 @@ export default {
     this.accountMessage();
   },
   methods: {
+    uploadCallback(url) {
+      if (url) {
+        putData(
+          "/auth/verified/avatar",
+          {
+            avatar: url,
+          },
+          true
+        ).then((res) => {
+          if (res.success) {
+            location.reload();
+          }
+        });
+      }
+    },
+    updateAvatar() {
+      this.$refs.uploder.submitUpload();
+    },
     accountMessage() {
       getData("/auth/verified/nickname").then((res) => {
         if (res.success) {
@@ -282,11 +335,17 @@ export default {
   },
 };
 </script>
-
 <style lang="sass" scoped>
+@import "@/sass/_variables.sass"
 .title
-    margin: 0 0 25px 0
-    font-size: 20px
+  margin: 0 0 25px 0
+  font-size: 20px
 .person_form
     // margin-top: 10px
+.avatar:hover
+  cursor: pointer
+  &::after
+   content: "修改" 
+   font-size: 5px
+   color: $secondary-color
 </style>

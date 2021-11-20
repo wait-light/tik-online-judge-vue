@@ -5,7 +5,7 @@
     ></router-link
   >
 
-  <!-- <el-empty v-if="tasks" description="未发布任何任务"></el-empty> -->
+ 
   <router-link
     :to="`/group/${$route.params.groupId}/task/${item.id}`"
     v-for="item in tasks"
@@ -41,6 +41,7 @@
       </div>
     </div>
   </router-link>
+   <el-empty v-if="tasks" description="未发布任何任务"></el-empty>
 </template>
 <script>
 import { getData, deleteData } from "@/js/common_data_operation";

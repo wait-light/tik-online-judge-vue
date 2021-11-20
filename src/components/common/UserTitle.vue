@@ -7,6 +7,9 @@ import { getData } from "@/js/common_data_operation";
 export default {
   props: {
     uid: Number,
+    showName:{
+      default:true
+    },
   },
   components: {
     TikAvatar,
@@ -23,6 +26,9 @@ export default {
       getData("/auth/anonymous/index/" + this.uid).then((res) => {
         if (res.success) {
           this.user = res.dto;
+          if(!this.showName){
+            this.user.nickname = ""
+          }
         }
       });
     },

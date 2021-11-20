@@ -81,20 +81,21 @@ export default {
   display: flex
   padding: 5px 15px
   align-items: center
-  border-bottom: 1px solid var(--el-border-color-base)
+  border-bottom: $border
   height: 50px
   cursor: pointer
   margin: 0px
   color: black
   display: block
+  &:hover
+    background: $auxiliary-color
   div
-    font-size: 16px
+    font-size: 14px
     margin-bottom: 5px
-    span
-      color: $secondary-color
-      font-size: 12px
-.infinite-list-item:hover
-  background: $auxiliary-color
+    font-weight: 700
+  span
+    color: $secondary-color
+    font-size: 8px
 a
   text-decoration: none
 </style>

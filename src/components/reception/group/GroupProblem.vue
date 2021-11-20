@@ -296,8 +296,9 @@ export default {
       if (result.success) {
         this.table = result.list;
         this.pageInfo.pageSize = result.pageSize;
-        this.pageInfo.page = result.cuttentPage;
+        this.pageInfo.page = result.currentPage;
         this.pageInfo.total = result.total;
+        console.log(result);
       }
     },
   },

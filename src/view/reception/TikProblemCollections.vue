@@ -6,6 +6,10 @@
         <el-radio-button label="私人集"></el-radio-button>
       </el-radio-group>
     </div>
+    <el-empty
+      v-if="!table || (table && table.length <= 0)"
+      description="没有任何题集"
+    ></el-empty>
     <div class="collections">
       <div class="collections-item" v-for="item in table" :key="item.id">
         <el-icon>
@@ -13,7 +17,8 @@
         </el-icon>
         <el-link :href="'/problemlist/' + item.id">{{ item.name }}</el-link>
         <span class="endtime" v-if="item.beginTime >= item.endTime">长期</span>
-        <span class="endtime" v-else-if="new Date() > new Date(item.endTime)">已过期</span
+        <span class="endtime" v-else-if="new Date() > new Date(item.endTime)"
+          >已过期</span
         >
         <span class="endtime" v-else
           >{{ new Date(item.beginTime).toSimpleString() }} 到

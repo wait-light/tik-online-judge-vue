@@ -42,7 +42,7 @@
             <el-button
               style="margin-right: 10px"
               type="primary"
-              @click="updatePasswordByEmaild"
+              @click="updatePasswordByEmail"
               >修改</el-button
             >
           </el-form>
@@ -165,6 +165,7 @@ export default {
         if (!valid) {
           return false;
         }
+        console.log("asd");
         putData(
           "/auth/anonymous/index/password/username",
           {
