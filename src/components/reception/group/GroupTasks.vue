@@ -18,7 +18,7 @@
               <p>{{ item.name }}</p>
               <div>
                 <span class="task-item-time">
-                  开始时间：{{ item.endTime.toLocaleString() }}
+                  开始时间：{{ item.beginTime.toLocaleString() }}
                 </span>
                 <br />
                 <span class="task-item-time">
@@ -28,34 +28,23 @@
             </div>
           </router-link>
         </div>
-         <el-empty v-else description="什么任务也没有"></el-empty>
+        <el-empty v-else description="什么任务也没有"></el-empty>
       </el-collapse-item>
       <el-collapse-item title="未开始" name="3">
         <div v-if="notStart && notStart.length > 0">
-          <router-link
-            :to="`/group/${$route.params.groupId}/task/${item.id}`"
-            v-for="item in notStart"
-            :key="item.id"
-          >
-            <div class="task-item">
-              <span class="cicle">任务</span>
-              <!-- <el-image
-              style="width: 50px; height: 50px"
-              src="https://w.wallhaven.cc/full/k7/wallhaven-k7lpe6.png"
-              fit="cover"
-            ></el-image> -->
-              <p>{{ item.name }}</p>
-              <div>
-                <span class="task-item-time">
-                  开始时间：{{ item.endTime.toLocaleString() }}
-                </span>
-                <br />
-                <span class="task-item-time">
-                  结束时间：{{ item.endTime.toLocaleString() }}
-                </span>
-              </div>
+          <div class="task-item unbegin-task-item" v-for="item in notStart" :key="item.id">
+            <span class="cicle">任务</span>
+            <p>{{ item.name }}</p>
+            <div>
+              <span class="task-item-time">
+                开始时间：{{ item.beginTime.toLocaleString() }}
+              </span>
+              <br />
+              <span class="task-item-time">
+                结束时间：{{ item.endTime.toLocaleString() }}
+              </span>
             </div>
-          </router-link>
+          </div>
         </div>
         <el-empty v-else description="什么任务也没有"></el-empty>
       </el-collapse-item>
@@ -76,7 +65,7 @@
               <p>{{ item.name }}</p>
               <div>
                 <span class="task-item-time">
-                  开始时间：{{ new Date(item.endTime).toLocaleString() }}
+                  开始时间：{{ item.beginTime.toLocaleString() }}
                 </span>
                 <br />
                 <span class="task-item-time">
@@ -115,9 +104,9 @@ export default {
               element.beginTime = new Date(element.beginTime);
               if (element.endTime < now) {
                 this.expiredTask.push(element);
-              } else if (element.beginTime <= now <= element.endTime) {
+              } else if (element.beginTime <= now && now <= element.endTime) {
                 this.tasking.push(element);
-              } else if (this.beginTime < now) {
+              } else if (element.beginTime > now) {
                 this.notStart.push(element);
               }
             }
@@ -167,4 +156,7 @@ a
   font-size: 12px
   color: $secondary-color
   align-self: center
+.unbegin-task-item
+  &:hover
+    cursor: auto
 </style>

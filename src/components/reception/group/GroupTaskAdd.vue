@@ -104,13 +104,7 @@
 </template>
 <script>
 import { ElMessageBox, ElMessage } from "element-plus";
-import {
-  getData,
-  postData,
-  putData,
-  deleteData,
-  getList,
-} from "@/js/common_data_operation";
+import { getData, postData, getList } from "@/js/common_data_operation";
 export default {
   components: { ElMessageBox, ElMessage },
   data() {
@@ -120,6 +114,8 @@ export default {
       } else {
         if (this.task.endTime <= this.task.beginTime) {
           callback(new Error("开始时间必须小于截止时间"));
+        } else {
+          callback();
         }
       }
     };
@@ -127,7 +123,7 @@ export default {
       pageInfo: { total: 0, pageSize: 10, page: 1 },
       task: {
         title: "",
-        beginTime: "",
+        beginTime: new Date(),
         endTime: "",
       },
       dialogOpen: false,
@@ -276,8 +272,7 @@ export default {
       });
     },
   },
-  mounted() {
-  },
+  mounted() {},
 };
 </script>
 

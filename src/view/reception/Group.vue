@@ -6,7 +6,7 @@
         <h1>{{ group.name }}</h1>
       </el-card>
 
-      <ul>
+      <ul v-if="userType == 'COMMON'">
         <router-link
           :to="`/group/${$route.params.groupId}/tasks`"
           custom
@@ -16,7 +16,7 @@
             <a :href="href">任务</a>
           </li>
         </router-link>
-        <router-link
+        <!-- <router-link
           :to="`/group/${$route.params.groupId}/resource`"
           custom
           v-slot="{ href, isActive, navigate }"
@@ -24,10 +24,10 @@
           <li :class="[isActive && 'active-class']" @click="navigate">
             <a :href="href">资料</a>
           </li>
-        </router-link>
+        </router-link> -->
       </ul>
-      <el-divider></el-divider>
-      <ul>
+      <!-- <el-divider></el-divider> -->
+      <ul v-if="userType == 'MASTER'">
         <router-link
           :to="`/group/${$route.params.groupId}/invite`"
           custom
@@ -55,7 +55,7 @@
             <a :href="href">任务管理</a>
           </li>
         </router-link>
-         <router-link
+        <router-link
           :to="`/group/${$route.params.groupId}/user-manager`"
           custom
           v-slot="{ href, isActive, navigate }"
@@ -78,10 +78,12 @@ export default {
   data() {
     return {
       group: {},
+      userType: "",
     };
   },
   mounted() {
     this.loadData(this.$route.params.groupId);
+    this.getUserType();
   },
   methods: {
     loadData(id) {
@@ -90,6 +92,20 @@ export default {
           this.group = res.dto;
         }
       });
+    },
+    getUserType() {
+      getData(`/social/group-user/${this.$route.params.groupId}`).then(
+        (res) => {
+          if (res.success) {
+            this.userType = res.dto;
+            if (this.userType == "COMMON") {
+              this.$router.push(`/group/${this.$route.params.groupId}/tasks`);
+            } else if (this.userType == "MASTER") {
+              this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
+            }
+          }
+        }
+      );
     },
   },
 };

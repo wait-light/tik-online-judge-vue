@@ -2,9 +2,9 @@ export default {
     path: "/group/:groupId(\\d+)",
     component: () =>
         import("@/view/reception/Group.vue"),
-    redirect: to => {
-        return `/group/${to.params.groupId}/tasks`;
-    },
+    // redirect: to => {
+    //     return `/group/${to.params.groupId}/tasks`;
+    // },
     children: [
         {
             path: "tasks",
@@ -39,7 +39,7 @@ export default {
         {
             path: "task/:taskId(\\d+)/manager",
             component: () =>
-                import("@/components/reception/group/GroupTaskAdd.vue"),
+                import("@/components/reception/group/GroupTaskUserInfo.vue"),
         },
         {
             path: "problems",

@@ -10,7 +10,7 @@
       v-if="!table || (table && table.length <= 0)"
       description="没有任何题集"
     ></el-empty>
-    <div class="collections">
+    <div v-else class="collections">
       <div class="collections-item" v-for="item in table" :key="item.id">
         <el-icon>
           <folder />

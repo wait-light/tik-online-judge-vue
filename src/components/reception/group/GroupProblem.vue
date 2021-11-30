@@ -298,7 +298,6 @@ export default {
         this.pageInfo.pageSize = result.pageSize;
         this.pageInfo.page = result.currentPage;
         this.pageInfo.total = result.total;
-        console.log(result);
       }
     },
   },

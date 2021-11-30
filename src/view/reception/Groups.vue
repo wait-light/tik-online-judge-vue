@@ -10,11 +10,20 @@
         <el-radio-button label="我的群组"></el-radio-button>
         <el-radio-button label="受邀信息"></el-radio-button>
         <label
+        v-if="createable"
           @click="groupAdd.open = true"
           class="el-radio-button--medium"
           aria-checked="false"
           tabindex="-1"
           ><span class="el-radio-button__inner">创建群组</span></label
+        >
+        <label
+         v-if="!createable"
+          @click="groupCreatorApply.open = true"
+          class="el-radio-button--medium"
+          aria-checked="false"
+          tabindex="-1"
+          ><span class="el-radio-button__inner">申请创群</span></label
         >
       </el-radio-group>
     </div>
@@ -22,15 +31,28 @@
     <el-dialog v-model="groupAdd.open" title="创建群组">
       <group-add-or-update></group-add-or-update>
     </el-dialog>
+    <el-dialog v-model="groupCreatorApply.open" title="申请创建群组权限">
+      <group-creator-apply></group-creator-apply>
+    </el-dialog>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import GroupAddOrUpdate from "@/components/reception/group/GroupAddOrUpdate.vue";
+import groupCreatorApply from "@/components/reception/group/GroupCreatorApply.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 export default {
+  setup() {
+    const store = useStore();
+    return {
+      createable: computed(() => store.state.group.createable),
+    };
+  },
   components: {
     GroupAddOrUpdate,
+    groupCreatorApply,
   },
   data() {
     return {
@@ -38,8 +60,12 @@ export default {
       groupAdd: {
         open: false,
       },
+      groupCreatorApply: {
+        open: false,
+      },
     };
   },
+  computed: {},
   methods: {
     change(label) {
       console.log(this.type);

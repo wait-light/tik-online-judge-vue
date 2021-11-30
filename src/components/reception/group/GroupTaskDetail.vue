@@ -7,7 +7,7 @@
     >
     <el-divider></el-divider>
     <user-title :uid="task.createUserId"></user-title>
-    <span class="time">发布时间：{{ new Date().toLocaleString() }}</span>
+    <span class="time">发布时间：{{ new Date(task.createTime).toLocaleString() }}</span>
     <div>
       <p style="word-wrap: break-word">
         {{ task.taskIntroduce }}
@@ -114,13 +114,6 @@ export default {
     font-size: 18px
 .task-detail
   margin-top: 20px
-.avatar-container
-  display: inline-block
-  // height: 36px
-  span
-    margin-left: 10px
-    font-size: 12px
-    vertical-align: middle
 .time
   color: $secondary-color
   font-size: 8px

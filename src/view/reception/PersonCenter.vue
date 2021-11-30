@@ -6,12 +6,12 @@
         <el-menu-item index="/redirect?path=/personCenter/account">
           <span>账户</span>
         </el-menu-item>
-        <el-menu-item  index="/redirect?path=/">
+        <!-- <el-menu-item  index="/redirect?path=/">
           <span>个人信息</span>
         </el-menu-item>
         <el-menu-item>
           <span>登录记录</span>
-        </el-menu-item>
+        </el-menu-item> -->
       </el-menu>
     </el-col>
     <el-col :span="20">

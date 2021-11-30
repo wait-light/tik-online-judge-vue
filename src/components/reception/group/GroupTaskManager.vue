@@ -5,9 +5,8 @@
     ></router-link
   >
 
- 
   <router-link
-    :to="`/group/${$route.params.groupId}/task/${item.id}`"
+    :to="`/group/${$route.params.groupId}/task/${item.id}/manager`"
     v-for="item in tasks"
     :key="item"
     custom
@@ -41,7 +40,10 @@
       </div>
     </div>
   </router-link>
-   <el-empty v-if="tasks" description="未发布任何任务"></el-empty>
+  <el-empty
+    v-if="(tasks && tasks.length == 0)"
+    description="未发布任何任务"
+  ></el-empty>
 </template>
 <script>
 import { getData, deleteData } from "@/js/common_data_operation";
@@ -74,9 +76,9 @@ export default {
         `/social/group-task-manager/${this.$route.params.groupId}/${taskId}`,
         null,
         true
-      ).then(res=>{
-        if(res.success){
-          this.loadData()
+      ).then((res) => {
+        if (res.success) {
+          this.loadData();
         }
       });
     },
