@@ -57,11 +57,6 @@
           >
             <div class="task-item">
               <span class="cicle">任务</span>
-              <!-- <el-image
-              style="width: 50px; height: 50px"
-              src="https://w.wallhaven.cc/full/k7/wallhaven-k7lpe6.png"
-              fit="cover"
-            ></el-image> -->
               <p>{{ item.name }}</p>
               <div>
                 <span class="task-item-time">

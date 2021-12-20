@@ -174,18 +174,18 @@ public class Main{
     }
 }`,
       },
-//       {
-//         value: 2,
-//         label: "C++",
-//         mode: "text/x-c++src",
-//         template: `#include <iostream>
-// using namespace std;
-// int main()
-// {
+      {
+        value: 1,
+        label: "C++",
+        mode: "text/x-c++src",
+        template: `#include <iostream>
+using namespace std;
+int main()
+{
     
-//     return 0;
-// }`,
-//       },
+    return 0;
+}`,
+      },
     ],
     language: 0,
   }),

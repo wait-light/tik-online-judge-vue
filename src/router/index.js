@@ -48,7 +48,7 @@ const routes = [{
             component: () =>
                 import("@/view/reception/AddSolution.vue")
         }, {
-            path: "/solution/:solutionId(\\d+)",
+            path: "/solution/:problemId(\\d+)/:solutionId(\\d+)",
             component: () =>
                 import("@/view/reception/Solution.vue")
         }, {

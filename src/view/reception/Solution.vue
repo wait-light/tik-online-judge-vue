@@ -4,15 +4,18 @@
       <h3>{{ solution.title }}</h3>
       <div class="baseMessage-box">
         <user-title :uid="solution.uid"></user-title>
-        <span class="baseMessage"
-          >发布时间: {{ dateStringFormat(solution.createTime) }}</span
-        >
-        <span class="baseMessage"
-          >修改时间: {{ dateStringFormat(solution.updateTime) }}</span
-        >
+        <span class="baseMessage">发布时间: {{ dateStringFormat(solution.createTime) }}</span>
+        <span class="baseMessage">修改时间: {{ dateStringFormat(solution.updateTime) }}</span>
+
+        <router-link :to="`/problem/${$route.params.problemId}`">
+          <span class="baseMessage">前往问题详情</span>
+        </router-link>
       </div>
       <el-divider></el-divider>
       <md-editor v-model="solution.content" :previewOnly="true" />
+      <el-divider style="margin-top: 20px;"></el-divider>
+      <h1 class="comment-division">评论</h1>
+      <solution-comment></solution-comment>
     </el-col>
   </el-row>
   <el-backtop />
@@ -21,10 +24,11 @@
 <script>
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
-import { getOne} from "@/js/common_data_operation.js";
+import { getOne } from "@/js/common_data_operation.js";
 import UserTitle from "@/components/common/UserTitle.vue";
+import SolutionComment from "@/components/reception/solution/SolutionComment.vue";
 export default {
-  components: { MdEditor, UserTitle },
+  components: { MdEditor, UserTitle, SolutionComment },
   data() {
     return {
       solution: {
@@ -55,6 +59,10 @@ export default {
 
 <style lang="sass" scoped>
 @import '@/sass/_variables'
+.left-arrow
+  background: black
+.comment-division
+  font-size: 18px
 .box
   margin: 0 auto
   padding: 25px

@@ -2,9 +2,7 @@
   <div class="problem-detail-description el-tab-pane-box">
     <el-skeleton v-if="!problem.name" :rows="10" animated />
     <div v-if="problem.name">
-      <h1>
-        {{ problem.name }}
-      </h1>
+      <h1>{{ problem.name }}</h1>
       <h3>题目描述</h3>
       <md-editor v-model="problem.problemDescribe" :previewOnly="true" />
       <!-- <p>{{ problem.problemDescribe }}</p> -->
@@ -51,15 +49,16 @@ export default {
 </script>
 
 <style lang='sass' scoped>
+
 @import '@/sass/_variables'
 .problem-detail-description
-    padding: 0 15px
-    .data-io
-        background-color: $auxiliary-color
-        padding: 10px
+  padding: 0 15px
+  .data-io
+    background-color: $auxiliary-color
+    padding: 10px
     h1
-        font-size: 20px
-        text-align: center
+      font-size: 20px
+      text-align: center
     h3
-        font-size: 15px
+      font-size: 15px
 </style>

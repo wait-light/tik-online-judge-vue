@@ -10,12 +10,12 @@
     <router-link
       v-for="solution in solutions"
       :key="solution.id"
-      :to="`/solution/${solution.id}`"
+      :to="`/solution/${problemId}/${solution.id}`"
       target="_blank"
     >
       <li class="infinite-list-item">
         <div>{{ solution.title }}</div>
-        <span> {{ solution.content }}</span>
+        <span>{{ solution.content }}</span>
       </li>
     </router-link>
   </ul>

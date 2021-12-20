@@ -1,0 +1,15 @@
+a {
+  -webkit-text-decoration-line: none;
+          text-decoration-line: none;
+  color: #666699;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: #FFFFFF;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #eee;
+}
+/*# sourceMappingURL=tik-style.css.map */

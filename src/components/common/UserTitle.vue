@@ -1,5 +1,5 @@
 <template>
-  <tik-avatar :src="user.avatar" :name="user.nickname"></tik-avatar>
+  <tik-avatar :size="size" :src="user.avatar" :name="user.nickname"></tik-avatar>
 </template>
 <script>
 import TikAvatar from "@/components/common/TikAvatar.vue";
@@ -7,9 +7,12 @@ import { getData } from "@/js/common_data_operation";
 export default {
   props: {
     uid: Number,
-    showName:{
-      default:true
+    showName: {
+      default: true
     },
+    size: {
+      default: "medium"
+    }
   },
   components: {
     TikAvatar,
@@ -26,7 +29,7 @@ export default {
       getData("/auth/anonymous/index/" + this.uid).then((res) => {
         if (res.success) {
           this.user = res.dto;
-          if(!this.showName){
+          if (!this.showName) {
             this.user.nickname = ""
           }
         }

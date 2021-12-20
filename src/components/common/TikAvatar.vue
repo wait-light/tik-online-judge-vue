@@ -1,12 +1,18 @@
 <template>
   <div class="avatar-container">
-    <el-avatar size="medium" :src="src"></el-avatar>
-    <span>{{name}}</span>
+    <el-avatar :size="size" :src="src"></el-avatar>
+    <span>{{ name }}</span>
   </div>
 </template>
 <script>
 export default {
-  props:["src","name"]
+  props: {
+    src: String,
+    name: String,
+    size: {
+      default: "small"
+    }
+  }
 };
 </script>
 

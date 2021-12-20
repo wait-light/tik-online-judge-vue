@@ -1,0 +1,10 @@
+{
+    "version": 3,
+    "mappings": "ACaA,AAAA,CAAC,CAAC;EACE,oBAAoB,EAAE,IAAI;EAC1B,KAAK,EAbK,OAAO;CAaK;;ADd1B,AAAA,mBAAmB,CAAC;EAClB,KAAK,EAAE,GAAG;EACV,gBAAgB,ECHL,OAAO;CDGc;;AAClC,AAAA,yBAAyB,CAAC;EACxB,gBAAgB,ECFA,IAAI;CDEiB",
+    "sources": [
+        "tik-style.sass",
+        "_variables.sass"
+    ],
+    "names": [],
+    "file": "tik-style.css"
+}
