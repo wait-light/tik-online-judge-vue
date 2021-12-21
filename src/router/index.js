@@ -20,7 +20,7 @@ const routes = [{
         path: "",
         component: () =>
             import("@/components/reception/TikContent.vue"),
-        redirect: "problem-collection",
+        redirect: "posts",
         children: [{
             path: "problemlist/:id(\\d+)",
             component: () =>
@@ -64,10 +64,24 @@ const routes = [{
                 }
 
             ]
-        }, group, groups
+        }, {
+            path: "/posts",
+            component: () =>
+                import("@/view/reception/Moments.vue"),
+        }, {
+            path: "/post/:solutionId(\\d+)",
+            component: () => import("@/view/reception/Solution.vue")
+        },
+            group, groups
         ]
     }],
-}, {
+},
+{
+    path: "/poster",
+    component: () =>
+        import("@/view/reception/Poster.vue")
+},
+{
     path: "/login",
     component: () =>
         import("@/view/reception/Login.vue")

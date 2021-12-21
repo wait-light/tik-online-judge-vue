@@ -6,16 +6,24 @@
         <user-title :uid="solution.uid"></user-title>
         <span class="baseMessage">发布时间: {{ dateStringFormat(solution.createTime) }}</span>
         <span class="baseMessage">修改时间: {{ dateStringFormat(solution.updateTime) }}</span>
-
-        <router-link :to="`/problem/${$route.params.problemId}`">
-          <span class="baseMessage">前往问题详情</span>
-        </router-link>
       </div>
       <el-divider></el-divider>
-      <md-editor v-model="solution.content" :previewOnly="true" />
+      <div v-if="$route.params.problemId">
+        <router-link :to="`/problem/${$route.params.problemId}`" target="_blank">
+          <p class="to-detail">
+            <span>&#8592;</span>前往问题详情
+          </p>
+        </router-link>
+        <el-divider></el-divider>
+      </div>
+
+      <md-editor @onGetCatalog="onGetCatalog" v-model="solution.content" :previewOnly="true" />
       <el-divider style="margin-top: 20px;"></el-divider>
       <h1 class="comment-division">评论</h1>
       <solution-comment></solution-comment>
+    </el-col>
+    <el-col :lg="4" :md="4">
+      <catalog class="test" :heads="catalogList"></catalog>
     </el-col>
   </el-row>
   <el-backtop />
@@ -27,8 +35,9 @@ import "md-editor-v3/lib/style.css";
 import { getOne } from "@/js/common_data_operation.js";
 import UserTitle from "@/components/common/UserTitle.vue";
 import SolutionComment from "@/components/reception/solution/SolutionComment.vue";
+import Catalog from "@/components/common/Catalog.vue"
 export default {
-  components: { MdEditor, UserTitle, SolutionComment },
+  components: { MdEditor, UserTitle, SolutionComment, Catalog },
   data() {
     return {
       solution: {
@@ -36,6 +45,7 @@ export default {
         uid: 0,
       },
       solutioner: "匿名用户",
+      catalogList: []
     };
   },
   mounted() {
@@ -43,6 +53,9 @@ export default {
     this.getSolution();
   },
   methods: {
+    onGetCatalog(list) {
+      this.catalogList = list
+    },
     dateStringFormat(dateString) {
       return new Date(dateString).toSimpleString();
     },
@@ -58,7 +71,22 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 @import '@/sass/_variables'
+.test
+  position: -webkit-sticky
+  position: sticky
+  height: 500px
+  overflow: auto  
+  // width: 100px
+  top: 50px
+.to-detail
+  margin: -25px 0
+  padding: 20px
+  &:hover
+    background: $division-color
+  span
+    font-size: 20px
 .left-arrow
   background: black
 .comment-division

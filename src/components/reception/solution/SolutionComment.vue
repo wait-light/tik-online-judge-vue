@@ -18,6 +18,16 @@
                         </el-icon>
                         <span class="comment-reply-tip">{{ replying(comment.id) }}</span>
                     </span>
+                    <span
+                        v-if="user.uid == comment.uid"
+                        class="comment-delete"
+                        @click="deleteReply(comment.id)"
+                    >
+                        <el-icon>
+                            <delete />
+                        </el-icon>
+                        <span class="comment-delete-tip">删除</span>
+                    </span>
                 </div>
                 <div
                     v-if="currentReply == comment.id"
@@ -55,13 +65,16 @@
 </template>
 
 <script setup>
-import { Comment } from "@element-plus/icons"
+import { Comment, Delete } from "@element-plus/icons"
 import UserTitle from "@/components/common/UserTitle.vue"
-import { postData, getData } from "@/js/common_data_operation"
+import { postData, getData, deleteData } from "@/js/common_data_operation"
 import { ref } from "@vue/reactivity"
 import { onMounted } from "vue"
 import { useRoute } from "vue-router"
 import { ElMessage } from "element-plus"
+import { useStore } from "vuex"
+const store = useStore()
+const user = store.state.user.user
 const commentList = ref([])
 const replying = (id) => {
     if (id == currentReply.value) {
@@ -86,6 +99,14 @@ const load = () => {
     getData(`/social/solution/comment/${route.params.solutionId}/floor`).then(res => {
         commentList.value = res.dto
     })
+}
+const deleteReply = (commentId) => {
+    deleteData(`/social/solution/comment/${route.params.solutionId}/${commentId}`, null, true, "删除此评论将无法恢复")
+        .then(res => {
+            if (res.success) {
+                load()
+            }
+        })
 }
 const reply = (commentId, floorId, content) => {
     if (!content) {
@@ -119,7 +140,6 @@ onMounted(() => {
 </script>
 
 <style lang="sass" scoped>
-
 @import "@/sass/_variables.sass"
 .floor-comment
     border-radius: $small-radius
@@ -145,12 +165,14 @@ onMounted(() => {
     margin-top: 10px
     margin-bottom: -15px
     padding-bottom: 12px
-    .comment-reply-tip
+    .comment-reply-tip,.comment-delete-tip
         font-size: 5px
         color: $secondary-color
         position: relative
         top: -2px
-.comment-reply
+.comment-delete
+    margin-left: 10px
+.comment-reply,.comment-delete
     color: $secondary-color
     &:hover
         cursor: pointer
