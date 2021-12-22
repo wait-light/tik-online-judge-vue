@@ -1,5 +1,5 @@
 <template>
-  <el-row class="box">
+  <el-row justify="center" class="box">
     <el-col class="box-content" :lg="12" :md="16">
       <h3>{{ solution.title }}</h3>
       <div class="baseMessage-box">
@@ -19,14 +19,16 @@
 
       <md-editor @onGetCatalog="onGetCatalog" v-model="solution.content" :previewOnly="true" />
       <el-divider style="margin-top: 20px;"></el-divider>
-      <h1 class="comment-division">评论</h1>
+      <h1 id="comment" class="comment-division">评论</h1>
       <solution-comment></solution-comment>
     </el-col>
-    <el-col :lg="4" :md="4">
-      <catalog class="test" :heads="catalogList"></catalog>
+    <el-col :lg="5" :md="5" class>
+      <catalog class="catalog" :heads="catalogList"></catalog>
     </el-col>
   </el-row>
+
   <el-backtop />
+  <!-- <el-backtop /> -->
 </template>
 
 <script>
@@ -55,6 +57,8 @@ export default {
   methods: {
     onGetCatalog(list) {
       this.catalogList = list
+      // console.log(this.catalogList.length);
+      // console.log(this.catalogList);
     },
     dateStringFormat(dateString) {
       return new Date(dateString).toSimpleString();
@@ -73,13 +77,14 @@ export default {
 <style lang="sass" scoped>
 
 @import '@/sass/_variables'
-.test
-  position: -webkit-sticky
+.catalog
+  border-radius: $large-radius
   position: sticky
-  height: 500px
-  overflow: auto  
-  // width: 100px
-  top: 50px
+  max-height: 500px
+  width: 100%
+  overflow: auto
+  background: white
+  top: 75px
 .to-detail
   margin: -25px 0
   padding: 20px
@@ -92,11 +97,14 @@ export default {
 .comment-division
   font-size: 18px
 .box
-  margin: 0 auto
-  padding: 25px
-  width: 100%
+  background: #f9f9f9
+  // padding: 25px
+  // width: 100%
+  border-radius: $small-radius
   .box-content
-    margin: 0 auto
+    margin: 25px 5%
+    background: #fff
+    padding: 10px 25px
 .baseMessage
   color: $secondary-color
   margin-left: 10px

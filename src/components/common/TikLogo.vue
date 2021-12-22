@@ -18,12 +18,14 @@ export default {
 <style lang="sass" scoped>
 @import "@/sass/_variables"
 .tik-logo
+    width: 100px
     cursor: pointer
     img
         width: 40px
         height: 40px
         margin: 5px 0
     span
+        width: 60px
         display: inline-block
         font-size: 20px
         color: $minor-color

@@ -68,7 +68,6 @@ export default {
   computed: {},
   methods: {
     change(label) {
-      console.log(this.type);
       if (label === "我的群组") {
         this.$router.push("/groups/list");
       } else if (label === "受邀信息") {

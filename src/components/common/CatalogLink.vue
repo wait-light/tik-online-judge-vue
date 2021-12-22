@@ -1,10 +1,15 @@
 <template>
-    <div>
-        <el-link :style="style" :href="tocItem.href">{{ tocItem.text }}</el-link>
+    <div class="catalog-container">
+        <a
+            :name="tocItem.name"
+            class="catalog-link"
+            :style="style"
+            :title="tocItem.text"
+            :href="tocItem.href"
+        >{{ tocItem.text }}</a>
     </div>
-
-    <div v-if="tocItem.children" class="catalog-container">
-        <CatalogLink v-for="item of tocItem.children" :key="item.href" :tocItem="item" />
+    <div v-if="tocItem.children">
+        <catalog-link v-for="item of tocItem.children" :key="item.href" :tocItem="item" />
     </div>
 </template>
 
@@ -19,8 +24,27 @@ const { tocItem } = defineProps({
     class: [Object, String]
 });
 const style = ref({
-    "font-size": `${(6 - tocItem.level) * 1 + 12}px`,
-    "margin-left": `${(tocItem.level) * 20}px`,
-    "font-weight": `${(6 - tocItem.level) * 100 + 50}`
+    "padding-left": `${(tocItem.level) * 20}px`
 })
 </script>
+<style lang="sass" scoped>
+
+@import '@/sass/_variables'
+.catalog-container
+    width: 100%
+    overflow: hidden
+.catalog-link
+    white-space: nowrap
+    text-overflow: ellipsis
+    color: #000
+    padding: 5px
+    display: inline-block
+    overflow: hidden
+    line-height: 15px
+    font-size: 13px
+    width: 100%
+    margin: 0 10px
+    border-radius: $large-radius
+    &:hover
+        background: $auxiliary-color
+</style>

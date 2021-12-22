@@ -1,17 +1,50 @@
 <template>
+  <div class="header-placeholder">asd</div>
   <div class="tik-header">
+    <div class="tik-header-left-margin hidden-xs-only"></div>
     <div class="tik-header-left">
       <tik-logo @click="$router.push({ path: '/redirect', query: { path: '' } })"></tik-logo>
-      <div class="tik-header-left-buttons">
-        <router-link to="/posts">首页</router-link>
-        <router-link class="primary" to="/problem-collection">题集</router-link>
-        <router-link class="primary" to="/groups">群组</router-link>
-        <!-- <router-link to="/backstage">后台</router-link> -->
-      </div>
+      <nav class="tik-header-left-buttons">
+        <ul style="display:flex;" class="hidden-xs-only">
+          <li>
+            <router-link to="/posts">首页</router-link>
+          </li>
+          <li>
+            <router-link class="primary" to="/problem-collection">题集</router-link>
+          </li>
+          <li>
+            <router-link class="primary" to="/groups">群组</router-link>
+          </li>
+        </ul>
+        <!-- <ul>asdasd</ul> -->
+        <ul class="phone-show hidden-sm-and-up" @click="show = !show">
+          <span>首页</span>
+          <el-icon>
+            <arrow-down />
+          </el-icon>
+        </ul>
+        <ul v-show="show" class="tik-header-left-buttons-phone hidden-sm-and-up">
+          <li>
+            <router-link to="/posts">首页</router-link>
+          </li>
+          <li>
+            <router-link class="primary" to="/problem-collection">题集</router-link>
+          </li>
+          <li>
+            <router-link class="primary" to="/groups">群组</router-link>
+          </li>
+          <li>
+             <el-icon>
+          <edit></edit>
+        </el-icon>
+            <router-link class="primary" to="/poster">写文章</router-link>
+          </li>
+        </ul>
+      </nav>
     </div>
 
     <div class="tik-header-right">
-      <router-link to="/poster" class="link-button">
+      <router-link to="/poster" class="link-button hidden-xs-only">
         写文章
         <el-icon>
           <edit></edit>
@@ -35,7 +68,8 @@
 </template>
 
 <script>
-import { Edit } from "@element-plus/icons";
+import 'element-plus/theme-chalk/display.css';
+import { Edit, ArrowDown } from "@element-plus/icons";
 import TikLogo from "@/components/common/TikLogo.vue";
 import { mapMutations, mapState, mapActions } from "vuex";
 import UserTitle from "@/components/common/UserTitle.vue";
@@ -51,7 +85,7 @@ export default {
   },
   components: {
     TikLogo,
-    UserTitle, Edit
+    UserTitle, Edit, ArrowDown
   },
   mounted() {
     if (this.user.login) {
@@ -59,15 +93,36 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      show: false
+    };
   },
 };
 </script>
 <style lang="sass" scoped>
+
 @import "@/sass/_variables"
+.tik-header-left-margin
+  &:before
+    content: ""
+    display: table
+    clear: both
+    margin-left: 5em
+.header-placeholder
+  height: 50px
+  &:before
+    content: "."
+    display: table
+    color: transparent
+    clear: both
+  &:after
+    content: "."
+    display: table
+    color: transparent
+    clear: both
 .link-button
   display: inline-block
-  // background: black
+  width: fit-content
   align-self: center
   font-size: 15px
   margin-right: 20px
@@ -80,6 +135,9 @@ export default {
   // box-sizing: border-box
   // margin: 20px
 .tik-header
+  position: fixed
+  top: 0px
+  z-index: 1000
   width: 100%
   height: 50px
   justify-content: space-between
@@ -87,33 +145,59 @@ export default {
   display: flex
   box-shadow: 0 2px 4px rgba(0,0,0,0.12),0 0 6px rgba(0,0,0,0.04)
 .tik-header-right
-  // margin-right: 100px
   height: 50px
-  width: 250px
-  // padding: 0
+  width: 350px
   display: flex
 .button
   display: inline-block
   margin-right: 5px
-  height: 50px
+  margin-top: 12px
+  // height: 50px
   color: $secondary-color
 .tik-header-left
   width: 100%
   display: flex
-  padding-left: 5rem
-  span
-    font-size: 30px
-    color: $minor-color
-    margin-left: 50px
-    position: absolute
-    top: 10px
-  .tik-header-left-buttons
-    margin-left: 120px
-  a
-    display: inline-block
+  margin-left: 20px
+  // padding-left: 5rem
+  // justify-content: center
+  .phone-show
+    margin: 0
+    padding: 0
+    // background: black
+    width: 120px
+    color: blue
     line-height: 50px
-    margin-right: 15px
-    font-size: 20px
-    text-decoration: none
-    color: $secondary-color
+    text-align: center
+    color: $minor-color
+    &:hover
+      cursor: pointer
+    // text-align: center 
+  .tik-header-left-buttons-phone
+    background: white
+    height: fit-content
+    border: $border
+    width: 120px
+    padding: 0
+    border-radius: $large-radius
+    box-shadow: $box-shadow
+    text-align: center
+    li
+      margin: 10px 0
+      // padding: 5px 30px
+  .tik-header-left-buttons
+    width: fit-content
+  ul
+    height: 50px
+    margin: 0
+    width: 100%
+  li
+    align-self: center
+    list-style: none
+    margin-right: 10px
+    padding: 0
+    &:hover
+      a
+        padding: 0
+        margin: 0
+        color: $secondary-color
 </style>

@@ -89,7 +89,7 @@ onMounted(() => {
     }
 })
 const load = () => {
-    return getData(`/social/post/list?pageSize=10&page=${pageInfo.value.page}&type=${type.value}&oderBy=${pageInfo.value.orderBy}`, false)
+    return getData(`/social/post/list?pageSize=10&page=${pageInfo.value.page}&type=${type.value}&${pageInfo.value.orderBy}`, false)
         .then(res => {
             if (res.success) {
                 for (let index = 0; index < res.list.length; index++) {
@@ -110,11 +110,11 @@ watch(route, () => {
         type.value = route.query.type
     }
     if (type.value == 1) {
-        pageInfo.value.orderBy = "view desc"
+        pageInfo.value.orderBy = "orderBy=orderBy view desc"
     } else if (type.value == 2) {
-        pageInfo.value.orderBy = "create_time desc"
+        pageInfo.value.orderBy = "orderBy=orderBy create_time desc"
     } else {
-        pageInfo.value.orderBy = "create_time desc"
+        pageInfo.value.orderBy = ""
     }
     pageInfo.value.hasNext = true
     pageInfo.value.page = 1
@@ -135,10 +135,10 @@ const timeStr = (time) => {
         return `${Math.floor(distance / 60)}小时前`
     } else if (distance < 43200) {
         return `${Math.floor(distance / 1440)}天前`
-    } else if (distance < 1296000) {
+    } else if (distance < 518400) {
         return `${Math.floor(distance / 43200)}月前`
     } else {
-        return `${Math.floor(distance / 1269000)}年前`
+        return `${Math.floor(distance / 518400)}年前`
     }
 }
 </script>
@@ -150,7 +150,7 @@ const timeStr = (time) => {
         color: $minor-color !important
 .content-box
     background: #f9f9f9
-    height: 100%
+    height: fit-content
     padding: 10px 0
 .division
     display: inline-block
@@ -181,11 +181,14 @@ const timeStr = (time) => {
                 top: 5px
         .post-title
             color: #444
-            font-weight: 600
+            font-weight: 700
+            // line-height: 24px
+            text-overflow: ellipsis
+            font-size: 16px
             margin: 8px 0px
         .post-content
-            font-size: 12px
-            color: #555
+            font-size: 13px
+            color: #86909c
         .post-info
             margin-top: 5px
             .post-info-item

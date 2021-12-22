@@ -1,6 +1,6 @@
 <template>
   <el-row style="padding: 0">
-    <el-col :span="3" class="menu-container">
+    <el-col :xs="8" :span="6" :lg="3" class="menu-container">
       <el-card shadow="never">
         <img :src="group.avatar" class="image" />
         <h1>{{ group.name }}</h1>
@@ -66,7 +66,7 @@
         </router-link>
       </ul>
     </el-col>
-    <el-col :span="21" class="content-container">
+    <el-col :xs="16" :span="18" :lg="21" class="content-container">
       <router-view></router-view>
     </el-col>
   </el-row>

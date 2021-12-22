@@ -78,7 +78,6 @@ export default {
 <style lang='sass' scoped>
 @import "@/sass/_variables"
 .container
-  width: 1200px
   margin: 0 auto
 .invite-info
   display: flex
