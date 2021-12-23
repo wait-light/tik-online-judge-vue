@@ -151,6 +151,7 @@ const timeStr = (time) => {
 .content-box
     background: #f9f9f9
     height: fit-content
+    // min-height: 100%
     padding: 10px 0
 .division
     display: inline-block
