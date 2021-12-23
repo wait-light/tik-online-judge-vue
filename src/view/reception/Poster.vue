@@ -1,25 +1,51 @@
 <template>
-    <div class="title-box">
-        <input placeholder="请输入文章标题..." max="64" v-model="post.title" />
-        <div class="operation">
-            <el-button type="primary" @click="doPost">发布</el-button>
+    <div v-loading="loading" element-loading-text="正在载入文章">
+        <div class="title-box">
+            <input placeholder="请输入文章标题..." max="64" v-model="post.title" />
+            <div class="operation">
+                <el-button type="primary" size="mini" @click="doPost">{{ res }}</el-button>
+                <el-button type="info" size="mini" @click="router.push({ path: '/redirect', query: { path: '' } })">返回首页</el-button>
+            </div>
         </div>
-    </div>
 
-    <md-editor class="editor" v-model="post.content" />
+        <md-editor class="editor" v-model="post.content" />
+    </div>
 </template>
 
 <script setup>
 import MdEditor from "@/components/common/TikMdEditor.vue"
-import { ref } from "@vue/reactivity"
+import { computed, ref } from "@vue/reactivity"
 import { ElMessage } from "element-plus"
-import { postData } from "@/js/common_data_operation"
-import { useRouter } from "vue-router"
+import { getData, postData, putData } from "@/js/common_data_operation"
+import { useRoute, useRouter } from "vue-router"
 const post = ref({
     content: "",
     title: ""
 })
+const loading = ref(false)
+const route = useRoute();
+const res = computed(() => {
+    if (route.params.posterId) {
+        getPost()
+        return "修改"
+    } else {
+        return "发布"
+    }
+})
 const router = useRouter()
+const getPost = () => {
+    loading.value = true
+    getData(`/social/post/${route.params.posterId}`).then(res => {
+        if (res.success) {
+            post.value = res.dto
+        } else {
+            ElMessage.error(res.msg)
+        }
+        loading.value = false
+    }).catch((err) => {
+        loading.value = false
+    })
+}
 const doPost = () => {
     if (!post.value.title) {
         ElMessage.warning("标题不能为空")
@@ -29,12 +55,24 @@ const doPost = () => {
         ElMessage.warning("内容不能为空")
         return
     }
-    postData(`/social/post`, post.value, true)
-        .then(res => {
-            if (res.success) {
-                router.push(`/post/${res.id}`)
-            }
-        })
+    //新增
+    if (!post.value.id) {
+        postData(`/social/post`, post.value, true)
+            .then(res => {
+                if (res.success) {
+                    router.push(`/post/${res.id}`)
+                }
+            })
+        //修改
+    } else {
+        putData(`/social/post`, post.value, true)
+            .then(res => {
+                if (res.success) {
+                    router.push(`/post/${post.value.id}`)
+                }
+            })
+    }
+
 }
 </script>
 
@@ -52,6 +90,7 @@ const doPost = () => {
         outline: none
         border: 0
     .operation
+        display: flex
         margin: 0 20px
         align-self: center
         width: fit-content

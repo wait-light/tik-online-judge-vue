@@ -82,6 +82,11 @@ const routes = [{
         import("@/view/reception/Poster.vue")
 },
 {
+    path: "/poster/:posterId(\\d+)",
+    component: () =>
+        import("@/view/reception/Poster.vue")
+},
+{
     path: "/login",
     component: () =>
         import("@/view/reception/Login.vue")
@@ -92,8 +97,17 @@ const routes = [{
         import("@/view/reception/PasswordReset.vue")
 }
     , backstage,
+{
+    path: "/notfound",
+    name: "notfound404",
+    component: () => import("@/view/NotFound.vue")
+},
 // 将匹配所有内容并将其放在 `$route.params.pathMatch` 下
-{ path: '/:pathMatch(.*)*', name: 'NotFound', component: () => import("@/view/NotFound.vue") }]
+{
+    path: '/:pathMatch(.*)*', name: 'NotFound', redirect: {
+        name: "notfound404"
+    }
+}]
 const router = createRouter({
     // 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
     history: createWebHistory(),

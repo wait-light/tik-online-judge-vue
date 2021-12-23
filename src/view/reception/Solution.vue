@@ -17,13 +17,14 @@
         <el-divider></el-divider>
       </div>
 
-      <md-editor @onGetCatalog="onGetCatalog" v-model="solution.content" :previewOnly="true" />
+      <md-editor :previewTheme="'vuepress'" @onGetCatalog="onGetCatalog" v-model="solution.content" :previewOnly="true" />
       <el-divider style="margin-top: 20px;"></el-divider>
       <h1 id="comment" class="comment-division">评论</h1>
       <solution-comment></solution-comment>
     </el-col>
     <el-col :lg="5" :md="5" class>
-      <catalog class="catalog" :heads="catalogList"></catalog>
+   
+      <catalog  :anchorOffset="-50" class="catalog" :heads="catalogList"></catalog>
     </el-col>
   </el-row>
 
@@ -57,8 +58,6 @@ export default {
   methods: {
     onGetCatalog(list) {
       this.catalogList = list
-      // console.log(this.catalogList.length);
-      // console.log(this.catalogList);
     },
     dateStringFormat(dateString) {
       return new Date(dateString).toSimpleString();

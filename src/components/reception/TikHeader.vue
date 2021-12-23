@@ -1,5 +1,5 @@
 <template>
-  <div class="header-placeholder">asd</div>
+  <div class="header-placeholder"></div>
   <div class="tik-header">
     <div class="tik-header-left-margin hidden-xs-only"></div>
     <div class="tik-header-left">

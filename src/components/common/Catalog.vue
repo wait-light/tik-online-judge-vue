@@ -19,6 +19,10 @@ const props = defineProps({
     class: String, Object,
     browsingClass: {
         default: `catalog-browsing`
+    },
+    anchorOffset: {
+        type: Number,
+        default: 0
     }
 });
 const tocItems: TocItem[] = [];
@@ -46,17 +50,14 @@ const getTargetByUrl = (url) => {
 }
 const toTarget = (hash) => {
     let newIndex = getTargetByUrl(hash.newURL)
-    // let oldIndex = getTargetByUrl(hash.oldURL)s
     let now = findTargetByname(newIndex)
+
     if (now) {
         now.classList.add(props.browsingClass)
-        // console.log(now.offsetTop);
-        // console.log();
         //到目录中部
-        // console.log(now.offsetTop + (cataLogSelf.clientHeight / 2));
         cataLogSelf.scrollTo(0, now.offsetTop - cataLogSelf.clientHeight / 2 + now.scrollHeight / 2)
     }
-    if (lastNameDocument) {
+    if (lastNameDocument && lastNameDocument != now) {
         lastNameDocument.classList.remove(props.browsingClass)
     }
     lastNameDocument = now
@@ -74,14 +75,8 @@ const upBrowsing = () => {
     for (const item of targetDocuments) {
         const target = item
         if (target) {
-            // console.log(target);
-
-            let minY = target.offsetTop
-            minY -= 50
-            let maxY = minY + target.offsetHeight
-            // console.log(`minY:${minY} maxY:${maxY} windows:${window.scrollY}`);
-
-            if (window.scrollY >= minY && window.scrollY <= maxY) {
+            //锚点位于窗口中，点亮目录中的对应点
+            if (window.scrollY >= target.minY && window.scrollY <= target.maxY) {
                 const current = catalogDocuments[index]
                 if (lastNameDocument && current != lastNameDocument) {
                     lastNameDocument.classList.remove(props.browsingClass)
@@ -91,7 +86,6 @@ const upBrowsing = () => {
                 } else {
                     current.classList.add(props.browsingClass)
                     cataLogSelf.scrollTo(0, current.offsetTop - cataLogSelf.clientHeight / 2 + current.scrollHeight / 2)
-
                 }
                 lastNameDocument = current
                 return
@@ -104,16 +98,46 @@ const upBrowsing = () => {
 const prepareDocument = (tocs) => {
     for (const item of tocs) {
         const target = document.getElementById(item.name)
-        const catalogItem = document.getElementsByName(item.name)
+        const catalogItem = document.getElementsByName(`${item.name}-anchor`)
         if (catalogItem && catalogItem.length > 0) {
-            catalogItem[0].name = item.name
             catalogDocuments.push(catalogItem[0])
         }
         if (target) {
-            targetDocuments.push(target)
+            // targetDocuments.push(target)
+            let tikAnchor = target.getElementsByClassName("tik-anchor")
+            if (tikAnchor.length == 0) {
+                let anchor = document.createElement('a');
+                anchor.id = `${item.name}-anchor`
+                anchor.className = "tik-anchor"
+                let offset = props.anchorOffset
+                anchor.setAttribute("style", `display: inline-block; position: relative; height: 0;top: ${offset}px;`)
+                anchor.minY = target.offsetTop + offset
+                anchor.maxY = anchor.minY + target.offsetHeight
+                target.insertAdjacentElement("beforebegin", anchor)
+                const autoAnchor = target.getElementsByTagName("a")
+                if (autoAnchor.length > 0) {
+                    const autoAnchorItem = autoAnchor[0]
+                    autoAnchorItem.href = `#${item.name}-anchor`
+                }
+                targetDocuments.push(anchor)
+            } else {
+                let anchor = tikAnchor[0]
+                anchor.minY = target.offsetTop + offset
+                anchor.maxY = anchor.minY + target.offsetHeight
+            }
+
         }
         if (item.children && item.children.length > 0) {
             prepareDocument(item.children)
+        }
+    }
+}
+const resizeTargetRange = () => {
+    let len = targetDocuments.length
+    for (let index = 0; index < len; index++) {
+        const element = targetDocuments[index];
+        if (index + 1 < len) {
+            element.maxY = targetDocuments[index + 1].minY
         }
     }
 }
@@ -121,7 +145,7 @@ onUpdated(() => {
     targetDocuments.splice(0, targetDocuments.length);
     catalogDocuments.splice(0, catalogDocuments.length)
     prepareDocument(tocItems)
-    // console.log(catalogDocuments,tocItems);
+    resizeTargetRange()
     upBrowsing()
 })
 const catalogs = computed(() => {
@@ -136,7 +160,7 @@ const catalogs = computed(() => {
         let name = `heading-${num}`
         lastLevel = level
         text = `${levels[lastLevel]++}. ${text}`
-        const item = { level, text, href: `#heading-${num++}`, name };
+        const item = { level, text, href: `#heading-${num++}-anchor`, name };
         if (tocItems.length === 0) {
             // 第一个 item 直接 push
             tocItems.push(item);
