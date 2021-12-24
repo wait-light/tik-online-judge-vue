@@ -17,28 +17,37 @@
           </li>
         </ul>
         <!-- <ul>asdasd</ul> -->
-        <ul class="phone-show hidden-sm-and-up" @click="show = !show">
-          <span>首页</span>
+        <ul
+          @mouseenter="show = true"
+          @mouseleave="show = false"
+          class="phone-show hidden-sm-and-up"
+        >
+          <router-link to="/posts">
+            <span>首页</span>
+          </router-link>
+
           <el-icon>
             <arrow-down />
           </el-icon>
-        </ul>
-        <ul v-show="show" class="tik-header-left-buttons-phone hidden-sm-and-up">
-          <li>
-            <router-link to="/posts">首页</router-link>
-          </li>
-          <li>
-            <router-link class="primary" to="/problem-collection">题集</router-link>
-          </li>
-          <li>
-            <router-link class="primary" to="/groups">群组</router-link>
-          </li>
-          <li>
-             <el-icon>
-          <edit></edit>
-        </el-icon>
-            <router-link class="primary" to="/poster">写文章</router-link>
-          </li>
+          <ul v-show="show" class="tik-header-left-buttons-phone hidden-sm-and-up">
+            <router-link to="/posts">
+              <li>首页</li>
+            </router-link>
+            <router-link to="/problem-collection">
+              <li>题集</li>
+            </router-link>
+            <router-link to="/groups">
+              <li>群组</li>
+            </router-link>
+
+            <router-link to="/poster">
+              <li>
+                <el-icon>
+                  <edit></edit>
+                </el-icon>写文章
+              </li>
+            </router-link>
+          </ul>
         </ul>
       </nav>
     </div>

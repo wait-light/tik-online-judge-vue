@@ -1,28 +1,11 @@
 <template>
-  <div
-    class="problem-detail-box"
-    @mouseup="cloasDrag"
-    @mousemove="boxWidthDrag"
-  >
+  <div class="problem-detail-box" @mouseup="cloasDrag" @mousemove="boxWidthDrag">
     <el-tabs type="card" :style="{ width: leftBoxWidth }">
-      <el-dialog
-        v-if="user.login"
-        v-model="submitDetail.open"
-        v-loading="submitDetail.open"
-        title="源码"
-      >
-        <el-button type="info" size="mini" @click="copyCode"
-          >点击复制</el-button
-        >
-        <pre class="code-box">{{ submitDetail.content }}</pre>
-      </el-dialog>
       <el-tab-pane label="问题详情">
-        <problem-detail
-          v-if="problem.id"
-          :problemId="problem.id"
-        ></problem-detail>
+        <problem-detail v-if="problem.id" :problemId="problem.id"></problem-detail>
       </el-tab-pane>
       <el-tab-pane
+        :lazy="true"
         class="el-tab-pane-box"
         style="padding: 10px"
         label="提交"
@@ -31,27 +14,27 @@
         <el-button @click="submit" type="success" size="small">提交</el-button>
         <el-button @click="reloadSubmit" type="info" size="small">刷新记录</el-button>
         <problem-submit-list
-        style="margin-top:10px;"
+          style="margin-top:10px;"
           ref="submit"
           v-if="problem.id"
           :problemId="problem.id"
         ></problem-submit-list>
       </el-tab-pane>
-      <el-tab-pane label="题解">
+      <el-tab-pane :lazy="true" label="题解">
         <div class="el-tab-pane-box" style="padding: 5px 15px">
           <el-button
             v-if="user.login"
             type="primary"
+            style="margin-bottom: 12px;"
             size="mini"
             @click="$router.push('/addSolution/' + problem.id)"
-            >写题解</el-button
-          >
+          >写题解</el-button>
           <tik-solution-list :problemId="problem.id"></tik-solution-list>
         </div>
       </el-tab-pane>
       <!-- <el-tab-pane label="排行">
         <div class="el-tab-pane-box submit-box"></div>
-      </el-tab-pane> -->
+      </el-tab-pane>-->
     </el-tabs>
 
     <div @mousedown="openDrag" @mouseup="cloasDrag" class="box-size-slider">
@@ -63,6 +46,11 @@
       <tik-code-editor ref="editor"></tik-code-editor>
     </div>
   </div>
+
+  <!-- <el-dialog v-if="user.login" v-model="submitDetail.open" title="源码">
+    <el-button v-loading="submitDetail.open" type="info" size="mini" @click="copyCode">点击复制</el-button>
+    <pre class="code-box">{{ submitDetail.content }}</pre>
+  </el-dialog> -->
 </template>
 
 <script>

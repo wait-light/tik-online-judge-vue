@@ -2,13 +2,28 @@
     <div v-loading="loading" element-loading-text="正在载入文章">
         <div class="title-box">
             <input placeholder="请输入文章标题..." max="64" v-model="post.title" />
-            <div class="operation">
-                <el-button type="primary" size="mini" @click="doPost">{{ res }}</el-button>
-                <el-button type="info" size="mini" @click="router.push({ path: '/redirect', query: { path: '' } })">返回首页</el-button>
+            <div style="width:130px; margin:auto 10px;">
+                <el-dropdown>
+                    <el-button size="mini" type="primary">
+                        {{ res }}
+                        <el-icon class="el-icon--right">
+                            <ArrowDown />
+                        </el-icon>
+                    </el-button>
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item
+                                @click="router.push({ path: '/redirect', query: { path: '' } })"
+                            >返回首页</el-dropdown-item>
+                            <el-dropdown-item
+                                @click="goWhere('https://www.runoob.com/markdown/md-tutorial.html')"
+                            >Markdown教程</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
             </div>
         </div>
-
-        <md-editor class="editor" v-model="post.content" />
+        <md-editor :historyLength="20" class="editor" v-model="post.content" />
     </div>
 </template>
 
@@ -18,6 +33,7 @@ import { computed, ref } from "@vue/reactivity"
 import { ElMessage } from "element-plus"
 import { getData, postData, putData } from "@/js/common_data_operation"
 import { useRoute, useRouter } from "vue-router"
+import { ArrowDown } from "@element-plus/icons"
 const post = ref({
     content: "",
     title: ""
@@ -33,6 +49,9 @@ const res = computed(() => {
     }
 })
 const router = useRouter()
+const goWhere = (url) => {
+    window.open(url, "_blank")
+}
 const getPost = () => {
     loading.value = true
     getData(`/social/post/${route.params.posterId}`).then(res => {

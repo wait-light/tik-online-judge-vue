@@ -1,32 +1,25 @@
 <template>
   <div style="min-width: 510px" class="el-tab-pane-box submit-box">
-    <el-dialog
-      v-if="user.login"
-      v-model="submitDetail.open"
-      v-loading="submitDetail.open"
-      title="源码"
-    >
-      <el-button type="info" size="mini" @click="copyCode">点击复制</el-button>
-      <pre class="code-box">{{ submitDetail.content }}</pre>
+    <el-dialog v-if="user.login" v-model="submitDetail.open" title="源码">
+      <el-button type="info" v-loading="submitDetail.loading" size="mini" @click="copyCode">点击复制</el-button>
+      <pre v-loading="submitDetail.loading" class="code-box">{{ submitDetail.content }}</pre>
     </el-dialog>
     <div style="box-shadow: 5px 6px 5px #eee">
       <el-collapse accordion>
-        <el-collapse-item
-          v-for="submitResult in submitResults"
-          :key="submitResult.submitId"
-        >
+        <el-collapse-item v-for="submitResult in submitResults" :key="submitResult.submitId">
           <template #title>
             <el-button
               style="margin-right: 10px"
               @click="getSubmitDetail(submitResult.submitId)"
               size="mini"
-              >查看详情</el-button
-            >
+            >查看详情</el-button>
             <span class="tips">提交时间：</span>
             {{ new Date(submitResult.createTime).toLocaleString() }}
-            <el-tag class="submit-tag" :type="resultType(submitResult)">{{
-              resultTypeString(submitResult)
-            }}</el-tag>
+            <el-tag class="submit-tag" :type="resultType(submitResult)">
+              {{
+                resultTypeString(submitResult)
+              }}
+            </el-tag>
           </template>
           <el-table
             :header-cell-style="{ textAlign: 'center' }"
@@ -36,16 +29,18 @@
           >
             <el-table-column type="expand">
               <template #default="props">
-                <span class="tips"> 错误信息 ：</span>
+                <span class="tips">错误信息 ：</span>
                 {{ props.row.errorOutput }}
               </template>
             </el-table-column>
             <el-table-column prop="executionTime" label="执行时间(ms)" />
             <el-table-column label="运行结果">
               <template #default="scope">
-                <el-tag size="mini" :type="judgeStatusType(scope.row)">{{
-                  scope.row.judgeStatus
-                }}</el-tag>
+                <el-tag size="mini" :type="judgeStatusType(scope.row)">
+                  {{
+                    scope.row.judgeStatus
+                  }}
+                </el-tag>
               </template>
             </el-table-column>
           </el-table>
@@ -57,6 +52,7 @@
 <script>
 import { getOne } from "@/js/common_data_operation.js";
 import { mapState } from "vuex";
+import { ElMessage } from "element-plus";
 export default {
   props: ["problemId"],
   data() {
@@ -65,6 +61,7 @@ export default {
       submitDetail: {
         open: false,
         content: "",
+        loading: false
       },
     };
   },
@@ -100,11 +97,16 @@ export default {
     },
     getSubmitDetail(id) {
       this.submitDetail.open = true;
+      // this.submitDetail.
+      this.submitDetail.loading = true
       getOne(`/executor/submit/${id}`).then((result) => {
         if (result.success) {
           this.submitDetail.content = result.dto.content;
         }
-      });
+        this.submitDetail.loading = false
+      }).catch(err => {
+        this.submitDetail.loading = false
+      })
     },
     resultTypeString(submit) {
       if (!submit.status) {

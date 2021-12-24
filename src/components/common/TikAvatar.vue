@@ -20,7 +20,7 @@ export default {
 .avatar-container
   margin: 3px 6px
   display: inline-block
-  // width: 80px
+  // width: 100%
   span
     margin-left: 10px
     font-size: 12px
