@@ -7,10 +7,23 @@ export default {
     // },
     children: [
         {
+            path: "problem",
+            component: () =>
+                import("@/components/reception/group/GroupProblemAdd.vue")
+        }, {
+            path: "problem/:problemId(\\d+)",
+            component: () =>
+                import("@/components/reception/group/GroupProblemAdd.vue")
+        }, {
+            path: "user-manager",
+            component: () =>
+                import("@/components/reception/group/UserManager.vue")
+        }, {
             path: "tasks",
             component: () =>
                 import("@/components/reception/group/GroupTasks.vue"),
-        }, {
+        },
+        {
             path: "resource",
             component: () =>
                 import("@/components/reception/group/GroupResource.vue"),
@@ -45,18 +58,6 @@ export default {
             path: "problems",
             component: () =>
                 import("@/components/reception/group/GroupProblem.vue")
-        }, {
-            path: "problem",
-            component: () =>
-                import("@/components/reception/group/GroupProblemAdd.vue")
-        }, {
-            path: "problem/:problemId(\\d+)",
-            component: () =>
-                import("@/components/reception/group/GroupProblemAdd.vue")
-        }, {
-            path: "user-manager",
-            component: () =>
-                import("@/components/reception/group/UserManager.vue")
         }
 
     ]

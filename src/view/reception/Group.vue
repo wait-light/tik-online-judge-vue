@@ -5,7 +5,6 @@
         <img :src="group.avatar" class="image" />
         <h1>{{ group.name }}</h1>
       </el-card>
-
       <ul v-if="userType == 'COMMON'">
         <router-link
           :to="`/group/${$route.params.groupId}/tasks`"
@@ -24,7 +23,7 @@
           <li :class="[isActive && 'active-class']" @click="navigate">
             <a :href="href">资料</a>
           </li>
-        </router-link> -->
+        </router-link>-->
       </ul>
       <!-- <el-divider></el-divider> -->
       <ul v-if="userType == 'MASTER'">
@@ -94,18 +93,23 @@ export default {
       });
     },
     getUserType() {
-      getData(`/social/group-user/${this.$route.params.groupId}`).then(
-        (res) => {
-          if (res.success) {
-            this.userType = res.dto;
-            if (this.userType == "COMMON") {
-              this.$router.push(`/group/${this.$route.params.groupId}/tasks`);
-            } else if (this.userType == "MASTER") {
-              this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
-            }
-          }
-        }
-      );
+      //  TODO 暂时取消权限认证
+      this.userType = "MASTER"
+      // console.log("asd",this.userType,"MASTER");
+      // this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
+      // getData(`/social/group-user/${this.$route.params.groupId}`).then(
+      //   (res) => {
+      //     if (res.success) {
+      //       console.log(res);
+      //       this.userType = res.dto;
+      //       if (this.userType == "COMMON") {
+      //         this.$router.push(`/group/${this.$route.params.groupId}/tasks`);
+      //       } else if (this.userType == "MASTER") {
+      //         this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
+      //       }
+      //     }
+      //   }
+      // );
     },
   },
 };

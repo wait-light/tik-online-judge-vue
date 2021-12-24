@@ -1,12 +1,33 @@
 <template>
+  <el-steps :space="200" :active="1" simple>
+    <el-step title="标题" :icon="Edit"></el-step>
+    <el-step title="问题描述" :icon="UploadFilled"></el-step>
+    <el-step title="输入描述" :icon="Picture"></el-step>
+    <el-step title="输出描述" :icon="Picture"></el-step>
+    <el-step title="输入样例" :icon="Picture"></el-step>
+    <el-step title="输出样例" :icon="Picture"></el-step>
+    <!-- <el-step title="共享" :icon="Picture"></el-step>
+    <el-step title="启用" :icon="Picture"></el-step>
+    <el-step title="上传" :icon="Picture"></el-step>-->
+  </el-steps>
+
+  <el-carousel :height="'calc( 100vh - 80px)'" :autoplay="false" arrow="always">
+    <el-carousel-item class="step-box">
+      <div class="step-box-item">
+        <h1>标题</h1>
+        <el-input placeholder="标题">asssdf</el-input>
+      </div>
+    </el-carousel-item>
+    <el-carousel-item>
+      <div style="margin:auto 0">asdasd</div>
+    </el-carousel-item>
+  </el-carousel>
+  <!-- <div class="step-box">
+    <div class="step-box-item">1</div>
+    <div class="step-box-item">2</div>
+  </div>-->
   <h4 style="text-align: center">{{ typeDescribe }}</h4>
-  <el-form
-    :rules="rules"
-    class="container"
-    ref="problem"
-    :model="problem"
-    label-width="80px"
-  >
+  <el-form :rules="rules" class="container" ref="problem" :model="problem" label-width="80px">
     <el-form-item label="名称" prop="name">
       <el-input v-model="problem.name"></el-input>
     </el-form-item>
@@ -32,12 +53,8 @@
       <el-switch v-model="problem.share"></el-switch>
     </el-form-item>
     <el-form-item label="操作">
-      <el-button v-if="!problem.id" type="primary" @click="addProblem"
-        >添加</el-button
-      >
-      <el-button v-if="problem.id" type="warning" @click="updateProblem"
-        >修改</el-button
-      >
+      <el-button v-if="!problem.id" type="primary" @click="addProblem">添加</el-button>
+      <el-button v-if="problem.id" type="warning" @click="updateProblem">修改</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -162,6 +179,18 @@ export default {
 };
 </script>
 <style lang="sass" scoped>
+
+.step-box
+  display: flex
+  height: 100%
+  justify-content: center
+  .step-box-item
+    display: block
+    text-align: center
+    // position: absolute
+    margin: auto 0
+    // height: 100%
+    // width: 100%
 .container
-    padding: 10px 15px
+  padding: 10px 15px
 </style>

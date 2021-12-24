@@ -29,7 +29,6 @@
       </div>
 
       <md-editor
-        :previewTheme="'vuepress'"
         @onGetCatalog="onGetCatalog"
         v-model="solution.content"
         :previewOnly="true"

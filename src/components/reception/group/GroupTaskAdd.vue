@@ -4,27 +4,13 @@
       <el-input v-model="task.name"></el-input>
     </el-form-item>
     <el-form-item label="描述">
-      <el-input
-        type="textarea"
-        :rows="8"
-        v-model="task.taskIntroduce"
-      ></el-input>
+      <el-input type="textarea" :rows="8" v-model="task.taskIntroduce"></el-input>
     </el-form-item>
     <el-form-item label="开始时间" prop="beginTime">
-      <el-date-picker
-        v-model="task.beginTime"
-        type="datetime"
-        placeholder="选择开启时间"
-      >
-      </el-date-picker>
+      <el-date-picker v-model="task.beginTime" type="datetime" placeholder="选择开启时间"></el-date-picker>
     </el-form-item>
     <el-form-item label="截止时间" prop="endTime">
-      <el-date-picker
-        v-model="task.endTime"
-        type="datetime"
-        placeholder="选择截止时间"
-      >
-      </el-date-picker>
+      <el-date-picker v-model="task.endTime" type="datetime" placeholder="选择截止时间"></el-date-picker>
     </el-form-item>
     <el-form-item label="选题">
       <el-tag
@@ -33,11 +19,8 @@
         :key="item[0]"
         class="collection-item"
         closable
-        >{{ item[1] }}</el-tag
-      >
-      <el-button type="success" size="small" @click="dialogOpen = true"
-        >新增问题</el-button
-      >
+      >{{ item[1] }}</el-tag>
+      <el-button type="success" size="small" @click="dialogOpen = true">新增问题</el-button>
     </el-form-item>
     <el-form-item>
       <el-button @click="submit" type="warning" size="small">发布</el-button>
@@ -59,20 +42,9 @@
         v-model="collection"
         placeholder="请选择题集"
       >
-        <el-option
-          v-for="item in collections"
-          :key="item.id"
-          :label="item.name"
-          :value="item.id"
-        >
-        </el-option>
+        <el-option v-for="item in collections" :key="item.id" :label="item.name" :value="item.id"></el-option>
       </el-select>
-      <el-button
-        class="problem-add-button"
-        type="success"
-        @click="dialogOpen = false"
-        >添加</el-button
-      >
+      <el-button class="problem-add-button" type="success" @click="dialogOpen = false">添加</el-button>
       <el-table
         ref="problemsTable"
         @select="probelmSelect"
@@ -83,9 +55,7 @@
         <el-table-column type="selection" width="55"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="createTime" label="创建时间" width="180">
-          <template #default="scope">
-            {{ new Date(scope.row.createTime).toLocaleString() }}
-          </template>
+          <template #default="scope">{{ new Date(scope.row.createTime).toLocaleString() }}</template>
         </el-table-column>
       </el-table>
       <el-pagination
@@ -97,14 +67,14 @@
         :page-size="pageInfo.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageInfo.total"
-      >
-      </el-pagination>
+      ></el-pagination>
     </el-dialog>
   </el-form>
 </template>
 <script>
 import { ElMessageBox, ElMessage } from "element-plus";
 import { getData, postData, getList } from "@/js/common_data_operation";
+var now = new Date()
 export default {
   components: { ElMessageBox, ElMessage },
   data() {
@@ -115,7 +85,11 @@ export default {
         if (this.task.endTime <= this.task.beginTime) {
           callback(new Error("开始时间必须小于截止时间"));
         } else {
-          callback();
+          if (now > this.task.beginTime) {
+            callback(new Error("开始时间必须大于当前时间"));
+          } else {
+            callback();
+          }
         }
       }
     };
@@ -172,7 +146,7 @@ export default {
               .then(() => {
                 canSubmit = true;
               })
-              .catch((res) => {});
+              .catch((res) => { });
           }
           if (canSubmit) {
             ElMessageBox.confirm("确认发布?", "Warning", {
@@ -199,7 +173,7 @@ export default {
                   }
                 });
               })
-              .catch((res) => {});
+              .catch((res) => { });
           }
         }
         return valid;
@@ -272,7 +246,7 @@ export default {
       });
     },
   },
-  mounted() {},
+  mounted() { },
 };
 </script>
 
