@@ -28,10 +28,10 @@
       </el-radio-group>
     </div>
 
-    <el-dialog v-model="groupAdd.open" title="创建群组">
+    <el-dialog  v-model="groupAdd.open" title="创建群组">
       <group-add-or-update></group-add-or-update>
     </el-dialog>
-    <el-dialog v-model="groupCreatorApply.open" title="申请创建群组权限">
+    <el-dialog :width="getDialogSize()" v-model="groupCreatorApply.open" title="申请创建群组权限">
       <group-creator-apply></group-creator-apply>
     </el-dialog>
     <router-view></router-view>
@@ -74,6 +74,13 @@ export default {
         this.$router.push("/groups/invite-info");
       }
     },
+    getDialogSize(){
+      if(window.innerWidth < 992){
+        return '90%'
+      }else{
+        return '50%'
+      }
+    }
   },
   mounted() {
     if (this.$route.href == "/groups/invite-info") {

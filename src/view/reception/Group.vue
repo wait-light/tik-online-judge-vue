@@ -1,6 +1,6 @@
 <template>
   <el-row style="padding: 0">
-    <el-col :xs="8" :span="6" :lg="3" class="menu-container">
+    <el-col v-if="!isMobile()" :md="3" class="menu-container">
       <el-card shadow="never">
         <img :src="group.avatar" class="image" />
         <h1>{{ group.name }}</h1>
@@ -65,7 +65,71 @@
         </router-link>
       </ul>
     </el-col>
-    <el-col :xs="16" :span="18" :lg="21" class="content-container">
+    <el-col v-if="isMobile()" class="menu-container-phone">
+      <ul v-if="userType == 'COMMON'">
+        <router-link
+          :to="`/group/${$route.params.groupId}/tasks`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">任务</a>
+          </li>
+        </router-link>
+        <!-- <router-link
+          :to="`/group/${$route.params.groupId}/resource`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">资料</a>
+          </li>
+        </router-link>-->
+      </ul>
+      <!-- <el-divider></el-divider> -->
+      <ul v-if="userType == 'MASTER'">
+        <router-link
+          :to="`/group/${$route.params.groupId}/invite`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">邀请</a>
+          </li>
+        </router-link>
+        <router-link
+          :to="`/group/${$route.params.groupId}/problems`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">题库</a>
+          </li>
+        </router-link>
+        <router-link
+          :to="`/group/${$route.params.groupId}/task/manager`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">任务管理</a>
+          </li>
+        </router-link>
+        <router-link
+          :to="`/group/${$route.params.groupId}/user-manager`"
+          custom
+          v-slot="{ href, isActive, navigate }"
+        >
+          <li :class="[isActive && 'active-class']" @click="navigate">
+            <a :href="href">人员管理</a>
+          </li>
+        </router-link>
+      </ul>
+    </el-col>
+    <el-col v-if="!isMobile()" :md="21" class="content-container">
+      <router-view></router-view>
+    </el-col>
+    <el-col v-if="isMobile()" :xs="24" class="content-container-phone">
       <router-view></router-view>
     </el-col>
   </el-row>
@@ -73,6 +137,7 @@
 
 <script>
 import { getData } from "@/js/common_data_operation";
+import { isMobile } from "@/js/backstage/mobile";
 export default {
   data() {
     return {
@@ -92,6 +157,7 @@ export default {
         }
       });
     },
+    isMobile,
     getUserType() {
       //  TODO 暂时取消权限认证
       this.userType = "MASTER"
@@ -108,7 +174,7 @@ export default {
       //         this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
       //       }
       //     }
-      //   }
+      //   }content-container-phone
       // );
     },
   },
@@ -119,8 +185,10 @@ export default {
 .menu-container
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04)
   padding: 0
-  overflow: scroll
-  height: calc( 100vh - 50px )
+  margin: 0
+  border: 0
+  // overflow: scroll 
+  height: calc( 100vh - 55px )
   h1
     text-align: center
     font-size: 6px
@@ -136,11 +204,37 @@ export default {
         background: $auxiliary-color
         cursor: pointer
     a
+      text-decoration-line: nonecontent-container-phone
+.menu-container-phone
+  padding: 0
+  margin: 0
+  border-bottom: $border
+  display: flex
+  height: 50px
+  // overflow: scroll 
+  ul
+    margin: auto 0
+    display: flex
+    list-style: none
+    text-align: center
+    padding: 0
+    li
+      border-radius: $large-radius
+      padding: 10px
+      font-size: 15px
+      &:hover
+        background: $auxiliary-color
+        cursor: pointer
+    a
       text-decoration-line: none
 .content-container
-  margin-top: 5px
-  padding: 20px 30px 20px 40px
-  height: calc( 100vh - 55px )
+  padding: 20px 10px 10px 20px
+  height: 100%
+  box-sizing: border-box
+  overflow: scroll
+.content-container-phone
+  padding: 20px 10px 10px 20px
+  height: calc( 100vh - 100px )
   box-sizing: border-box
   overflow: scroll
 .active-class
