@@ -104,21 +104,27 @@ const load = () => {
         })
 
 }
-const route = useRoute()
-watch(route, () => {
+const typeSetting = () => {
     if (route.query.type) {
         type.value = route.query.type
     }
     if (type.value == 1) {
-        pageInfo.value.orderBy = "orderBy=orderBy view desc"
+        pageInfo.value.orderBy = "orderBy=view desc"
     } else if (type.value == 2) {
-        pageInfo.value.orderBy = "orderBy=orderBy create_time desc"
+        pageInfo.value.orderBy = "orderBy=create_time desc"
     } else {
         pageInfo.value.orderBy = ""
     }
     pageInfo.value.hasNext = true
     pageInfo.value.page = 1
     posts.value.splice(0, posts.value.length)
+}
+onMounted(() => {
+    typeSetting()
+})
+const route = useRoute()
+watch(route, () => {
+    typeSetting()
 })
 const goPost = (id) => {
     window.open(`/post/${id}`, '_blank');

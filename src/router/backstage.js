@@ -17,6 +17,10 @@ export default {
             import("@/components/backstage/user/UserList.vue")
     },
     {
+        path:"ask",
+        component:()=>import("@/components/backstage/menu/Ask.vue")
+    },
+    {
         path: "problem",
         component: () =>
             import("@/components/backstage/problem/ProblemList.vue")

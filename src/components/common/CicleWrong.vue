@@ -7,7 +7,7 @@
 @import "@/sass/_variables"
 .cicle-wrong
     &::after 
-        content: "×"
+        content: "W"
         display: inline-block
         text-align: center
         background: $info-color

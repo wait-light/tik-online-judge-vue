@@ -58,23 +58,23 @@
             <el-form-item label="输出样例">
               <el-input rows="9" type="textarea" v-model="problem.output"></el-input>
             </el-form-item>
-            <el-form-item>
-              <el-button v-if="!problem.id" type="primary" @click="addProblem">添加</el-button>
-              <el-button v-if="problem.id" type="warning" @click="updateProblem">修改</el-button>
-              <!-- <el-button type="success" @click="">保存</el-button> -->
-            </el-form-item>
           </el-form>
         </el-carousel-item>
       </el-carousel>
       <div style="float:right;margin-top:10px">
-        <el-button size="mini" @click="preStep">上一步</el-button>
-        <el-button size="mini" @click="netStep">下一步</el-button>
+        <el-form :rules="rules" class="container" ref="problem" :model="problem" label-width="80px">
+          <el-form-item prop="name"></el-form-item>
+          <el-form-item prop="problemDescribe"></el-form-item>
+        </el-form>
+        <el-button size="mini" v-if="hasPre" @click="preStep">上一步</el-button>
+        <el-button size="mini" v-if="hasNext" @click="netStep">下一步</el-button>
+        <el-button v-if="!problem.id" size="mini" type="primary" @click="addProblem">添加</el-button>
+        <el-button v-if="problem.id" size="mini" type="warning" @click="updateProblem">修改</el-button>
       </div>
     </el-col>
   </el-row>
 
   <!-- <h4 style="text-align: center">{{ typeDescribe }}</h4> -->
-  <el-form :rules="rules" class="container" ref="problem" :model="problem" label-width="80px"></el-form>
 </template>
 
 <script>
@@ -82,6 +82,7 @@ import { commonajaxWithData, getOne } from "@/js/common_data_operation.js";
 import MdEditor from "md-editor-v3";
 import { isMobile } from "@/js/backstage/mobile";
 import "md-editor-v3/lib/style.css";
+import { ElMessage } from 'element-plus';
 //禁用tab跳转，防止出现页面畸形
 document.onkeydown = function HandleTabKey(evt) {
   if (evt.keyCode == 9) {
@@ -97,7 +98,7 @@ document.onkeydown = function HandleTabKey(evt) {
 
 export default {
   components: {
-    MdEditor,
+    MdEditor
   },
   data() {
     return {
@@ -107,43 +108,26 @@ export default {
           {
             required: true,
             trigger: "blur",
+            message: "标题不能为空"
           },
         ],
         problemDescribe: [
           {
             required: true,
             trigger: "blur",
+            message: "问题描述不能为空"
           },
-        ],
-        inputDescrible: [
-          {
-            required: true,
-            trigger: "blur",
-          },
-        ],
-        outputDescrible: [
-          {
-            required: true,
-            trigger: "blur",
-          },
-        ],
-        input: [
-          {
-            required: true,
-            trigger: "blur",
-          },
-        ],
-        output: [
-          {
-            required: true,
-            trigger: "blur",
-          },
-        ],
+        ]
       },
       type: "add",
       problem: {
+        name: "",
         status: true,
         collectionId: 0,
+        problemDescribe: "",
+        inputDescrible: "",
+        outputDescrible: ""
+
       },
       typeDescribe: "问题添加",
     };
@@ -158,6 +142,14 @@ export default {
       this.problem.id = this.$route.params.problemId;
       this.typeDescribe = "问题修改";
       this.loadProblemData();
+    }
+  },
+  computed: {
+    hasNext: function () {
+      return this.active < 4
+    },
+    hasPre: function () {
+      return this.active != 0
     }
   },
   methods: {
@@ -179,7 +171,7 @@ export default {
       });
     },
     updateProblem() {
-      this.$refs["problem"].validate((valid) => {
+      this.$refs["problem"].validate((valid, err) => {
         if (valid) {
           commonajaxWithData(
             `/executor/collection-group/problems/${this.$route.params.groupId}`,
@@ -195,13 +187,25 @@ export default {
           });
           return true;
         } else {
+          let keys = Object.keys(err)
+          let message = ""
+          let index = 1
+          for (let key of keys) {
+            let value = err[key]
+            for (let v of value) {
+              message += index + ". " + v.message + "\n"
+              index++
+            }
+          }
+          ElMessage.error(message)
           return false;
         }
       });
     },
     addProblem() {
-      this.$refs["problem"].validate((valid) => {
+      this.$refs["problem"].validate((valid, err) => {
         if (valid) {
+          console.log(this.problem, valid);
           commonajaxWithData(
             `/executor/collection-group/problems/${this.$route.params.groupId}`,
             "post",
@@ -216,6 +220,18 @@ export default {
           });
           return true;
         } else {
+
+          let keys = Object.keys(err)
+          let message = ""
+           let index = 1
+          for (let key of keys) {
+            let value = err[key]
+            for (let v of value) {
+               message += index + ". " + v.message + "\n"
+               index ++
+            }
+          }
+          ElMessage.error(message)
           return false;
         }
       });
@@ -250,5 +266,9 @@ export default {
     width: 80%
     margin: auto 0
 .container
-  padding: 10px 15px
+  position: absolute
+  left: 0
+  display: none
+  // padding: 10px 15px
+  width: 0
 </style>

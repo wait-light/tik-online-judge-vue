@@ -7,7 +7,7 @@
 @import "@/sass/_variables"
 .cicle-success
     &::after
-        content: "√"
+        content: "T"
         display: inline-block
         text-align: center
         background: $success-color
