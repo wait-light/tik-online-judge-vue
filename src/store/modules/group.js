@@ -8,17 +8,17 @@ const getters = {}
 
 // actions
 const actions = {
-    setCreateable(state, createable) {
-        state.createable = createable
+    createableGet(context) {
+        getOne('/auth/verified/power/createable').then(res => {
+            context.commit("setCreateable", res.success)
+        })
     }
 }
 
 // mutations
 const mutations = {
-    createableGet(context) {
-        getOne('/power/createable').then(res => {
-            context.commit("setCreateable", res.success)
-        })
+    setCreateable(state, createable) {
+        state.createable = createable
     }
 }
 

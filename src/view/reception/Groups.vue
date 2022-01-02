@@ -46,6 +46,8 @@ import { computed } from "vue";
 export default {
   setup() {
     const store = useStore();
+    console.log(store)
+    store.dispatch("group/createableGet")
     return {
       createable: computed(() => store.state.group.createable),
     };
@@ -67,6 +69,7 @@ export default {
   },
   computed: {},
   methods: {
+    
     change(label) {
       if (label === "我的群组") {
         this.$router.push("/groups/list");

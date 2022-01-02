@@ -6,9 +6,6 @@
     label-width="80px"
     :rules="rules"
   >
-    <el-form-item label="地址" prop="address">
-      <el-input v-model="creatorApply.address"></el-input>
-    </el-form-item>
     <el-form-item label="申请原因" prop="reason">
       <el-input
         type="textarea"
@@ -27,15 +24,8 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 import { postData } from "@/js/common_data_operation";
-const creatorApply = ref({ address: "", reason: "" });
+const creatorApply = ref({ reason: "", name: "group-create" });
 const rules = {
-  address: [
-    {
-      trigger: "blur",
-      required: true,
-      message: "地址不能为空",
-    },
-  ],
   reason: [
     {
       trigger: "blur",
@@ -48,7 +38,7 @@ const submitForm = ref(null);
 const prepareSave = () => {
   submitForm.value.validate((valid) => {
     if (valid) {
-      postData("/social/group-creator-apply/apply", creatorApply.value, true);
+      postData("/auth/role-ask/ask", creatorApply.value, true);
     }
   });
 };

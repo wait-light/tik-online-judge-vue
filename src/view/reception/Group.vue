@@ -137,7 +137,7 @@
 
 <script>
 import { getData } from "@/js/common_data_operation";
-import { isMobile } from "@/js/backstage/mobile";
+import { isMobile } from "@/js/mobile";
 export default {
   data() {
     return {
