@@ -3,6 +3,7 @@
     <el-form-item label="上级菜单">
       <!-- <Edit  /> -->
       <el-cascader
+        @change="handleParentChange"
         v-model="newMenu.parentId"
         placeholder="选择上级菜单"
         :options="menus"
@@ -17,19 +18,13 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item label="名称">
-      <el-input placeholder="请输入名称" v-model="newMenu.name" clearable> </el-input>
+      <el-input placeholder="请输入名称" v-model="newMenu.name" clearable></el-input>
     </el-form-item>
     <el-form-item label="排序">
-      <el-input-number
-        v-model="newMenu.order"
-        :min="1"
-        :max="100"
-        label="请输入排序"
-      ></el-input-number>
+      <el-input-number v-model="newMenu.order" :min="1" :max="100" label="请输入排序"></el-input-number>
     </el-form-item>
     <el-form-item label="权限标识">
-      <el-input placeholder="请输入权限标识" v-model="newMenu.perms" clearable>
-      </el-input>
+      <el-input placeholder="请输入权限标识" v-model="newMenu.perms" clearable></el-input>
     </el-form-item>
     <el-form-item label="路由地址" v-if="newMenu.type != 2">
       <el-input placeholder="请输入路由地址" v-model="newMenu.url" clearable></el-input>
@@ -40,6 +35,7 @@
         width="40vw"
         v-model:visible="iconBoxVisible"
         trigger="click"
+        value
         title="图标"
       >
         <template #reference>
@@ -65,15 +61,8 @@
       </el-popover>
     </el-form-item>
     <el-form-item>
-      <el-button @click="prepareSave" v-if="!newMenu.id || newMenu.id == 0" type="success"
-        >保存</el-button
-      >
-      <el-button
-        @click="prepareUpdate"
-        v-if="newMenu.id && newMenu.id != 0"
-        type="success"
-        >修改</el-button
-      >
+      <el-button @click="prepareSave" v-if="!newMenu.id || newMenu.id == 0" type="success">保存</el-button>
+      <el-button @click="prepareUpdate" v-if="newMenu.id && newMenu.id != 0" type="success">修改</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -96,11 +85,12 @@ const out = {
     return {
       newMenu: {
         type: 0,
+        parentId: 0
       },
       value: [],
       menus: [],
       props: {
-        value: "id",
+        children: "children",
         label: "name",
         checkStrictly: true,
       },
@@ -118,6 +108,9 @@ const out = {
     this.newMenu = this.menu;
   },
   methods: {
+    handleParentChange(nodes) {
+      this.newMenu.parentId = nodes[nodes.length - 1]
+    },
     async getMenus() {
       let result = await commonajaxWithData("/auth/menu/tree/");
       if (result.success) {
@@ -156,6 +149,8 @@ const out = {
     },
     async prepareUpdate() {
       this.prepareMenu();
+      console.log(this.newMenu);
+      console.log();
       let result = await update("/auth/menu", this.newMenu.id, this.newMenu);
       if (result.success) {
         this.$emit("updateMenus");
@@ -163,6 +158,7 @@ const out = {
     },
     async prepareSave() {
       this.prepareMenu();
+
       let result = await save("/auth/menu/", this.newMenu, true);
       if (result.success) {
         this.$emit("updateMenus");

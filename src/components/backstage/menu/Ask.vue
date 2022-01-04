@@ -1,18 +1,25 @@
 <template>
     <div>
-        <email v-for="item in 10" :key="item" :style="{'margin-right':'30px'}" :width="500" :height="300" :bottom="200">
+        <email
+            v-for="(item,index) in messages"
+            :key="item"
+            :style="{ 'margin-right': '30px' }"
+            :width="500"
+            :height="300"
+            :bottom="200"
+        >
             <div class="content-box">
                 <h6 class="title">管理员：</h6>
-                <p class="title-role">我想申请：【阿萨德】</p>
-                <p class="content">{{ content }}</p>
+                <p class="title-role">我想申请：【 {{ item.name }} 】</p>
+                <p class="content">{{ item.reason }}</p>
                 <h6 class="sign">
-                    <span class="name">某个用户</span>
-                    {{ new Date().toChineseDateShortString() }}
+                    <span class="name">{{ item.nickname }}</span>
+                    {{ new Date(item.createTime).toChineseDateShortString() }}
                 </h6>
             </div>
             <div class="operate">
-                <el-button type="danger" size="mini">拒绝</el-button>
-                <el-button style="margin-right: 10px;" type="success" size="mini">通过</el-button>
+                <el-button type="danger" size="mini"  @click="examine(index,'FAIL')">拒绝</el-button>
+                <el-button style="margin-right: 10px;" type="success" size="mini" @click="examine(index,'ADOPT')">通过</el-button>
             </div>
         </email>
     </div>
@@ -20,13 +27,35 @@
 
 <script setup>
 import Email from "@/components/common/Email.vue"
+import { getData, putData } from "@/js/common_data_operation";
 import { ref } from "@vue/reactivity"
-let a = "a"
-for (let i = 0; i < 256; i++) {
-    a += "a";
+import { onMounted } from "vue";
+const pageInfo = ref({
+    page: 1,
+    pageSize: 10,
+    hasNext: false
+})
+const messages = ref([])
+const examine = (index, status) => {
+    putData(`/auth/role-ask-admin/${messages.value[index].id}/${status}`, null, true).then(res => {
+        if (res.success) {
+            messages.value.splice(index, 1)
+        }
+    })
 }
-const content = ref(a)
-
+const loadData = () => {
+    getData(`/auth/role-ask-admin/list?pageSize=${pageInfo.value.pageSize}&page=${pageInfo.value.page}`).then(res => {
+        if (res.success) {
+            pageInfo.value.hasNext = res.hasNextPage
+            pageInfo.value.page++
+            pageInfo.value.pageSize = res.pageSize
+            messages.value = res.list
+        }
+    })
+}
+onMounted(() => {
+    loadData()
+})
 </script>
 
 <style lang="sass" scoped>

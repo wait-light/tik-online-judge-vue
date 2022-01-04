@@ -7,16 +7,10 @@
     :rules="rules"
   >
     <el-form-item label="申请原因" prop="reason">
-      <el-input
-        type="textarea"
-        placeholder="请输入申请原因（不超过255个字符）"
-        v-model="creatorApply.reason"
-      ></el-input>
+      <el-input type="textarea" placeholder="请输入申请原因（不超过255个字符）" v-model="creatorApply.reason"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button @click="prepareSave" v-if="creatorApply" type="success"
-        >保存</el-button
-      >
+      <el-button @click="prepareSave" v-if="creatorApply" type="success">保存</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -24,7 +18,9 @@
 <script setup>
 import { ref } from "@vue/reactivity";
 import { postData } from "@/js/common_data_operation";
-const creatorApply = ref({ reason: "", name: "group-create" });
+import { inject } from "@vue/runtime-core";
+const groupCreatorApply = inject("groupCreatorApply")
+const creatorApply = ref({ reason: "", name: "group-creator" });
 const rules = {
   reason: [
     {
@@ -35,10 +31,14 @@ const rules = {
   ],
 };
 const submitForm = ref(null);
+//提交申请
 const prepareSave = () => {
   submitForm.value.validate((valid) => {
     if (valid) {
-      postData("/auth/role-ask/ask", creatorApply.value, true);
+      postData("/auth/role-ask/ask", creatorApply.value, true).then(res => {
+        //取消显示
+        groupCreatorApply.open = false
+      });
     }
   });
 };

@@ -43,7 +43,6 @@ const commonStyle = computed(() => {
         }, props.style
     )
 })
-console.log(commonStyle.value);
 const paperStyle = computed(() => {
     return Object.assign({
         height: `${props.height}px`,

@@ -1,34 +1,31 @@
 <template>
   <div class="box">
     <div class="type-box">
-      <el-radio-group
-        @change="change"
-        v-model="type"
-        fill="#999999"
-        size="medium"
-      >
+      <el-radio-group @change="change" v-model="type" fill="#999999" size="medium">
         <el-radio-button label="我的群组"></el-radio-button>
         <el-radio-button label="受邀信息"></el-radio-button>
         <label
-        v-if="createable"
+          v-if="createable"
           @click="groupAdd.open = true"
           class="el-radio-button--medium"
           aria-checked="false"
           tabindex="-1"
-          ><span class="el-radio-button__inner">创建群组</span></label
         >
+          <span class="el-radio-button__inner">创建群组</span>
+        </label>
         <label
-         v-if="!createable"
+          v-if="!createable"
           @click="groupCreatorApply.open = true"
           class="el-radio-button--medium"
           aria-checked="false"
           tabindex="-1"
-          ><span class="el-radio-button__inner">申请创群</span></label
         >
+          <span class="el-radio-button__inner">申请创群</span>
+        </label>
       </el-radio-group>
     </div>
 
-    <el-dialog  v-model="groupAdd.open" title="创建群组">
+    <el-dialog v-model="groupAdd.open" title="创建群组">
       <group-add-or-update></group-add-or-update>
     </el-dialog>
     <el-dialog :width="getDialogSize()" v-model="groupCreatorApply.open" title="申请创建群组权限">
@@ -42,14 +39,18 @@
 import GroupAddOrUpdate from "@/components/reception/group/GroupAddOrUpdate.vue";
 import groupCreatorApply from "@/components/reception/group/GroupCreatorApply.vue";
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, provide, reactive } from "vue";
 export default {
   setup() {
     const store = useStore();
-    console.log(store)
     store.dispatch("group/createableGet")
+    const groupCreatorApply = reactive({
+      open: false,
+    })
+    provide("groupCreatorApply", groupCreatorApply)
     return {
       createable: computed(() => store.state.group.createable),
+      groupCreatorApply
     };
   },
   components: {
@@ -62,14 +63,11 @@ export default {
       groupAdd: {
         open: false,
       },
-      groupCreatorApply: {
-        open: false,
-      },
     };
   },
   computed: {},
   methods: {
-    
+
     change(label) {
       if (label === "我的群组") {
         this.$router.push("/groups/list");
@@ -77,10 +75,10 @@ export default {
         this.$router.push("/groups/invite-info");
       }
     },
-    getDialogSize(){
-      if(window.innerWidth < 992){
+    getDialogSize() {
+      if (window.innerWidth < 992) {
         return '90%'
-      }else{
+      } else {
         return '50%'
       }
     }
