@@ -34,6 +34,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="executionTime" label="执行时间(ms)" />
+                <el-table-column prop="runtimeMemory" label="内存(kb)" />
             <el-table-column label="运行结果">
               <template #default="scope">
                 <el-tag size="mini" :type="judgeStatusType(scope.row)">
