@@ -14,7 +14,7 @@
       <el-radio-group v-model="newMenu.type">
         <el-radio :label="0">目录</el-radio>
         <el-radio :label="1">菜单</el-radio>
-        <el-radio :label="2">按钮</el-radio>
+        <el-radio :label="2">接口</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item label="名称">
@@ -92,6 +92,7 @@ const out = {
       props: {
         children: "children",
         label: "name",
+        value: "id",
         checkStrictly: true,
       },
       iconBoxVisible: false,
@@ -101,6 +102,7 @@ const out = {
   watch: {
     menu(newValue, oldValue) {
       this.newMenu = newValue;
+      this.getMenus()
     },
   },
   async mounted() {
@@ -109,7 +111,9 @@ const out = {
   },
   methods: {
     handleParentChange(nodes) {
-      this.newMenu.parentId = nodes[nodes.length - 1]
+      if (nodes.length > 0) {
+        this.newMenu.parentId = nodes[nodes.length - 1]
+      }
     },
     async getMenus() {
       let result = await commonajaxWithData("/auth/menu/tree/");
@@ -121,17 +125,23 @@ const out = {
             children: [],
           },
         ];
-        rootMenu[0].children = this.processChildren(result.dto);
+        rootMenu[0].children = this.processChildren(result.dto, false);
         this.menus = rootMenu;
       }
     },
     //用于处理children为空数组的情况
-    processChildren(menus) {
+    processChildren(menus, disabled) {
       for (let i = 0; i < menus.length; i++) {
+        if (disabled) {
+          menus[i].disabled = true
+        }
+        if (menus[i].id == this.newMenu.id) {
+          disabled = menus[i].disabled = true
+        }
         if (menus[i].children && menus[i].children.length == 0) {
           menus[i].children = undefined;
         } else if (menus[i].children) {
-          this.processChildren(menus[i].children);
+          this.processChildren(menus[i].children, disabled);
         }
       }
       return menus;
@@ -149,8 +159,6 @@ const out = {
     },
     async prepareUpdate() {
       this.prepareMenu();
-      console.log(this.newMenu);
-      console.log();
       let result = await update("/auth/menu", this.newMenu.id, this.newMenu);
       if (result.success) {
         this.$emit("updateMenus");
@@ -158,7 +166,6 @@ const out = {
     },
     async prepareSave() {
       this.prepareMenu();
-
       let result = await save("/auth/menu/", this.newMenu, true);
       if (result.success) {
         this.$emit("updateMenus");
