@@ -54,6 +54,7 @@ export default {
         this.pageInfo.pageSize
       );
       if (result.success) {
+        console.log(result);
         this.problems = result.list;
         this.pageInfo.pageSize = result.pageSize;
         this.pageInfo.page = result.page;

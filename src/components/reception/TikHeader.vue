@@ -209,4 +209,11 @@ export default {
         padding: 0
         margin: 0
         color: $secondary-color
+a
+  -moz-user-select: none
+  -webkit-user-select: none
+  -ms-user-select: none
+  -khtml-user-select: none
+  -o-user-select: none
+  user-select: none
 </style>

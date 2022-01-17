@@ -80,7 +80,7 @@
 <script>
 import { commonajaxWithData, getOne } from "@/js/common_data_operation.js";
 import MdEditor from "md-editor-v3";
-import { isMobile } from "@/js/backstage/mobile";
+import { isMobile } from "@/js/mobile";
 import "md-editor-v3/lib/style.css";
 import { ElMessage } from 'element-plus';
 //禁用tab跳转，防止出现页面畸形
@@ -164,7 +164,7 @@ export default {
       this.active = now
     },
     loadProblemData() {
-      getOne("/executor/problem/" + this.problem.id).then((res) => {
+      getOne("/executor/problem/" + this.problem.id + `?secretKey=${this.$route.query.secretKey}`).then((res) => {
         if (res.success) {
           this.problem = res.dto;
         }
@@ -205,7 +205,6 @@ export default {
     addProblem() {
       this.$refs["problem"].validate((valid, err) => {
         if (valid) {
-          console.log(this.problem, valid);
           commonajaxWithData(
             `/executor/collection-group/problems/${this.$route.params.groupId}`,
             "post",
@@ -223,12 +222,12 @@ export default {
 
           let keys = Object.keys(err)
           let message = ""
-           let index = 1
+          let index = 1
           for (let key of keys) {
             let value = err[key]
             for (let v of value) {
-               message += index + ". " + v.message + "\n"
-               index ++
+              message += index + ". " + v.message + "\n"
+              index++
             }
           }
           ElMessage.error(message)

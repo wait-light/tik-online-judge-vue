@@ -24,9 +24,10 @@
 <script>
 import MdEditor from "md-editor-v3";
 import { getOne } from "@/js/common_data_operation.js";
+import { ElMessage } from 'element-plus';
 export default {
   components: {
-    MdEditor,
+    MdEditor, ElMessage
   },
   props: ["problemId"],
   data() {
@@ -36,9 +37,15 @@ export default {
   },
   methods: {
     async loadData() {
-      let result = await getOne("/executor/problem/" + this.problemId);
+      let result = await getOne("/executor/problem/" + this.problemId + `?secretKey=${this.$route.query.secretKey}`);
       if (result.success) {
         this.problem = result.dto;
+      } else {
+        if (result.code == 300) {
+          ElMessage.warning(result.msg)
+        } else {
+          ElMessage.error(result.msg)
+        }
       }
     },
   },

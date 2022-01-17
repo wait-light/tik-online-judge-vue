@@ -1,12 +1,6 @@
 <template>
   <h4 style="text-align: center">{{ typeDescribe }}</h4>
-  <el-form
-    :rules="rules"
-    class="container"
-    ref="problem"
-    :model="problem"
-    label-width="80px"
-  >
+  <el-form :rules="rules" class="container" ref="problem" :model="problem" label-width="80px">
     <el-form-item label="名称" prop="name">
       <el-input v-model="problem.name"></el-input>
     </el-form-item>
@@ -32,12 +26,8 @@
       <el-switch v-model="problem.share"></el-switch>
     </el-form-item>
     <el-form-item label="操作">
-      <el-button v-if="!problem.id" type="primary" @click="addProblem"
-        >添加</el-button
-      >
-      <el-button v-if="problem.id" type="warning" @click="updateProblem"
-        >修改</el-button
-      >
+      <el-button v-if="!problem.id" type="primary" @click="addProblem">添加</el-button>
+      <el-button v-if="problem.id" type="warning" @click="updateProblem">修改</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -111,8 +101,8 @@ export default {
     }
   },
   methods: {
-    loadProblemData() {
-      getOne("/executor/problem/" + this.problem.id).then((res) => {
+    loadProblemData() { 
+      getOne("/executor/problem/" + this.problem.id + `?secretKey=${this.$route.query.secretKey}`).then((res) => {
         if (res.success) {
           this.problem = res.dto;
         }

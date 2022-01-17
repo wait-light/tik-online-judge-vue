@@ -1,19 +1,15 @@
 <template>
   <el-card class="task-describe">
     <h1>{{ task.name }}</h1>
-    <span class="time"
-      >任务时间：{{ new Date(task.beginTime).toLocaleString() }} 到
-      {{ new Date(task.endTime).toLocaleString() }}</span
-    >
+    <span class="time">
+      任务时间：{{ new Date(task.beginTime).toLocaleString() }} 到
+      {{ new Date(task.endTime).toLocaleString() }}
+    </span>
     <el-divider></el-divider>
     <user-title :uid="task.createUserId"></user-title>
-    <span class="time"
-      >发布时间：{{ new Date(task.createTime).toLocaleString() }}</span
-    >
+    <span class="time">发布时间：{{ new Date(task.createTime).toLocaleString() }}</span>
     <div>
-      <p style="word-wrap: break-word">
-        {{ task.taskIntroduce }}
-      </p>
+      <p style="word-wrap: break-word">{{ task.taskIntroduce }}</p>
     </div>
   </el-card>
   <h3>完成情况：{{ finishCount }}/{{ userlist.length }}</h3>
@@ -22,20 +18,18 @@
       <template #title>
         <div v-if="userProblemStatus">
           <user-title :uid="user.uid"></user-title>
-          {{ userFinishCountMap.get(user.uid)}}/{{ problems.length }}
+          {{ userFinishCountMap.get(user.uid) }}/{{ problems.length }}
         </div>
       </template>
       <div class="problem-item-box" v-if="problemItemDisplay">
         <router-link
-          v-for="item in problemMap"
-          :key="item[0]"
-          :to="`/problem/${item[0]}`"
+          v-for="item in problems"
+          :key="item.id"
+          :to="`/problem/${item.id}/?secretKey=${item.secretKey}`"
         >
-          <span class="problem-item"
-            >{{ item[1] }}
-            <cicle-success
-              v-if="userProblemStatus && userProblemStatus[user.uid][item[0]]"
-            ></cicle-success>
+          <span class="problem-item">
+            {{ item.name }}
+            <cicle-success v-if="userProblemStatus && userProblemStatus[user.uid][item.id]"></cicle-success>
             <cicle-wrong v-else></cicle-wrong>
           </span>
         </router-link>
@@ -57,7 +51,7 @@ export default {
       problems: [],
       finishCount: 0,
       problemMap: "",
-      problemItemDisplay: false,
+      problemItemDisplay: true,
       userProblemStatus: "",
       userFinishCountMap: new Map(),
     };
@@ -106,21 +100,6 @@ export default {
         if (res.success) {
           this.task = res.task;
           this.problems = res.problems;
-          if (res.problems && res.problems.length > 0) {
-            this.loadProblemName();
-          }
-        }
-      });
-    },
-    loadProblemName() {
-      stringifyGet("/executor/problem/problem-name", {
-        pid: this.problems,
-      }).then((res) => {
-        if (res.success) {
-          this.problemMap = Object.entries(res.dto);
-          if (res.dto) {
-            this.problemItemDisplay = true;
-          }
         }
       });
     },
@@ -146,10 +125,11 @@ export default {
       });
       stringifyGet("/executor/user/task/problem/status", {
         uid: uids,
-        pid: this.problems,
+        pid: this.problems.map((item) => item.id),
       }).then((res) => {
         this.userProblemStatus = res.dto;
         this.calculateUserFinish();
+        console.log(this.problems);
       });
     },
     calculateUserFinish() {

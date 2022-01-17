@@ -16,23 +16,14 @@
     <!-- <el-table-column prop="input" label="输入"></el-table-column> -->
     <!-- <el-table-column prop="output" label="输出"></el-table-column> -->
     <el-table-column label="创建时间">
-      <template #default="scope">
-        {{ new Date(scope.row.createTime).toSimpleString() }}
-      </template>
+      <template #default="scope">{{ new Date(scope.row.createTime).toSimpleString() }}</template>
     </el-table-column>
     <el-table-column label="修改时间">
-      <template #default="scope">
-        {{ new Date(scope.row.updateTime).toSimpleString() }}
-      </template>
+      <template #default="scope">{{ new Date(scope.row.updateTime).toSimpleString() }}</template>
     </el-table-column>
     <el-table-column label="状态" width="80">
       <template #default="scope">
-        <el-switch
-          disabled
-          v-model="scope.row.status"
-          active-color="#13ce66"
-          inactive-color="#ccc"
-        ></el-switch>
+        <el-switch disabled v-model="scope.row.status" active-color="#13ce66" inactive-color="#ccc"></el-switch>
       </template>
     </el-table-column>
     <!-- <el-table-column prop="inputDescrible" label="输入描述"></el-table-column> -->
@@ -40,44 +31,29 @@
     <el-table-column prop="collectionId" label="所属合集"></el-table-column>
     <el-table-column label="是否与其他集合共享" width="80">
       <template #default="scope">
-        <el-switch
-          disabled
-          v-model="scope.row.share"
-          active-color="#13ce66"
-          inactive-color="#ccc"
-        ></el-switch>
+        <el-switch disabled v-model="scope.row.share" active-color="#13ce66" inactive-color="#ccc"></el-switch>
       </template>
     </el-table-column>
     <el-table-column label="操作" fixed="right" width="240">
       <template #default="scope">
         <el-button
           size="mini"
-          @click="$router.push('/problemDetail/update/' + scope.row.id)"
+          @click="$router.push('/problemDetail/update/' + scope.row.id + `?secretKey=${scope.row.secretKey}`)"
           type="warning"
-          >修改</el-button
-        >
-        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger"
-          >删除</el-button
-        >
-        <el-button type="info" size="mini" @click="preDataItem(scope.row.id)"
-          >数据项</el-button
-        >
+        >修改</el-button>
+        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
+        <el-button type="info" size="mini" @click="preDataItem(scope.row.id)">数据项</el-button>
       </template>
     </el-table-column>
   </el-table>
   <el-dialog title="添加/修改" v-model="prepareEntity.open">
     <div class="dialog-message">
-      <ProblemAddOrUpdate
-        @reloadData="loadData"
-        :entity="prepareEntity.entity"
-      ></ProblemAddOrUpdate>
+      <ProblemAddOrUpdate @reloadData="loadData" :entity="prepareEntity.entity"></ProblemAddOrUpdate>
     </div>
   </el-dialog>
   <el-dialog v-model="dataItemShow" title="数据项">
     <div class="dialog-message">
-      <el-button @click="prepareDataAddOrUpdate()" size="mini" type="primary"
-        >新增</el-button
-      >
+      <el-button @click="prepareDataAddOrUpdate()" size="mini" type="primary">新增</el-button>
       <div style="margin-top: 15px">
         <el-tag
           @click="prepareDataAddOrUpdate(item.id)"
@@ -87,23 +63,12 @@
           :key="item.id"
           :type="itemTypeGenerator(index)"
           closable
-        >
-          数据{{ index + 1 }}
-        </el-tag>
+        >数据{{ index + 1 }}</el-tag>
       </div>
     </div>
   </el-dialog>
-  <el-dialog
-    @close="getDataItem(problemId)"
-    v-model="dataAddOrUpdateShow"
-    title="数据新增/修改"
-  >
-    <el-input
-      v-model="dataItem.input"
-      :rows="2"
-      type="textarea"
-      placeholder="输入"
-    />
+  <el-dialog @close="getDataItem(problemId)" v-model="dataAddOrUpdateShow" title="数据新增/修改">
+    <el-input v-model="dataItem.input" :rows="2" type="textarea" placeholder="输入" />
     <el-input
       v-model="dataItem.output"
       :rows="2"
@@ -117,16 +82,14 @@
       style="margin-top: 10px"
       type="success"
       @click="dataItemAdd"
-      >添加</el-button
-    >
+    >添加</el-button>
     <el-button
       v-if="dataItem.problemId"
       size="mini"
       style="margin-top: 10px"
       type="success"
       @click="dataItemUpdate"
-      >修改</el-button
-    >
+    >修改</el-button>
   </el-dialog>
   <el-pagination
     :hide-on-single-page="hideOnSinglePage"
@@ -137,8 +100,7 @@
     :page-size="pageInfo.pageSize"
     layout="total, sizes, prev, pager, next, jumper"
     :total="pageInfo.total"
-  >
-  </el-pagination>
+  ></el-pagination>
 </template>
 
 <script>
