@@ -15,18 +15,18 @@
     </div>
   </el-card>
   <p>完成情况：{{ finishCount }} / {{ problems.length }}</p>
-  <el-card v-if="problemItemDisplay" class="task-detail">
+  <el-card v-if="problems" class="task-detail">
     <router-link
       class="task-item"
       v-for="item in problems"
-      :key="item"
-      :to="`/problem/${item}`"
+      :key="item.id"
+      :to="`/problem/${item.id}?secretKey=${item.secretKey}`"
     >
       <cicle-success
         v-if="problemFinishStatus && problemFinishStatus[item]"
       ></cicle-success>
       <cicle-wrong v-else></cicle-wrong>
-      <p>{{ problemMap[item] }}</p>
+      <p>{{ item.name }}</p>
     </router-link>
   </el-card>
   <el-empty v-else description="没有任务"></el-empty>
@@ -51,8 +51,6 @@ export default {
     return {
       task: {},
       problems: [],
-      problemMap: {},
-      problemItemDisplay: false,
       problemFinishStatus: {},
       finishCount: 0,
     };
@@ -65,22 +63,7 @@ export default {
         if (res.success) {
           this.task = res.task;
           this.problems = res.problems;
-          if (res.problems && res.problems.length > 0) {
-            this.loadProblemName();
-            this.loadProblemIsFinished();
-          }
-        }
-      });
-    },
-    loadProblemName() {
-      stringifyGet("/executor/problem/problem-name", {
-        pid: this.problems,
-      }).then((res) => {
-        if (res.success) {
-          this.problemMap = res.dto;
-          if (res.dto) {
-            this.problemItemDisplay = true;
-          }
+          console.log(this.problems);
         }
       });
     },

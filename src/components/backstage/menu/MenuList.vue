@@ -4,42 +4,39 @@
   </div>
 
   <el-table
+    border
     :data="menus"
     style="width: 100%; margin-bottom: 20px"
     row-key="id"
     :header-cell-style="{ textAlign: 'center' }"
-    :cell-style="{ textAlign: 'center' }"
     :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
   >
-    <el-table-column prop="name" label="菜单名称" sortable width="180"> </el-table-column>
-    <el-table-column prop="icon" label="图标" sortable width="180"> </el-table-column>
-    <el-table-column prop="perms" label="权限标识"> </el-table-column>
-    <el-table-column prop="url" label="地址"> </el-table-column>
-    <el-table-column prop="order" label="排序"> </el-table-column>
+    <el-table-column prop="name" label="菜单名称" sortable width="200"></el-table-column>
+    <el-table-column prop="icon" label="图标" sortable width="80" #default="scope">
+      <component v-if="scope.row.icon" :is="scope.row.icon"></component>
+    </el-table-column>
+    <el-table-column prop="perms" label="权限标识"></el-table-column>
+    <el-table-column prop="url" label="地址"></el-table-column>
+    <el-table-column prop="order" label="排序"></el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
-        <el-button size="mini" @click="prepareEditMenu(scope.row)" type="warning"
-          >修改</el-button
-        >
-        <el-button size="mini" @click="deleteMenu(scope.row.id)" type="danger"
-          >删除</el-button
-        >
+        <el-button size="mini" @click="prepareEditMenu(scope.row)" type="warning">修改</el-button>
+        <el-button size="mini" @click="deleteMenu(scope.row.id)" type="danger">删除</el-button>
       </template>
     </el-table-column>
   </el-table>
 
   <el-dialog title="权限" v-model="prepareMenu.open">
     <div class="dialog-message">
-      <menu-add-or-add-update
-        @updateMenus="reloadDate"
-        :menu="prepareMenu.menu"
-      ></menu-add-or-add-update>
+      <menu-add-or-add-update @updateMenus="reloadDate" :menu="prepareMenu.menu"></menu-add-or-add-update>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import MenuAddOrAddUpdate from "@/components/backstage/menu/MenuAddOrUpdate.vue";
+import * as ELIcon from "@element-plus/icons";
+let components = Object.assign({}, ELIcon, { MenuAddOrAddUpdate: MenuAddOrAddUpdate })
 import {
   getOne,
   update,
@@ -47,9 +44,7 @@ import {
   commonajaxWithData,
 } from "@/js/backstage/common/common_data_operation.js";
 export default {
-  components: {
-    MenuAddOrAddUpdate,
-  },
+  components: components,
   data() {
     return {
       menus: [

@@ -160,22 +160,22 @@ export default {
     isMobile,
     getUserType() {
       //  TODO 暂时取消权限认证
-      this.userType = "MASTER"
+      // this.userType = "MASTER"
       // console.log("asd",this.userType,"MASTER");
-      // this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
-      // getData(`/social/group-user/${this.$route.params.groupId}`).then(
-      //   (res) => {
-      //     if (res.success) {
-      //       console.log(res);
-      //       this.userType = res.dto;
-      //       if (this.userType == "COMMON") {
-      //         this.$router.push(`/group/${this.$route.params.groupId}/tasks`);
-      //       } else if (this.userType == "MASTER") {
-      //         this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
-      //       }
-      //     }
-      //   }content-container-phone
-      // );
+      this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
+      getData(`/social/group-user/${this.$route.params.groupId}`).then(
+        (res) => {
+          if (res.success) {
+            console.log(res);
+            this.userType = res.dto;
+            if (this.userType == "COMMON") {
+              this.$router.push(`/group/${this.$route.params.groupId}/tasks`);
+            } else if (this.userType == "MASTER") {
+              this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
+            }
+          }
+        }
+      );
     },
   },
 };
