@@ -4,6 +4,7 @@ import backstage from '@/router/backstage'
 import group from '@/router/group'
 import groups from '@/router/groups'
 import store from '@/store/index'
+import race from '@/router/race'
 import isReleasePath from '@/router/release'
 const routes = [{
     path: "/user-agreement",
@@ -72,7 +73,7 @@ const routes = [{
             path: "/post/:solutionId(\\d+)",
             component: () => import("@/view/reception/Solution.vue")
         },
-            group, groups
+            group, groups, race
         ]
     }],
 },
