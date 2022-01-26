@@ -20,7 +20,10 @@
       </el-row>
       <el-divider></el-divider>
       <div v-if="$route.params.problemId">
-        <router-link :to="`/problem/${$route.params.problemId}`" target="_blank">
+        <router-link
+          :to="`/problem/${$route.params.problemId}?secretKey=${secretKey}`"
+          target="_blank"
+        >
           <p class="to-detail">
             <span>&#8592;</span>前往问题详情
           </p>
@@ -28,11 +31,7 @@
         <el-divider></el-divider>
       </div>
 
-      <md-editor
-        @onGetCatalog="onGetCatalog"
-        v-model="solution.content"
-        :previewOnly="true"
-      />
+      <md-editor @onGetCatalog="onGetCatalog" v-model="solution.content" :previewOnly="true" />
       <el-divider style="margin-top: 20px;"></el-divider>
       <h1 id="comment" class="comment-division">评论</h1>
       <solution-comment></solution-comment>
@@ -82,6 +81,7 @@ export default {
         id: 0,
         uid: 0,
       },
+      secretKey: "",
       solutioner: "匿名用户",
       catalogList: [],
       mobileCatalogButtonShow: false
@@ -105,6 +105,7 @@ export default {
       getOne(`/social/solution/${this.solution.id}`).then((result) => {
         if (result.success) {
           this.solution = result.dto;
+          this.secretKey = result.secretKey
         }
       });
     },

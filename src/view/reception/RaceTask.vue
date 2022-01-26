@@ -15,11 +15,14 @@
                     </li>
                 </router-link>
                 <router-link
-                    :to="`/race/${$route.params.raceId}`"
+                    :to="`/race/${$route.params.raceId}/problems`"
                     custom
-                    v-slot="{ href, isActive, navigate }"
+                    v-slot="{ href, navigate }"
                 >
-                    <li :class="[isActive && 'active-class', 'navigation']" @click="navigate">
+                    <li
+                        :class="[$route.path.indexOf('problem') != -1 && 'active-class', 'navigation']"
+                        @click="navigate"
+                    >
                         <el-icon>
                             <list />
                         </el-icon>
@@ -27,7 +30,7 @@
                     </li>
                 </router-link>
                 <router-link
-                    :to="`/race/${$route.params.raceId}`"
+                    :to="`/race/${$route.params.raceId}/submission`"
                     custom
                     v-slot="{ href, isActive, navigate }"
                 >
@@ -39,7 +42,7 @@
                     </li>
                 </router-link>
                 <router-link
-                    :to="`/race/${$route.params.raceId}`"
+                    :to="`/race/${$route.params.raceId}/rank`"
                     custom
                     v-slot="{ href, isActive, navigate }"
                 >
@@ -51,7 +54,7 @@
                     </li>
                 </router-link>
             </ul>
-            <el-divider></el-divider>
+            <!-- <el-divider></el-divider> -->
         </el-col>
         <el-col :xs="24" :sm="20">
             <router-view></router-view>

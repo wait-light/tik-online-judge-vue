@@ -63,7 +63,6 @@ export default {
         if (res.success) {
           this.task = res.task;
           this.problems = res.problems;
-          console.log(this.problems);
         }
       });
     },

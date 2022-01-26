@@ -1,21 +1,14 @@
 <template>
   <div class="code-editor">
     <div class="code-menu">
-      <el-select
-        size="mini"
-        style="width: 150px"
-        v-model="language"
-        placeholder="请选择语言"
-        @change="languageChange"
-      >
+      <el-select size="mini" style="width: 150px" v-model="language" placeholder="请选择语言">
         <el-option
           v-for="item in languages"
           :key="item.value"
           :label="item.label"
           :value="item.value"
           :disabled="item.disabled"
-        >
-        </el-option>
+        ></el-option>
       </el-select>
       <el-icon
         class="code-button"
@@ -36,7 +29,7 @@
         <Warning />
       </el-icon>
     </div>
-    <div class="code-panel">
+    <div class="code-panel" :style="{ '--panel-height': height }">
       <textarea autofocus ref="codemirror" v-model="code"></textarea>
     </div>
   </div>
@@ -144,6 +137,18 @@ let codemirrorConfig = {
   scrollbarStyle: null,
 };
 export default {
+  props: {
+    height: {
+      default: " calc( 100% - 39.6px )"
+    },
+    modelValue: {
+      default: {
+        code: "",
+        language: 0
+      },
+      type: Object
+    }
+  },
   components: {
     Edit,
     FullScreen,
@@ -189,6 +194,16 @@ int main()
     ],
     language: 0,
   }),
+  watch: {
+    code: function (newValue, oldValue) {
+      this.modelValue.code = newValue
+    },
+    language: function (newValue, oldValue) {
+      this.modelValue.language = newValue
+      this.languageChange(newValue)
+    },
+
+  },
   mounted() {
     // 防止转为监听对象，vue3中如果CodeMirror对象被转为监听对象，会无法正常使用
     codemirror = markRaw(
@@ -202,6 +217,7 @@ int main()
     codemirror.setSize("auto", "100%");
     this.language = this.languages[0].value;
     this.languageChange(this.language);
+    this.initModelValue()
     // codemirror.on("changes", (instance, changes) => {
     //   //配置提示显示的情况
     //   var pattern = new RegExp(
@@ -222,6 +238,14 @@ int main()
     this.destroy();
   },
   methods: {
+    initModelValue() {
+      if (!this.modelValue.code) {
+        this.modelValue.code = this.code
+      }
+      if (!this.modelValue.language) {
+        this.modelValue.language = this.language
+      }
+    },
     languageChange(value) {
       let selected = this.languages.find((item) => {
         return item.value == value;
@@ -250,7 +274,7 @@ int main()
   height: 100%
   .code-panel
     // position: absolute
-    height: calc( 100% - 39.6px )
+    height: var(--panel-height)
     // height: 100%
     width: 100%
   .code-menu

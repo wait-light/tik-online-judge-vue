@@ -1,7 +1,7 @@
 <template>
   <el-table
     :data="problems"
-    height="calc( 100vh - 200px )"
+    empty-text="暂无问题"
     stripe
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"

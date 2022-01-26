@@ -6,25 +6,25 @@
         <span class="showing-info">展示</span>
         <el-switch style="margin-right: 10px;" v-model="solution.status"></el-switch>
         <el-dropdown>
-          <el-button type="primary" size="mini" v-if="!solution.id" @click="addSolution">
-            发布
+          <el-button :type="buttonType" size="mini" @click="buttonClick">
+            {{ buttonText }}
             <el-icon class="el-icon--right">
               <ArrowDown />
             </el-icon>
           </el-button>
-          <el-button type="success" size="mini" v-if="solution.id" @click="updateSolution">
+          <!-- <el-button type="success" size="mini" v-else @click="updateSolution">
             修改
             <el-icon class="el-icon--right">
               <ArrowDown />
             </el-icon>
-          </el-button>
+          </el-button>-->
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item
-                @click="router.push({ path: '/redirect', query: { path: '' } })"
+                @click="$router.push({ path: '/redirect', query: { path: '' } })"
               >返回首页</el-dropdown-item>
               <el-dropdown-item
-                @click="goWhere('https://www.runoob.com/markdown/md-tutorial.html')"
+                @click="open('https://www.runoob.com/markdown/md-tutorial.html')"
               >Markdown教程</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -80,7 +80,21 @@ export default {
     this.solution.problemId = this.$route.params.problemId;
     this.hasSolution();
   },
+  computed: {
+    buttonType() {
+      return this.solution.id ? "success" : "primary"
+    },
+    buttonClick() {
+      return this.solution.id ? this.updateSolution : this.addSolution
+    },
+    buttonText() {
+      return this.solution.id ? "更新" : "发布"
+    }
+  },
   methods: {
+    open(url) {
+      window.open(url, "_blank")
+    },
     hasSolution() {
       this.loading = true
       commonajaxWithData(
@@ -130,11 +144,7 @@ export default {
         "post",
         this.solution,
         true
-      ).then((result) => {
-        if (result.success) {
-          this.$router.push("/problem/" + this.solution.problemId);
-        }
-      });
+      )
     },
     updateSolution() {
       if (!this.solution.title) {
@@ -150,11 +160,7 @@ export default {
         "put",
         this.solution,
         true
-      ).then((result) => {
-        if (result.success) {
-          this.$router.push("/problem/" + this.solution.problemId);
-        }
-      })
+      )
     },
   },
 };

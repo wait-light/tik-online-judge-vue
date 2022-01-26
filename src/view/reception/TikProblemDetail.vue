@@ -43,14 +43,14 @@
       <span>.</span>
     </div>
     <div class="problem-editor-submit-box" :style="{ width: rightBoxWidth }">
-      <tik-code-editor ref="editor"></tik-code-editor>
+      <tik-code-editor v-model="coder"></tik-code-editor>
     </div>
   </div>
 
   <!-- <el-dialog v-if="user.login" v-model="submitDetail.open" title="源码">
     <el-button v-loading="submitDetail.open" type="info" size="mini" @click="copyCode">点击复制</el-button>
     <pre class="code-box">{{ submitDetail.content }}</pre>
-  </el-dialog> -->
+  </el-dialog>-->
 </template>
 
 <script>
@@ -85,6 +85,9 @@ export default {
         open: false,
         content: "",
       },
+      coder: {
+
+      }
     };
   },
   methods: {
@@ -105,8 +108,8 @@ export default {
     },
     async submit() {
       let submit = {
-        content: this.$refs.editor.code,
-        languageType: this.$refs.editor.language,
+        content: this.coder.code,
+        languageType: this.coder.language,
         problemId: this.problem.id,
       };
       let result = await save("/executor/submit/judge", submit, false);

@@ -5,16 +5,16 @@
       <pre v-loading="submitDetail.loading" class="code-box">{{ submitDetail.content }}</pre>
     </el-dialog>
     <div style="box-shadow: 5px 6px 5px #eee">
+      <el-empty v-if="!submitResults || submitResults.length == 0" description="不存在任何提交"></el-empty>
       <el-collapse accordion>
         <el-collapse-item v-for="submitResult in submitResults" :key="submitResult.submitId">
           <template #title>
             <el-button
               style="margin-right: 10px"
-              @click="getSubmitDetail(submitResult.submitId)"
+              @click.stop="getSubmitDetail(submitResult.submitId)"
               size="mini"
-            >查看详情</el-button>
-            <span class="tips">提交时间：</span>
-            {{ new Date(submitResult.createTime).toLocaleString() }}
+            >源码</el-button>
+            <span class="tips">提交时间： {{ new Date(submitResult.createTime).toLocaleString() }}</span>
             <el-tag class="submit-tag" :type="resultType(submitResult)">
               {{
                 resultTypeString(submitResult)
@@ -25,6 +25,7 @@
             :header-cell-style="{ textAlign: 'center' }"
             :cell-style="{ textAlign: 'center' }"
             :data="submitResult.judgeResults"
+            class="select-stop"
             style="width: 100%; margin-bottom: 20px"
           >
             <el-table-column type="expand">
@@ -34,7 +35,7 @@
               </template>
             </el-table-column>
             <el-table-column prop="executionTime" label="执行时间(ms)" />
-                <el-table-column prop="runtimeMemory" label="内存(kb)" />
+            <el-table-column prop="runtimeMemory" label="内存(kb)" />
             <el-table-column label="运行结果">
               <template #default="scope">
                 <el-tag size="mini" :type="judgeStatusType(scope.row)">
@@ -74,7 +75,8 @@ export default {
       navigator.clipboard.writeText(this.submitDetail.content);
       ElMessage({
         message: "已复制",
-        type: "success",
+        type: "info",
+        duration: "800"
       });
     },
     loadSubmitResults() {
@@ -137,6 +139,7 @@ export default {
 </script>
 
 <style lang='sass' scoped>
+
 .el-tab-pane-box
   height: calc( 100vh - 116px )
   overflow: auto
@@ -144,4 +147,9 @@ export default {
   padding: 5px 15px
 .submit-tag
   margin-left: 10px
+.tips,.submit-tag,.select-stop
+  user-select: none
+  -ms-user-select: none
+  -moz-user-select: none
+  -webkit-user-select: none
 </style>
