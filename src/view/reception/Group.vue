@@ -162,7 +162,6 @@ export default {
       //  TODO 暂时取消权限认证
       // this.userType = "MASTER"
       // console.log("asd",this.userType,"MASTER");
-      this.$router.push(`/group/${this.$route.params.groupId}/task/manager`);
       getData(`/social/group-user/${this.$route.params.groupId}`).then(
         (res) => {
           if (res.success) {

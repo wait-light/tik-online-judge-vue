@@ -224,7 +224,9 @@ export async function deleteById(url, id, enableMessage = true, tip = true) {
 }
 export async function getList(url, page = 1, pageSize = 10, orderBy = "", enableMessage = false) {
     return commonajaxWithData(url, "get", {
-        page, pageSize, orderBy
+        params: {
+            page, pageSize, orderBy
+        }
     }, enableMessage)
 }
 export async function getOne(url, enableMessage = false) {

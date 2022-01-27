@@ -4,7 +4,7 @@
       <el-collapse-item title="进行中" name="1">
         <div v-if="tasking && tasking.length > 0">
           <router-link
-            :to="`/group/${$route.params.groupId}/task/${item.id}`"
+            :to="`/race/${item.id}`"
             v-for="item in tasking"
             :key="item.id"
           >
@@ -51,7 +51,7 @@
       <el-collapse-item title="已过期" name="2">
         <div v-if="expiredTask && expiredTask.length > 0">
           <router-link
-            :to="`/group/${$route.params.groupId}/task/${item.id}`"
+            :to="`/race/${item.id}`"
             v-for="item in expiredTask"
             :key="item.id"
           >
