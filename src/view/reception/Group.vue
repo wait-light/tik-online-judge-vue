@@ -65,6 +65,7 @@
         </router-link>
       </ul>
     </el-col>
+    <el-col :md="3"></el-col>
     <el-col v-if="isMobile()" class="menu-container-phone">
       <ul v-if="userType == 'COMMON'">
         <router-link
@@ -186,8 +187,11 @@ export default {
   padding: 0
   margin: 0
   border: 0
+  left: 0
+  top: 50px
+  position: fixed
   // overflow: scroll 
-  height: calc( 100vh - 55px )
+  height: calc( 100vh - 50px )
   h1
     text-align: center
     font-size: 6px

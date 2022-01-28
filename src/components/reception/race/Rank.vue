@@ -41,12 +41,10 @@ const getRank = () => {
         if (res.success) {
             rank.value = res.list
         }
-        console.log(res);
     })
 }
 const getProblems = () => {
     getData(`/executor/task-rank/${route.params.raceId}/problems`).then(res => {
-        console.log(res);
         if (res.success) {
             problems.value = Object.entries(res.dto)
         }
