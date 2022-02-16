@@ -241,8 +241,7 @@ export default {
         this.pageInfo.pageSize
       );
       if (result.success) {
-        this.table = result.list;
-        this.pageInfo.pageSize = result.pageSize;
+        this.table = result.list
         this.pageInfo.page = result.cuttentPage;
         this.pageInfo.total = result.total;
       }

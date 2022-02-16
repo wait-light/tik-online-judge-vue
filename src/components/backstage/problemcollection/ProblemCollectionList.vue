@@ -9,26 +9,17 @@
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"
   >
-    <el-table-column prop="id" label=""></el-table-column>
+    <el-table-column prop="id" label></el-table-column>
     <el-table-column prop="name" label="名称"></el-table-column>
     <el-table-column label="创建时间">
-      <template #default="scope">
-        {{ new Date(scope.row.createTime).toSimpleString() }}
-      </template>
+      <template #default="scope">{{ new Date(scope.row.createTime).toSimpleString() }}</template>
     </el-table-column>
     <el-table-column label="更新时间">
-      <template #default="scope">
-        {{ new Date(scope.row.updateTime).toSimpleString() }}
-      </template>
+      <template #default="scope">{{ new Date(scope.row.updateTime).toSimpleString() }}</template>
     </el-table-column>
     <el-table-column label="是否启用" width="80">
       <template #default="scope">
-        <el-switch
-          disabled
-          v-model="scope.row.status"
-          active-color="#13ce66"
-          inactive-color="#ccc"
-        ></el-switch>
+        <el-switch disabled v-model="scope.row.status" active-color="#13ce66" inactive-color="#ccc"></el-switch>
       </template>
     </el-table-column>
     <el-table-column prop="createUserId" label="创建人"></el-table-column>
@@ -43,39 +34,23 @@
       </template>
     </el-table-column>
     <el-table-column label="开启时间" width="155">
-      <template #default="scope">
-        {{ new Date(scope.row.beginTime).toLocaleString() }}
-      </template>
+      <template #default="scope">{{ new Date(scope.row.beginTime).toLocaleString() }}</template>
     </el-table-column>
     <el-table-column label="结束时间" width="155">
-      <template #default="scope">
-        {{ new Date(scope.row.endTime).toLocaleString() }}
-      </template>
+      <template #default="scope">{{ new Date(scope.row.endTime).toLocaleString() }}</template>
     </el-table-column>
     <el-table-column label="操作" fixed="right" width="250">
       <template #default="scope">
-        <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning"
-          >修改</el-button
-        >
-        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger"
-          >删除</el-button
-        >
+        <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
+        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
         <!-- @click="$router.push(`/problemDetail/${scope.row.id}`)" -->
-        <el-button
-          size="mini"
-          @click="prepareLoadCollectionItem(scope.row.id)"
-          type="info"
-          >问题项</el-button
-        >
+        <el-button size="mini" @click="prepareLoadCollectionItem(scope.row.id)" type="info">问题项</el-button>
       </template>
     </el-table-column>
   </el-table>
   <el-dialog title="添加/修改" v-model="prepareEntity.open">
     <div class="dialog-message">
-      <ProblemCollectionAddOrUpdate
-        @reloadData="loadData"
-        :entity="prepareEntity.entity"
-      ></ProblemCollectionAddOrUpdate>
+      <ProblemCollectionAddOrUpdate @reloadData="loadData" :entity="prepareEntity.entity"></ProblemCollectionAddOrUpdate>
     </div>
   </el-dialog>
   <el-dialog v-model="collectionItemShow" title="问题项">
@@ -84,11 +59,8 @@
         @click="$router.push(`/problemDetail/${collectionId}`)"
         size="mini"
         type="primary"
-        >新增</el-button
-      >
-      <el-button size="mini" type="success" @click="availableProblem"
-        >添加</el-button
-      >
+      >新增</el-button>
+      <el-button size="mini" type="success" @click="availableProblem">添加</el-button>
       <div style="margin-top: 15px" v-loading="itemloading">
         <el-tag
           style="margin-right: 10px; margin-top: 10px"
@@ -97,16 +69,11 @@
           @close="deleteItem(item.id)"
           :type="itemTypeGenerator(index)"
           closable
-        >
-          {{ item.name }}
-        </el-tag>
+        >{{ item.name }}</el-tag>
       </div>
     </div>
   </el-dialog>
-  <el-dialog
-    v-model="collectionItemAvailable.show"
-    @close="loadCollectionItem(collectionId)"
-  >
+  <el-dialog v-model="collectionItemAvailable.show" @close="loadCollectionItem(collectionId)">
     <el-table
       :data="collectionItemAvailable.list"
       :header-cell-style="{ textAlign: 'center' }"
@@ -116,35 +83,32 @@
       <el-table-column prop="name" label="名称"></el-table-column>
       <el-table-column label="操作" fixed="right" width="250">
         <template #default="scope">
-          <el-button size="mini" @click="addItem(scope.row.id)" type="warning"
-            >添加</el-button
-          >
+          <el-button size="mini" @click="addItem(scope.row.id)" type="warning">添加</el-button>
         </template>
       </el-table-column>
     </el-table>
     <el-pagination
       :hide-on-single-page="hideOnSinglePage"
-      @size-change="pageSizeChange"
-      @current-change="pageChange"
-      :current-page="pageInfo.page"
-      :page-sizes="pageInfo.pageSizes"
-      :page-size="pageInfo.pageSize"
+      @size-change="availableProblem"
+      @current-change="availableProblem"
+      :current-page="collectionItemAvailable.page"
+      :page-sizes="collectionItemAvailable.pageSizes"
+      :page-size="collectionItemAvailable.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
-      :total="pageInfo.total"
-    >
-    </el-pagination>
+      :total="collectionItemAvailable.total"
+    ></el-pagination>
   </el-dialog>
+
   <el-pagination
     :hide-on-single-page="hideOnSinglePage"
-    @size-change="availableProblem"
-    @current-change="availableProblem"
-    :current-page="collectionItemAvailable.page"
-    :page-sizes="collectionItemAvailable.pageSizes"
-    :page-size="collectionItemAvailable.pageSize"
+    @size-change="pageSizeChange"
+    @current-change="pageChange"
+    :current-page="pageInfo.page"
+    :page-sizes="pageInfo.pageSizes"
+    :page-size="pageInfo.pageSize"
     layout="total, sizes, prev, pager, next, jumper"
-    :total="collectionItemAvailable.total"
-  >
-  </el-pagination>
+    :total="pageInfo.total"
+  ></el-pagination>
 </template>
 
 <script>
@@ -235,7 +199,6 @@ export default {
         (result) => {
           if (result.success) {
             this.collectionItemAvailable.list = result.list;
-            this.collectionItemAvailable.pageSize = result.pageSize;
             this.collectionItemAvailable.page = result.currentPage;
             this.collectionItemAvailable.total = result.total;
           }
@@ -293,10 +256,10 @@ export default {
         this.pageInfo.pageSize
       );
       if (result.success) {
-        this.table = result.list;
-        this.pageInfo.pageSize = result.pageSize;
+        this.table = result.list
         this.pageInfo.page = result.currentPage;
-        this.pageInfo.total = result.total;
+        this.pageInfo.total = result.total
+        console.log(result);
       }
     },
   },

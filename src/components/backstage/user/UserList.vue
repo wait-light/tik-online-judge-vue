@@ -132,9 +132,8 @@ export default {
             this.prepareEntity.open = false
             let result = await getList("/auth/user/list", this.pageInfo.page, this.pageInfo.pageSize);
             if (result.success) {
-                this.table = result.list;
-                this.pageInfo.pageSize = result.pageSize
-                this.pageInfo.page = result.page
+                this.table = result.list
+                this.pageInfo.page = result.currentPage
                 this.pageInfo.total = result.total
             }
         }
