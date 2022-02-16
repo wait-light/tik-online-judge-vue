@@ -84,6 +84,7 @@ export default {
     }
   },
   mounted() {
+    document.title = "Tik Online Judge 群组"
     if (this.$route.href == "/groups/invite-info") {
       this.type = "受邀信息";
     } else if (this.$route.href == "/groups/list") {

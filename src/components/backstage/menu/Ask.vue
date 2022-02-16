@@ -1,7 +1,8 @@
 <template>
     <div>
+        <el-empty description="未收到任何申请" v-if="!messages || messages.length == 0"></el-empty>
         <email
-            v-for="(item,index) in messages"
+            v-for="(item, index) in messages"
             :key="item"
             :style="{ 'margin-right': '30px' }"
             :width="500"
@@ -18,8 +19,13 @@
                 </h6>
             </div>
             <div class="operate">
-                <el-button type="danger" size="mini"  @click="examine(index,'FAIL')">拒绝</el-button>
-                <el-button style="margin-right: 10px;" type="success" size="mini" @click="examine(index,'ADOPT')">通过</el-button>
+                <el-button type="danger" size="mini" @click="examine(index, 'FAIL')">拒绝</el-button>
+                <el-button
+                    style="margin-right: 10px;"
+                    type="success"
+                    size="mini"
+                    @click="examine(index, 'ADOPT')"
+                >通过</el-button>
             </div>
         </email>
     </div>

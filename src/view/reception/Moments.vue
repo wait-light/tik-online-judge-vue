@@ -120,6 +120,7 @@ const typeSetting = () => {
     posts.value.splice(0, posts.value.length)
 }
 onMounted(() => {
+    document.title = "Tik Online Judge 首页"
     typeSetting()
 })
 const route = useRoute()

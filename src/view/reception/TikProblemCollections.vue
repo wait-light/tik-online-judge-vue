@@ -72,6 +72,7 @@ export default {
     },
   },
   mounted() {
+    document.title = "Tik Online Judge 题集"
     this.loadData();
   },
 };

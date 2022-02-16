@@ -9,7 +9,7 @@
             <span>权限</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/backstage/user">用户权限管理</el-menu-item>
+            <el-menu-item index="/backstage/user">用户管理</el-menu-item>
             <el-menu-item index="/backstage/role">角色管理</el-menu-item>
             <el-menu-item index="/backstage/menu">权限菜单管理</el-menu-item>
             <el-menu-item index="/backstage/ask">权限申请</el-menu-item>

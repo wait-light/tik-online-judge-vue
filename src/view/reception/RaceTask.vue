@@ -64,6 +64,10 @@
 
 <script setup>
 import { Notebook, List, Histogram, Operation } from '@element-plus/icons';
+import { onMounted } from '@vue/runtime-core';
+onMounted(()=>{
+    document.title = "Tik Online Judge"
+})
 </script>
 
 <style lang="sass" scoped>

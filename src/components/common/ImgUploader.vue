@@ -4,7 +4,7 @@
     ref="upload"
     class="avatar-uploader"
     :action="oss.host"
-    accept="image/png,image/jpeg"
+    accept="image/png, image/jpeg"
     :show-file-list="false"
     :auto-upload="false"
     :before-upload="beforeUpload"
@@ -12,7 +12,9 @@
     :http-request="upload"
   >
     <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-    <el-icon v-else class="avatar-uploader-icon"><plus /></el-icon>
+    <el-icon v-else class="avatar-uploader-icon">
+      <plus />
+    </el-icon>
   </el-upload>
 </template>
 <script>
