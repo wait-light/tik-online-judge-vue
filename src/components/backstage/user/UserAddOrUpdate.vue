@@ -1,16 +1,19 @@
 <template>
     <el-form v-model="newEntity" label-position="right" label-width="80px">
-        <el-form-item label="状态">
+        <el-form-item v-if="!isNew" label="状态">
             <el-switch v-model="newEntity.status" active-color="#13ce66" inactive-color="#ccc"></el-switch>
+        </el-form-item>
+        <el-form-item v-if="isNew" label="用户名">
+            <el-input v-model="newEntity.username"></el-input>
         </el-form-item>
         <el-form-item label="昵称">
             <el-input v-model="newEntity.nickname"></el-input>
         </el-form-item>
         <el-form-item label="手机号">
-            <el-input v-model="newEntity.telephone"></el-input>
+            <el-input type="tel" v-model="newEntity.telephone"></el-input>
         </el-form-item>
         <el-form-item label="电子邮箱">
-            <el-input v-model="newEntity.email"></el-input>
+            <el-input type="email" v-model="newEntity.email"></el-input>
         </el-form-item>
         <el-form-item label="头像">
             <el-avatar class="avatar" :src="newEntity.avatar" @click="avatar.edit = true"></el-avatar>
@@ -42,11 +45,14 @@ import {
     commonajaxWithData,
 } from "@/js/backstage/common/common_data_operation.js";
 import uploder from "@/components/common/ImgUploader.vue"
+import { ElMessage } from 'element-plus'
+
 export default {
     components: { uploder },
     emits: ["reloadData"],
     props: {
         entity: Object,
+        isNew: Boolean
     },
     data() {
         return {
@@ -65,10 +71,28 @@ export default {
                 this.avatar.edit = false
             }
         },
-        async prepareAvatar() {
-
-        },
         async prepareSave() {
+            if (!this.newEntity.username) {
+                ElMessage({
+                    message: '用户名不能为空',
+                    type: 'warning',
+                })
+                return
+            }
+            if (!this.newEntity.nickname) {
+                ElMessage({
+                    message: '昵称不能为空',
+                    type: 'warning',
+                })
+                return
+            }
+            if (!this.newEntity.avatar) {
+                ElMessage({
+                    message: '头像不能为空',
+                    type: 'warning',
+                })
+                return
+            }
             let result = await save("/auth/user", this.newEntity)
             if (result.success) {
                 this.$emit("reloadData");

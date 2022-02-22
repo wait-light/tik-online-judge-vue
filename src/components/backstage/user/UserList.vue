@@ -45,13 +45,18 @@
             <template #default="scope">
                 <div class="button-box">
                     <div>
-                        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">重置密码</el-button>
-                    </div>
-                    <div>
                         <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
                     </div>
                     <div>
-                        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
+                        <el-button
+                            size="mini"
+                            @click="prepareResetPassword(scope.row.uid)"
+                            type="danger"
+                        >重置密码</el-button>
+                    </div>
+
+                    <div>
+                        <el-button size="mini" @click="preUserRoles(scope.row)" type="primary">角色管理</el-button>
                     </div>
                 </div>
             </template>
@@ -59,7 +64,11 @@
     </el-table>
     <el-dialog title="添加/修改" v-model="prepareEntity.open">
         <div class="dialog-message">
-            <UserAddOrUpdate @reloadData="loadData" :entity="prepareEntity.entity"></UserAddOrUpdate>
+            <UserAddOrUpdate
+                @reloadData="loadData"
+                :isNew="prepareEntity.newOne"
+                :entity="prepareEntity.entity"
+            ></UserAddOrUpdate>
         </div>
     </el-dialog>
     <el-pagination
@@ -72,6 +81,29 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageInfo.total"
     ></el-pagination>
+    <el-dialog v-model="role.show" :title="roleTitle" width="30%">
+        <div>
+            <el-button size="mini" @click="prepareLoadUnLoad()">添加</el-button>
+        </div>
+        <el-empty description="没有任何角色" v-if="!role.roles || role.roles.length == 0"></el-empty>
+        <el-tag
+            class="role-tags"
+            @close="removeRole(r.id)"
+            closable
+            v-for="r in role.roles"
+            :key="r.id"
+        >{{ r.name }}</el-tag>
+    </el-dialog>
+    <el-dialog v-model="userRole.show" @close="loadUserRoles(userRole.uid)">
+        <p>点击标签添加，悬停查看介绍</p>
+        <el-tag
+            class="role-tags"
+            v-for="r in userRole.roles"
+            :key="r.id"
+            :title="r.remark"
+            @click="addUserRole(r.id)"
+        >{{ r.name }}</el-tag>
+    </el-dialog>
 </template>
 
 <script>
@@ -81,13 +113,18 @@ import {
     getList,
     deleteById,
     commonajaxWithData,
-} from "@/js/backstage/common/common_data_operation.js";
+    getData,
+    postData,
+    deleteData,
+} from "@/js/common_data_operation.js";
+import { ElMessageBox } from 'element-plus'
 import UserAddOrUpdate
     from "@/components/backstage/user/UserAddOrUpdate.vue";
+import { putData } from '@/js/common_data_operation';
 
 export default {
     components: {
-        UserAddOrUpdate,
+        UserAddOrUpdate, ElMessageBox
     },
     data() {
         return {
@@ -100,32 +137,56 @@ export default {
             },
             prepareEntity: {
                 entity: {},
-                open: false
+                open: false,
+                newOne: false
             },
-            hideOnSinglePage: true
+            hideOnSinglePage: true,
+            role: {
+                show: false,
+                username: "",
+                roles: []
+            },
+            userRole: {
+                show: false,
+                roles: [],
+                uid: 0
+            }
         };
+    },
+    computed: {
+        roleTitle() {
+            return `【${this.role.username}】角色列表`
+        }
     },
     methods: {
         prepareSave() {
             this.prepareEntity.entity = {}
             this.prepareEntity.open = true
+            this.prepareEntity.newOne = true
         },
         prepareUpdate(entity) {
+            this.prepareEntity.newOne = false
             this.prepareEntity.entity = entity
             this.prepareEntity.open = true
+
         },
-        async prepareDelete(entity) {
-            let result = await deleteById("/auth/user", entity.uid);
-            if (result.success) {
-                this.loadData();
-            }
+        async prepareResetPassword(id) {
+            ElMessageBox.confirm('确认重置密码?',
+                'Warning',
+                {
+                    confirmButtonText: '确认',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(() => {
+                    putData("/auth/user/resetPassword/" + id, null, true)
+                })
         },
         async pageChange(page) {
             this.pageInfo.page = page
             this.loadData()
         },
         async pageSizeChange(pageSize) {
-            this.pageInfo.pageSize = pageSize
+            this.pageInfoprepareSave.pageSize = pageSize
             this.loadData()
         },
         async loadData() {
@@ -136,6 +197,49 @@ export default {
                 this.pageInfo.page = result.currentPage
                 this.pageInfo.total = result.total
             }
+        },
+        preUserRoles(user) {
+            this.role.username = user.username
+            this.loadUserRoles(user.uid)
+            this.userRole.uid = user.uid
+            this.role.show = true
+        },
+        loadUserRoles(uid) {
+            getData(`/auth/role/user/${uid}/roles`).then(res => {
+                if (res.success) {
+                    this.role.roles = res.dto
+                }
+            })
+        },
+        prepareLoadUnLoad() {
+            this.userRole.show = true
+            this.userRole.roles = []
+            this.unroled(this.userRole.uid)
+        },
+        unroled(uid) {
+            getData(`/auth/user-role/unroled/${uid}`).then(res => {
+                if (res.success) {
+                    this.userRole.roles = res.dto
+                }
+            })
+        },
+        addUserRole(id) {
+            let data = {
+                uid: this.userRole.uid,
+                roleId: id
+            }
+            postData(`/auth/user-role`, data, true).then(res => {
+                if (res.success) {
+                    this.unroled(this.userRole.uid)
+                }
+            })
+        },
+        removeRole(id) {
+            deleteData(`/auth/user-role/${this.userRole.uid}/${id}`, null, true).then((res) => {
+                if (res.success) {
+                    this.loadUserRoles(this.userRole.uid)
+                }
+            })
         }
     },
     mounted() {
@@ -145,7 +249,10 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
+.role-tags
+    margin-top: 10px
+    margin-right: 10px
+    cursor: pointer
 .buttons
     margin: 10px 5px 25px
 .dialog-message
