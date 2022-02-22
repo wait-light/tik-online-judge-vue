@@ -11,7 +11,7 @@
         </el-menu-item>
         <el-menu-item>
           <span>登录记录</span>
-        </el-menu-item> -->
+        </el-menu-item>-->
       </el-menu>
     </el-col>
     <el-col :span="20">
@@ -23,11 +23,12 @@
   </el-row>
 </template>
 
-<script>
-export default {};
+<script setup>
+document.title = "Tik Online Judge 个人中心"
 </script>
 
 <style lang="sass" scoped>
+
 .person_center_container
-    margin: 10px 20px
+  margin: 10px 20px
 </style>

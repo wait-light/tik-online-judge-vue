@@ -84,12 +84,16 @@ export default {
 <style lang="sass" scoped>
 @import "@/sass/_variables"
 .main-problem-box
+  height: 100%
+  background: #f9f9f9
   padding: 10px
   .pagination
     text-align: center
     margin-top: 15px
   .problems
+    border: $border
     margin: 0 auto
+    border-radius: $large-radius
   h1
     margin-top: 0
     text-align: center

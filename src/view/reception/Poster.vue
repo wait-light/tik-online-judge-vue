@@ -34,6 +34,7 @@ import { ElMessage } from "element-plus"
 import { getData, postData, putData } from "@/js/common_data_operation"
 import { useRoute, useRouter } from "vue-router"
 import { ArrowDown } from "@element-plus/icons"
+import { onMounted } from "@vue/runtime-core"
 const post = ref({
     content: "",
     title: ""
@@ -93,6 +94,7 @@ const doPost = () => {
     }
 
 }
+document.title = "Tik Online Judge"
 </script>
 
 <style lang="sass" scoped>

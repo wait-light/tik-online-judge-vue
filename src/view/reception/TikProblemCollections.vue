@@ -81,7 +81,9 @@ export default {
 <style lang="sass" scoped>
 @import "@/sass/_variables"
 .main-content-box
-  padding: 5px
+  padding: 15px
+  height: 100%
+  background: #f9f9f9
   .pagination
     text-align: center
     margin-top: 15px
@@ -92,12 +94,14 @@ export default {
     text-align: center
     color: $secondary-color
 .collection-type-box
+  background: white
   box-shadow: $box-shadow
   border-radius: $large-radius
   width: fit-content
   margin: 0 auto
   padding: 10px
 .collections
+  background: white
   box-shadow: $box-shadow
   border-radius: $large-radius
   margin: 20px auto 0px

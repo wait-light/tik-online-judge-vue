@@ -96,10 +96,15 @@ export default {
 
 <style lang="sass" scoped>
 @import "@/sass/_variables"
+.box
+  padding: 5px
+  height: 100%
+  background: #f9f9f9
 .type-box
   box-shadow: $box-shadow
   border-radius: $large-radius
   width: fit-content
   margin: 10px auto 20px
   padding: 10px
+  background: white
 </style>

@@ -9,7 +9,7 @@
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"
   >
-    <el-table-column prop="id" label></el-table-column>
+    <!-- <el-table-column prop="id" label></el-table-column> -->
     <el-table-column prop="name" label="名称"></el-table-column>
     <el-table-column label="创建时间">
       <template #default="scope">{{ new Date(scope.row.createTime).toSimpleString() }}</template>
@@ -22,7 +22,7 @@
         <el-switch disabled v-model="scope.row.status" active-color="#13ce66" inactive-color="#ccc"></el-switch>
       </template>
     </el-table-column>
-    <el-table-column prop="createUserId" label="创建人"></el-table-column>
+    <!-- <el-table-column prop="createUserId" label="创建人"></el-table-column> -->
     <el-table-column label="是否公开集" width="80">
       <template #default="scope">
         <el-switch

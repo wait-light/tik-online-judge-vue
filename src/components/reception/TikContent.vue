@@ -8,6 +8,4 @@ export default {};
 
 <style lang="sass" scoped>
 @import '@/sass/_variables'
-.tik-home-content
-  height: 100%
 </style>
