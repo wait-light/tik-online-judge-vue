@@ -6,7 +6,7 @@
   >
 
   <router-link
-    :to="`/group/${$route.params.groupId}/task/${item.id}/manager`"
+    :to="`/race/${item.id}`"
     v-for="item in tasks"
     :key="item"
     custom

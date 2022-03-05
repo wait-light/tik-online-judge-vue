@@ -1,6 +1,6 @@
 <template>
   <el-card class="task-describe">
-    <h1>{{ task.name }}</h1>
+    <h1 class="title" title="前往详情" @click="$router.push(`/race/${$route.params.taskId}`)">{{ task.name }}<el-icon><right /></el-icon></h1>
     <span class="time">
       任务时间：{{ new Date(task.beginTime).toLocaleString() }} 到
       {{ new Date(task.endTime).toLocaleString() }}
@@ -12,38 +12,13 @@
       <p style="word-wrap: break-word">{{ task.taskIntroduce }}</p>
     </div>
   </el-card>
-  <h3>完成情况：{{ finishCount }}/{{ userlist.length }}</h3>
-  <el-collapse accordion>
-    <el-collapse-item v-for="user in userlist" :key="user.uid" :name="user.uid">
-      <template #title>
-        <div v-if="userProblemStatus">
-          <user-title :uid="user.uid"></user-title>
-          {{ userFinishCountMap.get(user.uid) }}/{{ problems.length }}
-        </div>
-      </template>
-      <div class="problem-item-box" v-if="problemItemDisplay">
-        <router-link
-          v-for="item in problems"
-          :key="item.id"
-          :to="`/problem/${item.id}/?secretKey=${item.secretKey}`"
-        >
-          <span class="problem-item">
-            {{ item.name }}
-            <cicle-success v-if="userProblemStatus && userProblemStatus[user.uid][item.id]"></cicle-success>
-            <cicle-wrong v-else></cicle-wrong>
-          </span>
-        </router-link>
-      </div>
-    </el-collapse-item>
-  </el-collapse>
 </template>
 <script>
 import { stringifyGet, getData } from "@/js/common_data_operation";
 import UserTitle from "@/components/common/UserTitle.vue";
-import CicleSuccess from "@/components/common/CicleSuccess.vue";
-import CicleWrong from "@/components/common/CicleWrong.vue";
+import { Right } from "@element-plus/icons"
 export default {
-  components: { UserTitle, CicleSuccess, CicleWrong },
+  components: { UserTitle,Right },
   data() {
     return {
       task: {},
@@ -56,106 +31,19 @@ export default {
       userFinishCountMap: new Map(),
     };
   },
-  watch: {
-    userlist(newValue, oldValue) {
-      if (
-        newValue &&
-        newValue.length > 0 &&
-        this.problems &&
-        this.problems.length > 0
-      ) {
-        this.loadProblemIsFinished();
-      }
-    },
-    problems(newValue, oldValue) {
-      if (
-        newValue &&
-        newValue.length > 0 &&
-        this.userlist &&
-        this.userlist.length > 0
-      ) {
-        this.loadProblemIsFinished();
-      }
-    },
-  },
   methods: {
-    makeCount(status) {
-      let userSuccessCount = 0;
-      let keys = Object.getOwnPropertyNames(status);
-      keys.forEach((key) => {
-        if (status[key]) {
-          userSuccessCount++;
-        }
-      });
-      if (userSuccessCount == this.problems.length) {
-        this.finishCount++;
-        console.log("asdawsd");
-      }
-      return userSuccessCount;
-    },
     loadData() {
       getData(
         `/social/task/manager/${this.$route.params.groupId}/${this.$route.params.taskId}`
       ).then((res) => {
         if (res.success) {
           this.task = res.task;
-          this.problems = res.problems;
         }
       });
-    },
-    loadUserInfo() {
-      getData(`/social/group-user/userlist/${this.$route.params.groupId}`).then(
-        (res) => {
-          if (res.success) {
-            for (let index = res.dto.length - 1; index >= 0; index--) {
-              const element = res.dto[index];
-              if (element.userType == "MASTER") {
-                res.dto.splice(index, 1);
-              }
-            }
-            this.userlist = res.dto;
-          }
-        }
-      );
-    },
-    loadProblemIsFinished() {
-      let uids = [];
-      this.userlist.forEach((item) => {
-        uids.push(item.uid);
-      });
-      stringifyGet("/executor/user/task/problem/status", {
-        uid: uids,
-        pid: this.problems.map((item) => item.id),
-      }).then((res) => {
-        this.userProblemStatus = res.dto;
-        this.calculateUserFinish();
-        console.log(this.problems);
-      });
-    },
-    calculateUserFinish() {
-      let map = new Map();
-      let finishCount = 0;
-      // this.finishCount = 0;
-      const status = this.userProblemStatus;
-      this.userlist.forEach((user) => {
-        let count = 0;
-        this.problems.forEach((pid) => {
-          if (status[user.uid][pid]) {
-            count++;
-          }
-        });
-        if (count == this.problems.length) {
-          finishCount++;
-        }
-        map.set(user.uid, count);
-      });
-      this.userFinishCountMap = map;
-      this.finishCount = finishCount
     },
   },
   mounted() {
     this.loadData();
-    this.loadUserInfo();
   },
 };
 </script>
@@ -190,4 +78,6 @@ export default {
   //   background: red
 .problem-item-box
   padding: 12px 10px 0px 10px
+.title
+  cursor: pointer
 </style>
