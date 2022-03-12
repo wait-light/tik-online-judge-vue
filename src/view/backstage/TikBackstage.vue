@@ -5,8 +5,9 @@
       <el-menu router background-color="#FFFFFF" :default-active="activeIndex">
         <el-sub-menu index="1">
           <template #title>
-            <i class="el-icon-location"></i>
-            <span>权限</span>
+            <el-icon>
+              <cpu />权限管理
+            </el-icon>
           </template>
           <el-menu-item-group>
             <el-menu-item index="/backstage/user">用户管理</el-menu-item>
@@ -15,13 +16,17 @@
             <el-menu-item index="/backstage/ask">权限申请</el-menu-item>
           </el-menu-item-group>
         </el-sub-menu>
-        <el-menu-item index="/backstage/problem">问题管理</el-menu-item>
-        <!-- <el-menu-item index="/backstage/problemdata">问题数据管理</el-menu-item>
-        <el-menu-item index="/backstage/submit">提交管理</el-menu-item>
-        <el-menu-item index="/backstage/tag">标签管理</el-menu-item> -->
-        <el-menu-item index="/backstage/problemcollection"
-          >问题集管理</el-menu-item
-        >
+        <el-sub-menu index="2">
+          <template #title>
+            <el-icon>
+              <question-filled />问题管理
+            </el-icon>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="/backstage/problem">问题管理</el-menu-item>
+            <el-menu-item index="/backstage/problemcollection">问题集管理</el-menu-item>
+          </el-menu-item-group>
+        </el-sub-menu>
       </el-menu>
     </el-col>
     <el-col class="tik-home-container-content" :span="20">
@@ -32,8 +37,9 @@
 
 <script>
 import TikHeader from "@/components/backstage/TikHeader.vue";
+import { Cpu, QuestionFilled } from "@element-plus/icons"
 export default {
-  components: { TikHeader },
+  components: { TikHeader, Cpu, QuestionFilled },
   data() {
     return {
       activeIndex: "",

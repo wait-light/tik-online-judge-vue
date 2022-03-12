@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, PropType, ref } from 'vue';
+import { PropType, ref } from 'vue';
 import { TocItem } from '@/components/common/TocTtem';
 const { tocItem } = defineProps({
     tocItem: {
