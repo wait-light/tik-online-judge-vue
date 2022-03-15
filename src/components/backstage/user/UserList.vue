@@ -10,17 +10,21 @@
         :cell-style="{ textAlign: 'center' }"
     >
         <!-- <el-table-column prop="uid" label="用户id"></el-table-column> -->
-        <el-table-column prop="username" label="用户名"></el-table-column>
+        <el-table-column prop="username" label="用户名">
+            <template #default="scope">
+                <span style="font-size:12px;">{{scope.row.username}}</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="avatar" label="头像" width="60">
             <template #default="scope">
                 <el-avatar :size="44" :src="scope.row.avatar"></el-avatar>
             </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="注册时间" width="155">
-            <template #default="scope">{{ new Date(scope.row.createTime).toTypecalString() }}</template>
+        <el-table-column prop="createTime" label="注册时间" width="150">
+            <template #default="scope"><span style="font-size:12px;">{{ new Date(scope.row.createTime).toTypecalString() }}</span></template>
         </el-table-column>
-        <el-table-column prop="updateTime" label="修改时间" width="155">
-            <template #default="scope">{{ new Date(scope.row.updateTime).toTypecalString() }}</template>
+        <el-table-column prop="updateTime" label="修改时间" width="150">
+            <template #default="scope"><span style="font-size:12px;">{{ new Date(scope.row.updateTime).toTypecalString() }}</span></template>
         </el-table-column>
 
         <el-table-column label="状态" width="50">
@@ -33,12 +37,16 @@
                 ></el-switch>
             </template>
         </el-table-column>
-        <el-table-column prop="nickname" label="昵称"></el-table-column>
+        <el-table-column prop="nickname" label="昵称">
+             <template #default="scope">
+                <span style="font-size:12px;">{{scope.row.nickname}}</span>
+            </template>
+        </el-table-column>
         <el-table-column prop="telephone" label="手机号" width="110">
-            <template #default="scope">{{ scope.row.telephone ? scope.row.telephone : "无" }}</template>
+            <template #default="scope"><span style="font-size:12px;">{{ scope.row.telephone ? scope.row.telephone : "无" }}</span></template>
         </el-table-column>
         <el-table-column prop="email" label="电子邮箱">
-            <template #default="scope">{{ scope.row.email ? scope.row.email : "无" }}</template>
+            <template #default="scope"><span style="font-size:12px;">{{ scope.row.email ? scope.row.email : "无" }}</span></template>
         </el-table-column>
 
         <el-table-column label="操作" fixed="right" width="120">

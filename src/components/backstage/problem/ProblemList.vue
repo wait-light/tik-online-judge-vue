@@ -9,17 +9,21 @@
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"
   >
-    <el-table-column prop="id" label="id"></el-table-column>
+    <!-- <el-table-column prop="id" label="id"></el-table-column> -->
     <el-table-column prop="name" label="问题名称"></el-table-column>
     <el-table-column prop="uid" label="上传人ID"></el-table-column>
     <!-- <el-table-column prop="problemDescribe" label="问题描述"></el-table-column> -->
     <!-- <el-table-column prop="input" label="输入"></el-table-column> -->
     <!-- <el-table-column prop="output" label="输出"></el-table-column> -->
-    <el-table-column label="创建时间">
-      <template #default="scope">{{ new Date(scope.row.createTime).toSimpleString() }}</template>
+    <el-table-column label="创建时间" width="100">
+      <template #default="scope">
+        <span style="font-size:12px;">{{ new Date(scope.row.createTime).toSimpleString() }}</span>
+      </template>
     </el-table-column>
-    <el-table-column label="修改时间">
-      <template #default="scope">{{ new Date(scope.row.updateTime).toSimpleString() }}</template>
+    <el-table-column label="修改时间" width="100">
+         <template #default="scope">
+        <span style="font-size:12px;">{{ new Date(scope.row.updateTime).toSimpleString() }}</span>
+      </template>
     </el-table-column>
     <el-table-column label="状态" width="80">
       <template #default="scope">
@@ -254,6 +258,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .buttons
   margin: 10px 5px 25px
 .dialog-message

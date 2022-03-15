@@ -4,7 +4,7 @@
       <el-button type="info" v-loading="submitDetail.loading" size="mini" @click="copyCode">点击复制</el-button>
       <pre v-loading="submitDetail.loading" class="code-box">{{ submitDetail.content }}</pre>
     </el-dialog>
-    <div style="box-shadow: 5px 6px 5px #eee">
+    <div style="box-shadow: 5px 6px 5px #eee" v-loading="refresh">
       <el-empty v-if="!submitResults || submitResults.length == 0" description="不存在任何提交"></el-empty>
       <el-collapse accordion>
         <el-collapse-item v-for="submitResult in submitResults" :key="submitResult.submitId">
@@ -65,6 +65,7 @@ export default {
         content: "",
         loading: false
       },
+      refresh: false
     };
   },
   mounted() {
@@ -80,10 +81,14 @@ export default {
       });
     },
     loadSubmitResults() {
+      this.refresh = true
       getOne("/executor/judge-result/" + this.problemId).then((result) => {
         if (result.success) {
           this.submitResults = result.array;
         }
+        this.refresh = false
+      }).catch(err => {
+        this.refresh = false
       });
     },
     resultType(submit) {
@@ -94,6 +99,9 @@ export default {
         return "success";
       }
       if (submit.status == "PRESENTATION_ERROR") {
+        return "warning";
+      }
+      if (submit.status == "JUDGING") {
         return "warning";
       }
       return "danger";
@@ -125,6 +133,9 @@ export default {
         return "success";
       }
       if (judge.judgeStatus == "PRESENTATION_ERROR") {
+        return "warning";
+      }
+      if (judge.status == "JUDGING") {
         return "warning";
       }
       return "danger";

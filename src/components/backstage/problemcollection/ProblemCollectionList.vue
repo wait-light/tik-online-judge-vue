@@ -10,12 +10,20 @@
     :cell-style="{ textAlign: 'center' }"
   >
     <!-- <el-table-column prop="id" label></el-table-column> -->
-    <el-table-column prop="name" label="名称"></el-table-column>
-    <el-table-column label="创建时间">
-      <template #default="scope">{{ new Date(scope.row.createTime).toSimpleString() }}</template>
+    <el-table-column prop="name" label="名称">
+      <template #default="scope">
+        <span style="font-size:12px;">{{ scope.row.name }}</span>
+      </template>
     </el-table-column>
-    <el-table-column label="更新时间">
-      <template #default="scope">{{ new Date(scope.row.updateTime).toSimpleString() }}</template>
+    <el-table-column label="创建时间" width="100">
+      <template #default="scope">
+        <span style="font-size:12px;">{{ new Date(scope.row.createTime).toSimpleString() }}</span>
+      </template>
+    </el-table-column>
+    <el-table-column label="更新时间" width="100">
+      <template #default="scope">
+        <span style="font-size:12px;">{{ new Date(scope.row.updateTime).toSimpleString() }}</span>
+      </template>
     </el-table-column>
     <el-table-column label="是否启用" width="80">
       <template #default="scope">
@@ -34,10 +42,14 @@
       </template>
     </el-table-column>
     <el-table-column label="开启时间" width="155">
-      <template #default="scope">{{ new Date(scope.row.beginTime).toLocaleString() }}</template>
+      <template #default="scope">
+        <span style="font-size:12px;">{{ new Date(scope.row.beginTime).toLocaleString() }}</span>
+      </template>
     </el-table-column>
     <el-table-column label="结束时间" width="155">
-      <template #default="scope">{{ new Date(scope.row.endTime).toLocaleString() }}</template>
+      <template #default="scope">
+        <span style="font-size:12px;">{{ new Date(scope.row.endTime).toLocaleString() }}</span>
+      </template>
     </el-table-column>
     <el-table-column label="操作" fixed="right" width="250">
       <template #default="scope">
@@ -270,6 +282,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .buttons
   margin: 10px 5px 25px
 .dialog-message
