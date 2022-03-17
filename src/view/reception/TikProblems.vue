@@ -7,6 +7,7 @@
       :problems="problems"
     ></tik-problem-list>
     <el-pagination
+      style="margin-top:10px"
       :hide-on-single-page="hideOnSinglePage"
       @size-change="pageSizeChange"
       @current-change="pageChange"
@@ -38,7 +39,7 @@ export default {
       collectionId: 0,
       problems: [],
       pageInfo: {
-        pageSize: 1,
+        pageSize: 10,
         page: 1,
         total: 0,
         pageSizes: [10, 20, 30, 50, 100],
@@ -56,7 +57,7 @@ export default {
       if (result.success) {
         console.log(result);
         this.problems = result.list;
-        this.pageInfo.pageSize = result.pageSize;
+        // this.pageInfo.pageSize = result.pageSize;
         this.pageInfo.page = result.page;
         this.pageInfo.total = result.total;
       }
@@ -84,6 +85,7 @@ export default {
 <style lang="sass" scoped>
 @import "@/sass/_variables"
 .main-problem-box
+  text-align: center
   height: 100%
   background: #f9f9f9
   padding: 10px

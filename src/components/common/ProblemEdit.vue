@@ -89,7 +89,7 @@
 <script setup>
 import { computed, ref, toRef } from "@vue/reactivity";
 import "md-editor-v3/lib/style.css";
-import MdEditor from "md-editor-v3";
+import MdEditor from "@/components/common/TikMdEditor.vue"
 import { onMounted, watch, watchEffect } from "@vue/runtime-core";
 import { getData, postData, putData } from "@/js/common_data_operation";
 import { ElMessage } from 'element-plus';
@@ -117,7 +117,7 @@ const stepContent = ref(null)
 const problemForm = ref(null)
 const problem = ref({})
 const props = defineProps(["secretKey", "problemId"])
-const emit = defineEmits(["addProblem", "updateProblem"])
+const emit = defineEmits(["add-problem", "update-problem"])
 const problemId = toRef(props, 'problemId')
 const change = (now, old) => {
     active.value = now
@@ -133,13 +133,13 @@ const loadProblem = () => {
             })
     }
 }
-const clearProlem = () => {
+const clearProblem = () => {
     problem.value = {}
 }
 const addProblem = () => {
     problemForm.value.validate((valid, err) => {
         if (valid) {
-            emit("addProblem", problem.value, clearProlem)
+            emit("add-problem", problem.value, clearProblem)
         } else {
             let keys = Object.keys(err)
             let message = ""
@@ -159,7 +159,7 @@ const addProblem = () => {
 const updateProblem = () => {
     problemForm.value.validate((valid, err) => {
         if (valid) {
-            emit("updateProblem", problem.value, clearProlem)
+            emit("update-problem", problem.value, clearProblem)
         } else {
             let keys = Object.keys(err)
             let message = ""
@@ -191,6 +191,8 @@ const hasPre = computed(() => {
 })
 
 watch(problemId, (newValue) => {
+    active.value = 0
+    stepContent.value.setActiveItem(0)
     if (newValue) {
         problem.value.id = newValue
         loadProblem()

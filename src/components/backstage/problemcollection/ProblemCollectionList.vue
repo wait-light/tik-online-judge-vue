@@ -196,7 +196,6 @@ export default {
           this.problemAddDialog = false
           this.loadCollectionItem(this.collectionId)
           clearProlem()
-          // this.$router.push("/backstage/problemcollection");
         }
       });
     },

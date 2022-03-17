@@ -2,7 +2,6 @@
   <el-table
     :data="problems"
     empty-text="暂无问题"
-    stripe
     :header-cell-style="{ textAlign: 'center' }"
     :cell-style="{ textAlign: 'center' }"
   >

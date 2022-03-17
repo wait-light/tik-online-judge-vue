@@ -62,8 +62,8 @@
   <el-dialog title="添加/修改" v-model="prepareEntity.open" :fullscreen="true">
     <div style="height: calc( 100vh - 200px );">
       <ProblemEdit
-        @addProblem="addProblem"
-        @updateProblem="updateProblem"
+        @add-problem="addProblem"
+        @update-problem="updateProblem"
         :problemId="prepareEntity.entity.id"
         :secretKey="prepareEntity.entity.secretKey"
       ></ProblemEdit>
@@ -165,12 +165,12 @@ export default {
     };
   },
   methods: {
-    
-    addProblem(problem) {
+    addProblem(problem, clearProlem) {
       postData(`/executor/problem`, problem, true).then(res => {
         if (res.success) {
           this.loadData()
           this.prepareEntity.open = false
+          clearProlem()
         }
       })
     },
@@ -179,6 +179,7 @@ export default {
         if (res.success) {
           this.loadData()
           this.prepareEntity.open = false
+          clearProlem()
         }
       })
     },
@@ -256,6 +257,9 @@ export default {
     prepareUpdate(entity) {
       this.prepareEntity.entity = entity;
       this.prepareEntity.open = true;
+    },
+    opened() {
+      this.$refs["editer"].clearProlem()
     },
     async prepareDelete(entity) {
       let result = await deleteById("/executor/problem", entity.id);
