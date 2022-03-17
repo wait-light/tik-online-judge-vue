@@ -1,26 +1,39 @@
 <template>
+  <div class="invite-box">
+    <el-row style="width:100%;">
+      <el-col style="margin:0 auto;" :lg="16" :md="18">
+        <el-input clearable v-model="invite.invitees" placeholder="请输入受邀人的账号或邮箱">
+          <template #append>
+             <el-button type="primary" @click="invitePost">邀请</el-button>
+          </template>
+        </el-input>
+      </el-col>
+    
+    </el-row>
+  </div>
   <el-row>
     <el-col style="margin: 0 auto" :lg="16" :md="18">
       <div class="user-list-item" v-for="user in userlist" :key="user.uid">
         <user-title :uid="user.uid"></user-title>
-        <el-tag size="mini" :type="userTypeColor(user.userType)">{{
-          userType(user.userType)
-        }}</el-tag>
+        <el-tag size="mini" :type="userTypeColor(user.userType)">
+          {{
+            userType(user.userType)
+          }}
+        </el-tag>
         <div class="buttons">
           <el-button
             @click="removeUser(user)"
             v-if="displayRemove(user.userType)"
             size="mini"
             type="danger"
-            >移出</el-button
-          >
+          >移出</el-button>
         </div>
       </div>
     </el-col>
   </el-row>
 </template>
 <script>
-import { getData, deleteData } from "@/js/common_data_operation";
+import { getData, deleteData,postData } from "@/js/common_data_operation";
 import userTitle from "@/components/common/UserTitle.vue";
 export default {
   components: {
@@ -29,9 +42,16 @@ export default {
   data() {
     return {
       userlist: [],
+      invite: {
+        invitees: "",
+        groupId: 0,
+      },
     };
   },
   methods: {
+    invitePost() {
+      postData("/social/invite/", this.invite, true);
+    },
     removeUser(user) {
       deleteData(
         `/social/group-user/${this.$route.params.groupId}/${user.uid}`,
@@ -76,12 +96,17 @@ export default {
   },
   mounted() {
     this.loadUserInfo();
+    this.invite.groupId = this.$route.params.groupId;
   },
 };
 </script>
 
 <style lang='sass' scoped>
+
 @import "@/sass/_variables"
+.invite-box
+  display: flex
+  margin-bottom: 15px
 .buttons
   position: absolute
   right: 10px

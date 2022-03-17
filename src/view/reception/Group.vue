@@ -28,15 +28,6 @@
       <!-- <el-divider></el-divider> -->
       <ul v-if="userType == 'MASTER'">
         <router-link
-          :to="`/group/${$route.params.groupId}/invite`"
-          custom
-          v-slot="{ href, isActive, navigate }"
-        >
-          <li :class="[isActive && 'active-class']" @click="navigate">
-            <a :href="href">邀请</a>
-          </li>
-        </router-link>
-        <router-link
           :to="`/group/${$route.params.groupId}/problems`"
           custom
           v-slot="{ href, isActive, navigate }"
@@ -160,7 +151,6 @@ export default {
     },
     isMobile,
     getUserType() {
-      //  TODO 暂时取消权限认证
       // this.userType = "MASTER"
       // console.log("asd",this.userType,"MASTER");
       getData(`/social/group-user/${this.$route.params.groupId}`).then(

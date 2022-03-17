@@ -34,11 +34,6 @@ export default {
                 import("@/components/reception/group/GroupTaskDetail.vue"),
         },
         {
-            path: "invite",
-            component: () =>
-                import("@/components/reception/group/GroupInvite.vue")
-        },
-        {
             path: "task/manager",
             component: () =>
                 import("@/components/reception/group/GroupTaskManager.vue")
