@@ -68,7 +68,6 @@
       <template #default="scope">
         <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
         <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
-        <!-- @click="$router.push(`/problemDetail/${scope.row.id}`)" -->
         <el-button size="mini" @click="prepareLoadCollectionItem(scope.row.id)" type="info">问题项</el-button>
       </template>
     </el-table-column>
@@ -80,11 +79,7 @@
   </el-dialog>
   <el-dialog v-model="collectionItemShow" title="问题项">
     <div class="dialog-message">
-      <el-button
-        @click="$router.push(`/problemDetail/${collectionId}`)"
-        size="mini"
-        type="primary"
-      >新增</el-button>
+      <el-button @click="prepareProblemAdd()" size="mini" type="primary">新增</el-button>
       <el-button size="mini" type="success" @click="availableProblem">添加</el-button>
       <div style="margin-top: 15px" v-loading="itemloading">
         <el-tag
@@ -134,6 +129,12 @@
     layout="total, sizes, prev, pager, next, jumper"
     :total="pageInfo.total"
   ></el-pagination>
+
+  <el-dialog title="添加/修改" v-model="problemAddDialog" :fullscreen="true">
+    <div style="height: calc( 100vh - 200px );">
+      <ProblemEdit @addProblem="addProblem" @updateProblem="updateProblem"></ProblemEdit>
+    </div>
+  </el-dialog>
 </template>
 
 <script>
@@ -147,10 +148,11 @@ import {
 import ProblemCollectionAddOrUpdate from "@/components/backstage/problemcollection/ProblemCollectionAddOrUpdate.vue";
 import { ElMessageBox } from "element-plus";
 import { Search } from '@element-plus/icons'
-
+import { getData, postData, putData } from '@/js/common_data_operation';
+import ProblemEdit from "@/components/common/ProblemEdit.vue";
 export default {
   components: {
-    ProblemCollectionAddOrUpdate, Search
+    ProblemCollectionAddOrUpdate, Search, ProblemEdit
   },
   data() {
     return {
@@ -180,10 +182,36 @@ export default {
         show: false,
         pageSizes: [10, 20, 30, 50, 100],
       },
-      search: ""
+      search: "",
+      problemAddDialog: false
     };
   },
   methods: {
+    addProblem(problem, clearProlem) {
+      postData(
+        `/executor/problem-collection/problem/${this.collectionId}`,
+        problem
+      ).then((result) => {
+        if (result.success) {
+          this.problemAddDialog = false
+          this.loadCollectionItem(this.collectionId)
+          clearProlem()
+          // this.$router.push("/backstage/problemcollection");
+        }
+      });
+    },
+    updateProblem(problem) {
+      putData(
+        `/executor/problem/${this.collectionId}`,
+        problem
+      ).then((result) => {
+        if (result.success) {
+          this.problemAddDialog = false
+          this.loadCollectionItem(this.collectionId)
+          clearProlem()
+        }
+      });
+    },
     addItem(problemId) {
       commonajaxWithData(
         `/executor/problem-collection-item/${this.collectionId}/${problemId}`,
@@ -253,6 +281,9 @@ export default {
         .catch((err) => {
           this.itemloading = false;
         });
+    },
+    prepareProblemAdd() {
+      this.problemAddDialog = true
     },
     prepareSave() {
       this.prepareEntity.entity = {};

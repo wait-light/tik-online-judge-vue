@@ -53,19 +53,20 @@
     </el-table-column>
     <el-table-column label="操作" fixed="right" width="240">
       <template #default="scope">
-        <el-button
-          size="mini"
-          @click="$router.push('/problemDetail/update/' + scope.row.id + `?secretKey=${scope.row.secretKey}`)"
-          type="warning"
-        >修改</el-button>
+        <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
         <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
         <el-button type="info" size="mini" @click="preDataItem(scope.row.id)">数据项</el-button>
       </template>
     </el-table-column>
   </el-table>
-  <el-dialog title="添加/修改" v-model="prepareEntity.open">
-    <div class="dialog-message">
-      <ProblemAddOrUpdate @reloadData="loadData" :entity="prepareEntity.entity"></ProblemAddOrUpdate>
+  <el-dialog title="添加/修改" v-model="prepareEntity.open" :fullscreen="true">
+    <div style="height: calc( 100vh - 200px );">
+      <ProblemEdit
+        @addProblem="addProblem"
+        @updateProblem="updateProblem"
+        :problemId="prepareEntity.entity.id"
+        :secretKey="prepareEntity.entity.secretKey"
+      ></ProblemEdit>
     </div>
   </el-dialog>
   <el-dialog v-model="dataItemShow" title="数据项">
@@ -129,11 +130,12 @@ import {
   deleteById,
   commonajaxWithData,
 } from "@/js/backstage/common/common_data_operation.js";
-import ProblemAddOrUpdate from "@/components/backstage/problem/ProblemAddOrUpdate.vue";
+import ProblemEdit from "@/components/common/ProblemEdit.vue";
 import { Search } from '@element-plus/icons'
+import { postData, putData } from '@/js/common_data_operation';
 export default {
   components: {
-    ProblemAddOrUpdate,Search
+    ProblemEdit, Search
   },
   data() {
     return {
@@ -159,10 +161,27 @@ export default {
       },
       hideOnSinglePage: true,
       itemTypes: ["primary", "success", "info", "warning", "danger"],
-      search:""
+      search: ""
     };
   },
   methods: {
+    
+    addProblem(problem) {
+      postData(`/executor/problem`, problem, true).then(res => {
+        if (res.success) {
+          this.loadData()
+          this.prepareEntity.open = false
+        }
+      })
+    },
+    updateProblem(problem) {
+      putData(`/executor/problem/${problem.id}`, problem, true).then(res => {
+        if (res.success) {
+          this.loadData()
+          this.prepareEntity.open = false
+        }
+      })
+    },
     deleteById(id) {
       deleteById("/executor/problem-data", id).then((res) => {
         if (res.success) {
@@ -273,11 +292,12 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .menus
-    margin: 10px 5px 25px
-    display: flex
-    .search
-        width: 100%
+  margin: 10px 5px 25px
+  display: flex
+  .search
+    width: 100%
 .buttons
   margin: 10px 5px 25px
 .dialog-message

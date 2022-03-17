@@ -17,8 +17,8 @@ export default {
             import("@/components/backstage/user/UserList.vue")
     },
     {
-        path:"ask",
-        component:()=>import("@/components/backstage/menu/Ask.vue")
+        path: "ask",
+        component: () => import("@/components/backstage/menu/Ask.vue")
     },
     {
         path: "problem",
@@ -45,12 +45,12 @@ export default {
         component: () =>
             import("@/components/backstage/problemcollection/ProblemCollectionList.vue")
     }
-    // ,
-    // {
-    //     path: "problemcollectionitem",
-    //     component: () =>
-    //         import("@/components/backstage/problemcollectionitem/ProblemCollectionItemList.vue")
-    // }
-]
-    
+        // ,
+        // {
+        //     path: "problemcollectionitem",
+        //     component: () =>
+        //         import("@/components/backstage/problemcollectionitem/ProblemCollectionItemList.vue")
+        // }
+    ]
+
 }

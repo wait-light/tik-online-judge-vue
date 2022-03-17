@@ -73,7 +73,11 @@ const routes = [{
             path: "/post/:solutionId(\\d+)",
             component: () => import("@/view/reception/Solution.vue")
         },
-            group, groups, race
+            group, groups, race, {
+            path: "/tester",
+            component: () =>
+                import("@/view/test/Tester.vue")
+        }
         ]
     }],
 },

@@ -127,7 +127,6 @@ export default {
         problemDescribe: "",
         inputDescrible: "",
         outputDescrible: ""
-
       },
       typeDescribe: "问题添加",
     };
