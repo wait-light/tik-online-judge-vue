@@ -1,5 +1,18 @@
 <template>
-    <div class="buttons">
+    <div class="menus">
+        <el-row class="search">
+            <el-col :xs="24" :sm="8">
+                <el-input @keypress.enter="loadData" v-model="search" placeholder="请输入用户名">
+                    <template #append>
+                        <el-button @click="loadData">
+                            <el-icon class="el-icon--right">
+                                <Search />
+                            </el-icon>
+                        </el-button>
+                    </template>
+                </el-input>
+            </el-col>
+        </el-row>
         <el-button @click="prepareSave" type="success" size="mini">添加</el-button>
     </div>
     <el-table
@@ -12,7 +25,7 @@
         <!-- <el-table-column prop="uid" label="用户id"></el-table-column> -->
         <el-table-column prop="username" label="用户名">
             <template #default="scope">
-                <span style="font-size:12px;">{{scope.row.username}}</span>
+                <span style="font-size:12px;">{{ scope.row.username }}</span>
             </template>
         </el-table-column>
         <el-table-column prop="avatar" label="头像" width="60">
@@ -21,10 +34,14 @@
             </template>
         </el-table-column>
         <el-table-column prop="createTime" label="注册时间" width="150">
-            <template #default="scope"><span style="font-size:12px;">{{ new Date(scope.row.createTime).toTypecalString() }}</span></template>
+            <template #default="scope">
+                <span style="font-size:12px;">{{ new Date(scope.row.createTime).toTypecalString() }}</span>
+            </template>
         </el-table-column>
         <el-table-column prop="updateTime" label="修改时间" width="150">
-            <template #default="scope"><span style="font-size:12px;">{{ new Date(scope.row.updateTime).toTypecalString() }}</span></template>
+            <template #default="scope">
+                <span style="font-size:12px;">{{ new Date(scope.row.updateTime).toTypecalString() }}</span>
+            </template>
         </el-table-column>
 
         <el-table-column label="状态" width="50">
@@ -38,15 +55,19 @@
             </template>
         </el-table-column>
         <el-table-column prop="nickname" label="昵称">
-             <template #default="scope">
-                <span style="font-size:12px;">{{scope.row.nickname}}</span>
+            <template #default="scope">
+                <span style="font-size:12px;">{{ scope.row.nickname }}</span>
             </template>
         </el-table-column>
         <el-table-column prop="telephone" label="手机号" width="110">
-            <template #default="scope"><span style="font-size:12px;">{{ scope.row.telephone ? scope.row.telephone : "无" }}</span></template>
+            <template #default="scope">
+                <span style="font-size:12px;">{{ scope.row.telephone ? scope.row.telephone : "无" }}</span>
+            </template>
         </el-table-column>
         <el-table-column prop="email" label="电子邮箱">
-            <template #default="scope"><span style="font-size:12px;">{{ scope.row.email ? scope.row.email : "无" }}</span></template>
+            <template #default="scope">
+                <span style="font-size:12px;">{{ scope.row.email ? scope.row.email : "无" }}</span>
+            </template>
         </el-table-column>
 
         <el-table-column label="操作" fixed="right" width="120">
@@ -125,6 +146,7 @@ import {
     postData,
     deleteData,
 } from "@/js/common_data_operation.js";
+import { Search } from '@element-plus/icons'
 import { ElMessageBox } from 'element-plus'
 import UserAddOrUpdate
     from "@/components/backstage/user/UserAddOrUpdate.vue";
@@ -132,7 +154,7 @@ import { putData } from '@/js/common_data_operation';
 
 export default {
     components: {
-        UserAddOrUpdate, ElMessageBox
+        UserAddOrUpdate, ElMessageBox, Search
     },
     data() {
         return {
@@ -158,7 +180,8 @@ export default {
                 show: false,
                 roles: [],
                 uid: 0
-            }
+            },
+            search: ""
         };
     },
     computed: {
@@ -199,7 +222,7 @@ export default {
         },
         async loadData() {
             this.prepareEntity.open = false
-            let result = await getList("/auth/user/list", this.pageInfo.page, this.pageInfo.pageSize);
+            let result = await getList(`/auth/user/list?search=${this.search}`, this.pageInfo.page, this.pageInfo.pageSize);
             if (result.success) {
                 this.table = result.list
                 this.pageInfo.page = result.currentPage
@@ -257,12 +280,16 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .role-tags
     margin-top: 10px
     margin-right: 10px
     cursor: pointer
-.buttons
+.menus
     margin: 10px 5px 25px
+    display: flex
+    .search
+        width: 100%
 .dialog-message
     overflow: auto
     height: 55vh

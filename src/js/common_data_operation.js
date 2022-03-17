@@ -92,7 +92,7 @@ export default async function commonajax(url, methods = "get", data, enableMessa
     }).catch((err) => {
         if (enableMessage) {
             ElMessage({
-                message: err.message,
+                message: "请求出错",
                 type: 'error'
             })
             //开发模式显示错误
@@ -101,7 +101,7 @@ export default async function commonajax(url, methods = "get", data, enableMessa
             console.log(err)
             if (!enableMessage) {
                 ElMessage({
-                    message: err.message,
+                    message: "请求出错",
                     type: 'error'
                 })
             }

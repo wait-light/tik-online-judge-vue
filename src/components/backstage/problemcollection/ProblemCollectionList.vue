@@ -1,5 +1,18 @@
 <template>
-  <div class="buttons">
+  <div class="menus">
+    <el-row class="search">
+      <el-col :xs="24" :sm="8">
+        <el-input @keypress.enter="loadData" v-model="search" placeholder="请输入问题集名">
+          <template #append>
+            <el-button @click="loadData">
+              <el-icon class="el-icon--right">
+                <Search />
+              </el-icon>
+            </el-button>
+          </template>
+        </el-input>
+      </el-col>
+    </el-row>
     <el-button @click="prepareSave" type="success" size="mini">添加</el-button>
   </div>
   <el-table
@@ -133,9 +146,11 @@ import {
 } from "@/js/backstage/common/common_data_operation.js";
 import ProblemCollectionAddOrUpdate from "@/components/backstage/problemcollection/ProblemCollectionAddOrUpdate.vue";
 import { ElMessageBox } from "element-plus";
+import { Search } from '@element-plus/icons'
+
 export default {
   components: {
-    ProblemCollectionAddOrUpdate,
+    ProblemCollectionAddOrUpdate, Search
   },
   data() {
     return {
@@ -165,6 +180,7 @@ export default {
         show: false,
         pageSizes: [10, 20, 30, 50, 100],
       },
+      search: ""
     };
   },
   methods: {
@@ -263,7 +279,7 @@ export default {
     async loadData() {
       this.prepareEntity.open = false;
       let result = await getList(
-        "/executor/problem-collection/list",
+        `/executor/problem-collection/list?search=${this.search}`,
         this.pageInfo.page,
         this.pageInfo.pageSize
       );
@@ -271,7 +287,6 @@ export default {
         this.table = result.list
         this.pageInfo.page = result.currentPage;
         this.pageInfo.total = result.total
-        console.log(result);
       }
     },
   },
@@ -283,6 +298,11 @@ export default {
 
 <style lang="sass" scoped>
 
+.menus
+  margin: 10px 5px 25px
+  display: flex
+  .search
+    width: 100%
 .buttons
   margin: 10px 5px 25px
 .dialog-message

@@ -1,5 +1,18 @@
 <template>
-  <div class="buttons">
+  <div class="menus">
+    <el-row class="search">
+      <el-col :xs="24" :sm="8">
+        <el-input @keypress.enter="loadData" v-model="search" placeholder="请输入问题名">
+          <template #append>
+            <el-button @click="loadData">
+              <el-icon class="el-icon--right">
+                <Search />
+              </el-icon>
+            </el-button>
+          </template>
+        </el-input>
+      </el-col>
+    </el-row>
     <el-button @click="prepareSave" type="success" size="mini">添加</el-button>
   </div>
   <el-table
@@ -21,7 +34,7 @@
       </template>
     </el-table-column>
     <el-table-column label="修改时间" width="100">
-         <template #default="scope">
+      <template #default="scope">
         <span style="font-size:12px;">{{ new Date(scope.row.updateTime).toSimpleString() }}</span>
       </template>
     </el-table-column>
@@ -60,6 +73,7 @@
       <el-button @click="prepareDataAddOrUpdate()" size="mini" type="primary">新增</el-button>
       <div style="margin-top: 15px">
         <el-tag
+          class="tag-clickable"
           @click="prepareDataAddOrUpdate(item.id)"
           @close="deleteById(item.id)"
           style="margin-right: 10px; margin-top: 10px"
@@ -116,10 +130,10 @@ import {
   commonajaxWithData,
 } from "@/js/backstage/common/common_data_operation.js";
 import ProblemAddOrUpdate from "@/components/backstage/problem/ProblemAddOrUpdate.vue";
-
+import { Search } from '@element-plus/icons'
 export default {
   components: {
-    ProblemAddOrUpdate,
+    ProblemAddOrUpdate,Search
   },
   data() {
     return {
@@ -145,6 +159,7 @@ export default {
       },
       hideOnSinglePage: true,
       itemTypes: ["primary", "success", "info", "warning", "danger"],
+      search:""
     };
   },
   methods: {
@@ -240,7 +255,7 @@ export default {
     async loadData() {
       this.prepareEntity.open = false;
       let result = await getList(
-        "/executor/problem/list",
+        `/executor/problem/list?search=${this.search}`,
         this.pageInfo.page,
         this.pageInfo.pageSize
       );
@@ -258,10 +273,17 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-
+.menus
+    margin: 10px 5px 25px
+    display: flex
+    .search
+        width: 100%
 .buttons
   margin: 10px 5px 25px
 .dialog-message
   overflow: auto
   height: 55vh
+.tag-clickable
+  &:hover
+    cursor: pointer
 </style>
