@@ -4,7 +4,7 @@
             <input placeholder="请输入文章标题..." max="64" v-model="post.title" />
             <div style="width:130px; margin:auto 10px;">
                 <el-dropdown>
-                    <el-button size="mini" type="primary">
+                    <el-button size="mini" type="primary" @click="doPost">
                         {{ res }}
                         <el-icon class="el-icon--right">
                             <ArrowDown />
