@@ -184,9 +184,9 @@ export default {
   },
   data() {
     const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
-    const usernameReg = /^[a-zA-Z][a-zA-Z0-9_]{4,15}$/;
+    const usernameReg = /^[a-zA-Z0-9_@\.]{2,50}$/;
     // const passwordReg = /^[a-zA-Z]w{5,17}$/;
-    const passwordReg = /^[a-zA-Z0-9_]{3,17}$/;
+    const passwordReg = /^[a-zA-Z0-9_@]{0,50}$/;
     const checkEmail = (rule, value, callback) => {
       if (!value) {
         return callback(new Error("邮箱不能为空"));
@@ -205,7 +205,7 @@ export default {
         return callback();
       } else {
         callback(
-          new Error("以字母开头，长度在5~18之间，只能包含字母、数字和下划线")
+          new Error("以字母开头，长度在2~50之间，只能包含字母、数字和下划线")
         );
       }
     };
@@ -216,7 +216,7 @@ export default {
       if (usernameReg.test(value)) {
         callback();
       } else {
-        callback(new Error("字母开头，长度在5-16之间，允许字母数字下划线"));
+        callback(new Error("字母开头，长度在2-50之间，允许字母数字、@和下划线"));
       }
     };
     const repeatPassword = (rule, value, callback) => {

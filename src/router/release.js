@@ -1,4 +1,4 @@
-const releasePathReg = [/^\/passwordrest /, /^\/login/]
+const releasePathReg = [/^\/passwordrest /, /^\/login/,/^\/passwordrest/]
 /**
  * 判断是否满足无需拦截的路径
  */

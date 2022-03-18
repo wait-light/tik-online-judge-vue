@@ -35,8 +35,7 @@
                     type="success"
                     :disabled="codeSecond <= 0 ? false : true"
                     @click="sendCode"
-                    >{{ sendCodeStr }}</el-button
-                  >
+                  >{{ sendCodeStr }}</el-button>
                 </el-col>
               </el-row>
             </el-form-item>
@@ -52,15 +51,11 @@
                     this.entity.code
                   )
                 "
-                >登录/注册</el-button
-              >
+              >登录/注册</el-button>
+              <el-button type="warning" @click="$router.push('/passwordrest')">密码修改</el-button>
             </el-form-item>
             <el-checkbox v-model="agree" label="同意"></el-checkbox>
-            <el-link
-              style="margin-top: -8px; margin-left: 8px"
-              href="/user-agreement"
-              >《服务条款》</el-link
-            >
+            <el-link style="margin-top: -8px; margin-left: 8px" href="/user-agreement">《服务条款》</el-link>
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="密码" name="password">
@@ -88,6 +83,7 @@
                 "
               ></el-input>
             </el-form-item>
+
             <el-button
               style="margin-right: 10px"
               type="primary"
@@ -99,12 +95,15 @@
                   this.entity.password
                 )
               "
-              >登录</el-button
-            >
+            >登录</el-button>
+            <el-button type="warning" @click="$router.push('/passwordrest')">密码修改</el-button>
           </el-form>
+
+          <el-checkbox v-model="agree" label="同意"></el-checkbox>
+          <el-link style="margin-top: -8px; margin-left: 8px" href="/user-agreement">《服务条款》</el-link>
         </el-tab-pane>
         <!-- <el-tab-pane label="Role" name="third">Role</el-tab-pane>
-        <el-tab-pane label="Task" name="fourth">Task</el-tab-pane> -->
+        <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>-->
       </el-tabs>
     </div>
   </div>
@@ -120,7 +119,7 @@ import { ElMessage } from "element-plus";
 import { mapState, mapMutations } from "vuex";
 
 export default {
-  mounted() {},
+  mounted() { },
   computed: {
     ...mapState("user", {
       user: (state) => state.user,
@@ -289,6 +288,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 @import '@/sass/_variables'
 .login_container
   width: 100%
