@@ -6,18 +6,18 @@
       <h3>题目描述</h3>
       <md-editor v-model="problem.problemDescribe" :previewOnly="true" />
       <!-- <p>{{ problem.problemDescribe }}</p> -->
-      <h3>输入描述</h3>
+      <h3 v-if="problem.inputDescrible">输入描述</h3>
       <md-editor v-model="problem.inputDescrible" :previewOnly="true" />
       <!-- <p>{{ problem.inputDescrible }}</p> -->
-      <h3>输出描述</h3>
+      <h3 v-if="problem.outputDescrible">输出描述</h3>
       <md-editor v-model="problem.outputDescrible" :previewOnly="true" />
       <!-- <p>{{ problem.outputDescrible }}</p> -->
-      <h3>样例输入</h3>
+      <h3 v-if="problem.input">样例输入</h3>
       <!-- <md-editor v-model="problem.input" :previewOnly="true" /> -->
-      <code @click="copy('input')" class="data-io">{{ problem.input }}</code>
-      <h3>样例输出</h3>
+      <pre @click="copy('input')" class="data-io">{{ problem.input }}</pre>
+      <h3 v-if="problem.output">样例输出</h3>
       <!-- <md-editor v-model="problem.output" :previewOnly="true" /> -->
-      <code @click="copy('output')" class="data-io">{{ problem.output }}</code>
+      <pre @click="copy('output')" class="data-io">{{ problem.output }}</pre>
     </div>
   </div>
 </template>
