@@ -25,3 +25,27 @@ Date.prototype.toTypecalString = function () { // 重写日期函数格式化日
 Date.prototype.toISOString = function () {
     return moment(this).format('YYYY-MM-DD HH:mm:ss')
 }
+const timeStr = (time) => {
+    if(typeof time == "string"){
+        time = new Date(time)
+    }
+    let now = new Date().valueOf()
+    let target = time.valueOf()
+    let distance = (now - target) / 1000 / 60
+    if (distance < 1) {
+        return "刚刚"
+    } else if (distance < 60) {
+        return `${Math.floor(distance)}分钟前`
+    } else if (distance < 1440) {
+        return `${Math.floor(distance / 60)}小时前`
+    } else if (distance < 43200) {
+        return `${Math.floor(distance / 1440)}天前`
+    } else if (distance < 518400) {
+        return `${Math.floor(distance / 43200)}月前`
+    } else {
+        return `${Math.floor(distance / 518400)}年前`
+    }
+}
+export {
+    timeStr
+} 

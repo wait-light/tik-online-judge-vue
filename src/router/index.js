@@ -5,6 +5,7 @@ import group from '@/router/group'
 import groups from '@/router/groups'
 import store from '@/store/index'
 import race from '@/router/race'
+import personCenter from "@/router/personCenter"
 import isReleasePath from '@/router/release'
 const routes = [{
     path: "/user-agreement",
@@ -53,19 +54,6 @@ const routes = [{
             component: () =>
                 import("@/view/reception/Solution.vue")
         }, {
-            path: "/personCenter",
-            component: () =>
-                import("@/view/reception/PersonCenter.vue"),
-            redirect: "/personCenter/account",
-            children: [
-                {
-                    path: "account",
-                    component: () =>
-                        import("@/components/reception/person_center/Account.vue"),
-                }
-
-            ]
-        }, {
             path: "/posts",
             component: () =>
                 import("@/view/reception/Moments.vue"),
@@ -73,7 +61,8 @@ const routes = [{
             path: "/post/:solutionId(\\d+)",
             component: () => import("@/view/reception/Solution.vue")
         },
-            group, groups, race, {
+            group, groups, race, personCenter,
+        {
             path: "/tester",
             component: () =>
                 import("@/view/test/Tester.vue")

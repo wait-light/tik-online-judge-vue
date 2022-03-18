@@ -4,7 +4,6 @@ const state = () => ({
     user: {
         login: token != undefined,
         token,
-        detail: {}
     }
 })
 // getters

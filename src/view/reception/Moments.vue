@@ -48,7 +48,7 @@
                         :key="post.id"
                     >
                         <div class="post-header">
-                            <span class="post-user">{{ post.title }}</span>
+                            <span class="post-user">{{ post.username }}</span>
                             <span class="division"></span>
                             <span class="post-time">{{ timeStr(post.createTime) }}</span>
                         </div>
@@ -76,6 +76,7 @@ import { onMounted, watch, watchEffect } from "@vue/runtime-core";
 import { useRoute } from "vue-router";
 import router from "@/router";
 import { getData } from "@/js/common_data_operation";
+import { timeStr } from "@/js/DateUtil";
 const pageInfo = ref({
     page: 1,
     hasNext: true,
@@ -130,24 +131,7 @@ watch(route, () => {
 const goPost = (id) => {
     window.open(`/post/${id}`, '_blank');
 }
-const timeStr = (time) => {
-    let now = new Date().valueOf()
-    let target = time.valueOf()
-    let distance = (now - target) / 1000 / 60
-    if (distance < 1) {
-        return "刚刚"
-    } else if (distance < 60) {
-        return `${Math.floor(distance)}分钟前`
-    } else if (distance < 1440) {
-        return `${Math.floor(distance / 60)}小时前`
-    } else if (distance < 43200) {
-        return `${Math.floor(distance / 1440)}天前`
-    } else if (distance < 518400) {
-        return `${Math.floor(distance / 43200)}月前`
-    } else {
-        return `${Math.floor(distance / 518400)}年前`
-    }
-}
+
 </script>
 
 <style lang="sass" scoped>
