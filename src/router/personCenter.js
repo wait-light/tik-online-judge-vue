@@ -2,9 +2,10 @@ export default {
     path: "/personCenter/:uid(\\d+)?",
     component: () =>
         import("@/view/reception/PersonCenter.vue"),
-    redirect: "/personCenter/account",
+    redirect: { name: "account" },
     children: [
         {
+            name: "account",
             path: "account",
             component: () =>
                 import("@/components/reception/person_center/Account.vue"),

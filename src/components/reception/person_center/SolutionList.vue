@@ -43,7 +43,7 @@ import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { timeStr } from "@/js/DateUtil"
 const props = defineProps({
-    uid: Number, String
+    uid: [Number, String]
 })
 const store = useStore();
 const route = useRoute()
@@ -98,8 +98,6 @@ const goPost = (id) => {
     window.open(`/post/${id}`, '_blank');
 }
 onMounted(() => {
-
-
     getSolutions()
 })
 </script>

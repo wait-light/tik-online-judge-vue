@@ -234,7 +234,7 @@ function updateAvatar() {
 }
 function accountMessage() {
   if (uid.value) {
-    getData("/auth/verified/nickname").then((res) => {
+    getData(`/auth/verified/accountMessage/${uid.value}`).then((res) => {
       if (res.success) {
         account.value.nickname.value = res.nickname;
         account.value.email = res.email;
@@ -325,14 +325,14 @@ const uidChange = (newValue) => {
   }
   accountMessage()
 }
-const storeUidChange = (newValue) => {
+const storeUidChange = (newValue, oldValue) => {
   if (newValue && !route.params.uid && !props.uid) {
     uid.value = newValue
     accountMessage()
   }
 }
 
-uid.value = props.uid | route.params.uid | store.state.user.user.uid
+uid.value = props.uid || route.params.uid || store.state.user.user.uid
 watch(() => props.uid, uidChange)
 watch(() => route.params.uid, uidChange)
 watch(() => store.state.user.user.uid, storeUidChange)
