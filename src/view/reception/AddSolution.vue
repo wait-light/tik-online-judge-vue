@@ -144,7 +144,11 @@ export default {
         "post",
         this.solution,
         true
-      )
+      ).then(res => {
+        if (res.success) {
+          this.solution.id = res.id
+        }
+      })
     },
     updateSolution() {
       if (!this.solution.title) {
@@ -167,6 +171,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .showing-info
   font-size: 12px
   line-height: 20px

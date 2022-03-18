@@ -87,10 +87,8 @@ export default {
   h1
     font-size: 20px
     text-align: center
-    user-select: none
   h3
     font-size: 15px
-  h1,h3
     -moz-user-select: none
     -webkit-user-select: none
     -ms-user-select: none

@@ -25,7 +25,7 @@
 <script setup>
 import { getList } from "@/js/common_data_operation";
 import { ref } from "@vue/reactivity";
-import { onMounted } from "vue";
+import { onBeforeUnmount, onMounted } from "vue";
 import { useRoute } from "vue-router";
 const submissions = ref([])
 const pageInfo = ref({
@@ -60,10 +60,21 @@ const statusType = (status) => {
         default: return "info"
     }
 }
+const autoLoadSubmissionId = setInterval(() => {
+    if (pageInfo.value.page == 1) {
+        loadSubmission()
+    }
+}, 5000);
+
 onMounted(loadSubmission)
+onBeforeUnmount(()=>{
+    clearInterval(autoLoadSubmissionId)
+})
+
 </script>
 
 <style lang="sass" scoped>
+
 .box
     margin: 10px 20px
 .submissions
