@@ -17,6 +17,7 @@
     </el-table-column>
     <el-table-column prop="perms" label="权限标识"></el-table-column>
     <el-table-column prop="url" label="地址"></el-table-column>
+    <el-table-column prop="requestMethod" label="请求方法"></el-table-column>
     <el-table-column prop="order" label="排序"></el-table-column>
     <el-table-column label="操作">
       <template #default="scope">
