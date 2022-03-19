@@ -12,8 +12,8 @@
     :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
   >
     <el-table-column prop="name" label="菜单名称" sortable width="200"></el-table-column>
-    <el-table-column prop="icon" label="图标" sortable width="80" #default="scope">
-      <component v-if="scope.row.icon" :is="scope.row.icon"></component>
+    <el-table-column prop="icon" label="图标" sortable width="50" #default="scope" >
+      <component v-if="scope.row.icon" :is="scope.row.icon" style="width:2em;"></component>
     </el-table-column>
     <el-table-column prop="perms" label="权限标识"></el-table-column>
     <el-table-column prop="url" label="地址"></el-table-column>
@@ -111,7 +111,7 @@ export default {
 <style lang="sass" scoped>
 .dialog-message
   overflow: auto
-  height: 55vh
+  height: 55vh 
 .buttons
   margin: 10px 5px 25px
 </style>

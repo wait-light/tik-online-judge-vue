@@ -99,6 +99,7 @@ const iconBoxVisible = ref(false)
 const currentView = ref("apple")
 function handleParentChange(nodes) {
   if (nodes.length > 0) {
+    console.log(newMenu.value);
     newMenu.value.parentId = nodes[nodes.length - 1]
   }
 }
@@ -114,16 +115,17 @@ async function getMenus() {
     ];
     rootMenu[0].children = processChildren(result.dto, false);
     menus.value = rootMenu;
+    console.log(menus.value);
   }
 }
 //用于处理children为空数组的情况
 function processChildren(menus, disabled) {
   for (let i = 0; i < menus.length; i++) {
-    if (disabled) {
-      menus[i].disabled = true
-    }
+    menus[i].disabled = disabled
     if (menus[i].id == newMenu.value.id) {
-      disabled = menus[i].disabled = true
+      menus[i].disabled = true
+      menus[i].children = undefined;
+      continue
     }
     if (menus[i].children && menus[i].children.length == 0) {
       menus[i].children = undefined;
@@ -182,8 +184,8 @@ const name = computed(() => {
   }
   return ""
 })
-watch(() => prop.menu, (newValue) => {
-  newMenu.value = newValue
+watch(() => prop.menu.id, () => {
+  newMenu.value = prop.menu
   getMenus()
 })
 onMounted(() => {
