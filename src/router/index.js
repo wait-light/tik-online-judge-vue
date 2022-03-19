@@ -107,6 +107,7 @@ const router = createRouter({
     history: createWebHistory(),
     routes, // `routes: routes` 的缩写
 })
+store.dispatch("auth/loadDectory")
 //登录拦截
 router.beforeEach((to, from, next) => {
     if (!store.getters["user/isLogin"] && isReleasePath(to.fullPath)) {

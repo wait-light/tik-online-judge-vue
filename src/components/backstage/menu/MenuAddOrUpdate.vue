@@ -217,6 +217,7 @@ const name = computed(() => {
 })
 function clearMenu() {
   newMenu.id = 0
+  newMenu.parentId = 0
   newMenu.type = 0
   newMenu.order = 0
   newMenu.requestMethod = []
