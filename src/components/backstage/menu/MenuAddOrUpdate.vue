@@ -215,8 +215,22 @@ const name = computed(() => {
   }
   return ""
 })
-watch(() => prop.menu.id, () => {
-  Object.assign(newMenu, prop.menu)
+function clearMenu() {
+  newMenu.id = 0
+  newMenu.type = 0
+  newMenu.order = 0
+  newMenu.requestMethod = []
+  newMenu.url = ""
+  newMenu.icon = ""
+  newMenu.name = ""
+}
+watch(() => prop.menu.id, (newValue) => {
+  if (!newValue) {
+    clearMenu()
+  } else {
+    Object.assign(newMenu, prop.menu)
+  }
+
   newMenu.requestMethod = requestString2NumberArray(prop.menu.requestMethod)
   getMenus()
 })
