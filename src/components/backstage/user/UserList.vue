@@ -123,7 +123,7 @@
             :key="r.id"
         >{{ r.name }}</el-tag>
     </el-dialog>
-    <el-dialog v-model="userRole.show" @close="loadUserRoles(userRole.uid)">
+    <el-dialog v-model="userRole.show" @close="loadUserRoles(userRole.uid)" title="">
         <p>点击标签添加，悬停查看介绍</p>
         <el-tag
             class="role-tags"
@@ -137,11 +137,7 @@
 
 <script>
 import {
-    getOne,
-    update,
     getList,
-    deleteById,
-    commonajaxWithData,
     getData,
     postData,
     deleteData,

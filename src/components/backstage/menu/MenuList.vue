@@ -35,11 +35,10 @@
 
 <script>
 import MenuAddOrAddUpdate from "@/components/backstage/menu/MenuAddOrUpdate.vue";
-import * as ELIcon from "@element-plus/icons";
-let components = Object.assign({}, ELIcon, { MenuAddOrAddUpdate: MenuAddOrAddUpdate })
+import * as Icons from "@element-plus/icons-vue"
+
+let components = Object.assign({}, Icons, { MenuAddOrAddUpdate: MenuAddOrAddUpdate })
 import {
-  getOne,
-  update,
   deleteById,
   commonajaxWithData,
 } from "@/js/backstage/common/common_data_operation.js";

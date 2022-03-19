@@ -27,7 +27,7 @@
       </template>
     </el-table-column>
     <el-table-column prop="createUserId" label="创建人" width="120"></el-table-column>
-    <el-table-column label="状态" width="80">
+    <!-- <el-table-column label="状态" width="80">
       <template #default="scope">
         <el-switch
           v-model="scope.row.status"
@@ -35,11 +35,11 @@
           inactive-color="#ccc"
         ></el-switch>
       </template>
-    </el-table-column>
+    </el-table-column> -->
     <el-table-column fixed="right" label="操作">
       <template #default="scope">
         <el-button type="info" size="mini" @click="chanegeRoleMenu(scope.row)"
-          >角色权限</el-button
+          >修改</el-button
         >
         <el-button type="danger" size="mini" @click="prepareDelete(scope.row.id)"
           >删除</el-button
@@ -54,7 +54,7 @@
       </template>
     </el-table-column>
   </el-table>
-  <el-dialog title="角色权限" v-model="roleMenu.open">
+  <el-dialog title="角色" v-model="roleMenu.open">
     <div class="dialog-message">
       <role-add-or-update
         @reloadRoles="reloadRoles"

@@ -54,7 +54,6 @@ export default {
     async prepareSave() {
       this.newRole.menus = this.getSelectNodeIds()
       let result = await save("/auth/role", this.newRole);
-
       if (result.success) {
         this.$emit("reloadRoles");
       }
