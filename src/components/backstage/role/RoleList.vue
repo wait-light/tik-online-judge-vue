@@ -1,6 +1,6 @@
 <template>
   <div class="buttons">
-    <el-button @click="addRole" type="success" size="mini">添加</el-button>
+    <el-button @click="addRole" type="success" size="mini" v-if="isShowableInterface('auth:role:add')">添加</el-button>
   </div>
   <el-table
     :data="roles"
@@ -13,17 +13,21 @@
     <el-table-column label="创建时间" width="120">
       <template #default="scope">
         <!-- <i class="el-icon-time"></i> -->
-        <span style="margin-left: 10px">{{
-          StringToSimpleDateString(scope.row.createTime)
-        }}</span>
+        <span style="margin-left: 10px">
+          {{
+            StringToSimpleDateString(scope.row.createTime)
+          }}
+        </span>
       </template>
     </el-table-column>
     <el-table-column label="修改时间" width="120">
       <template #default="scope">
         <!-- <i class="el-icon-time"></i> -->
-        <span style="margin-left: 10px">{{
-          StringToSimpleDateString(scope.row.updateTime)
-        }}</span>
+        <span style="margin-left: 10px">
+          {{
+            StringToSimpleDateString(scope.row.updateTime)
+          }}
+        </span>
       </template>
     </el-table-column>
     <el-table-column prop="createUserId" label="创建人" width="120"></el-table-column>
@@ -35,31 +39,25 @@
           inactive-color="#ccc"
         ></el-switch>
       </template>
-    </el-table-column> -->
+    </el-table-column>-->
     <el-table-column fixed="right" label="操作">
       <template #default="scope">
-        <el-button type="info" size="mini" @click="chanegeRoleMenu(scope.row)"
-          >修改</el-button
-        >
-        <el-button type="danger" size="mini" @click="prepareDelete(scope.row.id)"
-          >删除</el-button
-        >
+        <el-button type="info" size="mini" @click="chanegeRoleMenu(scope.row)" v-if="isShowableInterface('auth:role:update')">修改</el-button>
+        <el-button type="danger" size="mini" @click="prepareDelete(scope.row.id)" v-if="isShowableInterface('auth:role:delete')">删除</el-button>
       </template>
     </el-table-column>
     <el-table-column type="expand" width="80" label="展开">
       <template #default="props">
         <p class="extand-message">
-          备注信息： <span>{{ props.row.remark }}</span>
+          备注信息：
+          <span>{{ props.row.remark }}</span>
         </p>
       </template>
     </el-table-column>
   </el-table>
   <el-dialog title="角色" v-model="roleMenu.open">
     <div class="dialog-message">
-      <role-add-or-update
-        @reloadRoles="reloadRoles"
-        :role="roleMenu.role"
-      ></role-add-or-update>
+      <role-add-or-update @reloadRoles="reloadRoles" :role="roleMenu.role"></role-add-or-update>
     </div>
   </el-dialog>
 </template>
@@ -72,23 +70,15 @@ import {
   getOne,
   update,
 } from "@/js/backstage/common/common_data_operation";
+import { mapGetters, useStore } from 'vuex';
+import { watch } from '@vue/runtime-core';
+import { ref } from "vue";
 export default {
   components: {
     RoleAddOrUpdate,
   },
   data() {
     return {
-      roles: [
-        {
-          id: 1,
-          name: "数据加载中",
-          createTime: new Date(),
-          updateTime: new Date(),
-          remark: "数据加载中",
-          createUserId: 0,
-          status: true,
-        },
-      ],
       pageInfo: {
         pageSize: 10,
         page: 0,
@@ -109,7 +99,7 @@ export default {
     };
   },
   methods: {
-    deleteRole(id) {},
+    deleteRole(id) { },
     StringToSimpleDateString(str) {
       return new Date(str).toSimpleString();
     },
@@ -143,10 +133,44 @@ export default {
   async mounted() {
     this.loadData();
   },
+  computed:{
+    ...mapGetters("auth",["isShowableInterface"])
+  },
+  setup() {
+    const store = useStore()
+    const roles = ref([
+      {
+        id: 1,
+        name: "数据加载中",
+        createTime: new Date(),
+        updateTime: new Date(),
+        remark: "数据加载中",
+        createUserId: 0,
+        status: true,
+      },
+    ])
+    const loadData = async () => {
+      let result = await getList("/auth/role/list");
+      if (result.success) {
+        roles.value = result.list;
+      }
+    }
+    watch(() => {
+      return store.getters["auth/isShowableInterface"](`auth:menu:add`)
+    }, (view) => {
+      if (view) {
+        loadData()
+      }
+    })
+    return {
+      roles, loadData
+    }
+  }
 };
 </script>
 
 <style lang="sass" scoped>
+
 .extand-message
   margin: 0 20px
   font-weight: 800

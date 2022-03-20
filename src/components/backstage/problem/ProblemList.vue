@@ -1,6 +1,6 @@
 <template>
   <div class="menus">
-    <el-row class="search">
+    <el-row class="search" v-if="isShowableInterface('executor:problem:view')">
       <el-col :xs="24" :sm="8">
         <el-input @keypress.enter="loadData" v-model="search" placeholder="请输入问题名">
           <template #append>
@@ -13,7 +13,12 @@
         </el-input>
       </el-col>
     </el-row>
-    <el-button @click="prepareSave" type="success" size="mini">添加</el-button>
+    <el-button
+      v-if="isShowableInterface('executor:problem:add')"
+      @click="prepareSave"
+      type="success"
+      size="mini"
+    >添加</el-button>
   </div>
   <el-table
     :data="table"
@@ -53,9 +58,19 @@
     </el-table-column>
     <el-table-column label="操作" fixed="right" width="240">
       <template #default="scope">
-        <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
-        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
-        <el-button type="info" size="mini" @click="preDataItem(scope.row.id)">数据项</el-button>
+        <el-button
+          size="mini"
+          @click="prepareUpdate(scope.row)"
+          type="warning"
+          v-if="isShowableInterface('executor:problem:update')"
+        >修改</el-button>
+        <el-button
+          size="mini"
+          @click="prepareDelete(scope.row)"
+          type="danger"
+          v-if="isShowableInterface('executor:problem:delete')"
+        >删除</el-button>
+        <el-button type="info" size="mini" @click="preDataItem(scope.row.id)" v-if="isShowableInterface('executor:problem:dateItemAdd')">数据项</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -133,13 +148,14 @@ import {
 import ProblemEdit from "@/components/common/ProblemEdit.vue";
 import { Search } from '@element-plus/icons'
 import { postData, putData } from '@/js/common_data_operation';
+import { useStore } from 'vuex';
+import { computed, reactive, ref } from '@vue/reactivity';
 export default {
   components: {
     ProblemEdit, Search
   },
   data() {
     return {
-      table: [],
       dataAddOrUpdateShow: false,
       dataItem: {
         input: "",
@@ -149,19 +165,8 @@ export default {
       problemId: 0,
       dataItemShow: false,
       dataItems: [],
-      pageInfo: {
-        pageSize: 10,
-        page: 1,
-        total: 0,
-        pageSizes: [10, 20, 30, 50, 100],
-      },
-      prepareEntity: {
-        entity: {},
-        open: false,
-      },
       hideOnSinglePage: true,
       itemTypes: ["primary", "success", "info", "warning", "danger"],
-      search: ""
     };
   },
   methods: {
@@ -275,23 +280,49 @@ export default {
       this.pageInfo.pageSize = pageSize;
       this.loadData();
     },
-    async loadData() {
-      this.prepareEntity.open = false;
-      let result = await getList(
-        `/executor/problem/list?search=${this.search}`,
-        this.pageInfo.page,
-        this.pageInfo.pageSize
-      );
-      if (result.success) {
-        this.table = result.list
-        this.pageInfo.page = result.cuttentPage;
-        this.pageInfo.total = result.total;
-      }
-    },
   },
   mounted() {
     this.loadData();
   },
+  setup() {
+
+    const store = useStore()
+    const prepareEntity = reactive({
+      entity: {},
+      open: false,
+    })
+    const pageInfo = reactive({
+      pageSize: 10,
+      page: 1,
+      total: 0,
+      pageSizes: [10, 20, 30, 50, 100],
+    })
+    const table = ref([])
+    const search = ref("")
+    const isShowableInterface = computed(() => {
+      return store.getters["auth/isShowableInterface"]
+    }, (viewAble) => {
+      if (viewAble) {
+        loadData()
+      }
+    })
+    const loadData = async () => {
+      prepareEntity.open = false;
+      let result = await getList(
+        `/executor/problem/list?search=${search.value}`,
+        pageInfo.page,
+        pageInfo.pageSize
+      );
+      if (result.success) {
+        table.value = result.list
+        pageInfo.page = result.cuttentPage;
+        pageInfo.total = result.total;
+      }
+    }
+    return {
+      isShowableInterface, loadData, prepareEntity, pageInfo, table, search
+    }
+  }
 };
 </script>
 

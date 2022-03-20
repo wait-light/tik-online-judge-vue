@@ -153,6 +153,7 @@ export default {
               if (res.success) {
                 this.$router.push("/");
                 this.$store.dispatch("auth/loadDectory")
+                this.$store.dispatch("auth/loadInterfaces")
                 this.login(res.token);
               }
             });
@@ -169,6 +170,7 @@ export default {
               if (res.success) {
                 this.$router.push("/");
                 this.$store.dispatch("auth/loadDectory")
+                this.$store.dispatch("auth/loadInterfaces")
                 this.login(res.token);
 
               }

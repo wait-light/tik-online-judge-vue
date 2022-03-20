@@ -1,6 +1,6 @@
 <template>
     <div class="menus">
-        <el-row class="search">
+        <el-row class="search" v-if="isShowableInterface('auth:user:view')">
             <el-col :xs="24" :sm="8">
                 <el-input @keypress.enter="loadData" v-model="search" placeholder="请输入用户名">
                     <template #append>
@@ -13,7 +13,12 @@
                 </el-input>
             </el-col>
         </el-row>
-        <el-button @click="prepareSave" type="success" size="mini">添加</el-button>
+        <el-button
+            @click="prepareSave"
+            type="success"
+            size="mini"
+            v-if="isShowableInterface('auth:user:add')"
+        >添加</el-button>
     </div>
     <el-table
         :data="table"
@@ -74,10 +79,16 @@
             <template #default="scope">
                 <div class="button-box">
                     <div>
-                        <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
+                        <el-button
+                            size="mini"
+                            @click="prepareUpdate(scope.row)"
+                            type="warning"
+                            v-if="isShowableInterface('auth:user:update')"
+                        >修改</el-button>
                     </div>
                     <div>
                         <el-button
+                            v-if="isShowableInterface('auth:user:reset')"
                             size="mini"
                             @click="prepareResetPassword(scope.row.uid)"
                             type="danger"
@@ -85,7 +96,7 @@
                     </div>
 
                     <div>
-                        <el-button size="mini" @click="preUserRoles(scope.row)" type="primary">角色管理</el-button>
+                        <el-button size="mini"  v-if="isShowableInterface('auth:user:roleAdd')" @click="preUserRoles(scope.row)" type="primary" >角色管理</el-button>
                     </div>
                 </div>
             </template>
@@ -123,7 +134,7 @@
             :key="r.id"
         >{{ r.name }}</el-tag>
     </el-dialog>
-    <el-dialog v-model="userRole.show" @close="loadUserRoles(userRole.uid)" title="">
+    <el-dialog v-model="userRole.show" @close="loadUserRoles(userRole.uid)" title>
         <p>点击标签添加，悬停查看介绍</p>
         <el-tag
             class="role-tags"
@@ -147,6 +158,10 @@ import { ElMessageBox } from 'element-plus'
 import UserAddOrUpdate
     from "@/components/backstage/user/UserAddOrUpdate.vue";
 import { putData } from '@/js/common_data_operation';
+import { reactive, ref } from '@vue/reactivity';
+import { useStore } from 'vuex';
+import { onMounted, watch } from '@vue/runtime-core';
+import { computed } from "vue";
 
 export default {
     components: {
@@ -154,18 +169,6 @@ export default {
     },
     data() {
         return {
-            table: [],
-            pageInfo: {
-                pageSize: 10,
-                page: 1,
-                total: 0,
-                pageSizes: [10, 20, 30, 50, 100]
-            },
-            prepareEntity: {
-                entity: {},
-                open: false,
-                newOne: false
-            },
             hideOnSinglePage: true,
             role: {
                 show: false,
@@ -177,7 +180,6 @@ export default {
                 roles: [],
                 uid: 0
             },
-            search: ""
         };
     },
     computed: {
@@ -215,15 +217,6 @@ export default {
         async pageSizeChange(pageSize) {
             this.pageInfoprepareSave.pageSize = pageSize
             this.loadData()
-        },
-        async loadData() {
-            this.prepareEntity.open = false
-            let result = await getList(`/auth/user/list?search=${this.search}`, this.pageInfo.page, this.pageInfo.pageSize);
-            if (result.success) {
-                this.table = result.list
-                this.pageInfo.page = result.currentPage
-                this.pageInfo.total = result.total
-            }
         },
         preUserRoles(user) {
             this.role.username = user.username
@@ -269,8 +262,48 @@ export default {
             })
         }
     },
-    mounted() {
-        this.loadData()
+    setup() {
+        const store = useStore()
+        const prepareEntity = ref({
+            entity: {},
+            open: false,
+            newOne: false
+        })
+        const table = ref([])
+        const pageInfo = reactive({
+            pageSize: 10,
+            page: 1,
+            total: 0,
+            pageSizes: [10, 20, 30, 50, 100]
+        })
+        const search = ref("")
+        const loadData = async () => {
+            prepareEntity.value.open = false
+            let result = await getList(`/auth/user/list?search=${search.value}`, pageInfo.page, pageInfo.pageSize);
+            if (result.success) {
+                table.value = result.list
+                pageInfo.page = result.currentPage
+                pageInfo.total = result.total
+            }
+        }
+        const isShowableInterface = computed(() => {
+            return store.getters["auth/isShowableInterface"]
+        })
+        watch(() => {
+            return isShowableInterface.value("auth:user:view")
+        }, (viewAble) => {
+            if (viewAble) {
+                loadData()
+            }
+        })
+        onMounted(() => {
+            if (isShowableInterface.value("auth:user:view") && pageInfo.total == 0) {
+                loadData()
+            }
+        })
+        return {
+            prepareEntity, table, pageInfo, search, loadData, isShowableInterface
+        }
     }
 };
 </script>

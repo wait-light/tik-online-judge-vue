@@ -188,7 +188,7 @@ function prepareSave() {
   prepareMenu();
   const outData = Object.assign({}, newMenu)
   outData.requestMethod = array2requestString()
-  save("/auth/menu/", outData, true).then(result => {
+  save("/auth/menu", outData, true).then(result => {
     if (result.success) {
       emit("updateMenus");
     }

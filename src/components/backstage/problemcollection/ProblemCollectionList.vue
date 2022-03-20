@@ -1,6 +1,6 @@
 <template>
   <div class="menus">
-    <el-row class="search">
+    <el-row class="search" v-if="isShowableInterface('executor:problem-collection:view')">
       <el-col :xs="24" :sm="8">
         <el-input @keypress.enter="loadData" v-model="search" placeholder="请输入问题集名">
           <template #append>
@@ -13,7 +13,12 @@
         </el-input>
       </el-col>
     </el-row>
-    <el-button @click="prepareSave" type="success" size="mini">添加</el-button>
+    <el-button
+      @click="prepareSave"
+      type="success"
+      size="mini"
+      v-if="isShowableInterface('executor:problem-collection:add')"
+    >添加</el-button>
   </div>
   <el-table
     :data="table"
@@ -66,9 +71,24 @@
     </el-table-column>
     <el-table-column label="操作" fixed="right" width="250">
       <template #default="scope">
-        <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning">修改</el-button>
-        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger">删除</el-button>
-        <el-button size="mini" @click="prepareLoadCollectionItem(scope.row.id)" type="info">问题项</el-button>
+        <el-button
+          size="mini"
+          @click="prepareUpdate(scope.row)"
+          type="warning"
+          v-if="isShowableInterface('executor:problem-collection:update')"
+        >修改</el-button>
+        <el-button
+          size="mini"
+          @click="prepareDelete(scope.row)"
+          type="danger"
+          v-if="isShowableInterface('executor:problem-collection:delete')"
+        >删除</el-button>
+        <el-button
+          size="mini"
+          @click="prepareLoadCollectionItem(scope.row.id)"
+          type="info"
+          v-if="isShowableInterface('executor:problem-collection:itemAdd')"
+        >问题项</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -150,6 +170,9 @@ import { ElMessageBox } from "element-plus";
 import { Search } from '@element-plus/icons'
 import { getData, postData, putData } from '@/js/common_data_operation';
 import ProblemEdit from "@/components/common/ProblemEdit.vue";
+import { useStore } from 'vuex';
+import { computed, reactive, ref } from '@vue/reactivity';
+import { onMounted, watch } from '@vue/runtime-core';
 export default {
   components: {
     ProblemCollectionAddOrUpdate, Search, ProblemEdit
@@ -160,17 +183,7 @@ export default {
       itemloading: false,
       collectionItem: [],
       collectionId: 0,
-      table: [],
-      pageInfo: {
-        pageSize: 10,
-        page: 1,
-        total: 0,
-        pageSizes: [10, 20, 30, 50, 100],
-      },
-      prepareEntity: {
-        entity: {},
-        open: false,
-      },
+
       hideOnSinglePage: true,
       itemTypes: ["primary", "success", "info", "warning", "danger"],
       collectionItemAvailable: {
@@ -182,7 +195,6 @@ export default {
         show: false,
         pageSizes: [10, 20, 30, 50, 100],
       },
-      search: "",
       problemAddDialog: false
     };
   },
@@ -306,23 +318,55 @@ export default {
       this.pageInfo.pageSize = pageSize;
       this.loadData();
     },
-    async loadData() {
-      this.prepareEntity.open = false;
+  },
+  setup() {
+    const store = useStore()
+    const prepareEntity = reactive({
+      entity: {},
+      open: false,
+    })
+    const pageInfo = reactive({
+      pageSize: 10,
+      page: 1,
+      total: 0,
+      pageSizes: [10, 20, 30, 50, 100],
+    })
+    const table = ref([])
+    const search = ref("")
+    const isShowableInterface = computed(() => {
+      return store.getters["auth/isShowableInterface"]
+    })
+    const needLoad = ref(true)
+    watch(() => {
+      return isShowableInterface.value("executor:problem-collection:view")
+    }, (viewAble) => {
+      if (viewAble) {
+        needLoad.value = false
+        loadData()
+      }
+    })
+    const loadData = async () => {
+      prepareEntity.open = false;
       let result = await getList(
-        `/executor/problem-collection/list?search=${this.search}`,
-        this.pageInfo.page,
-        this.pageInfo.pageSize
+        `/executor/problem-collection/list?search=${search.value}`,
+        pageInfo.page,
+        pageInfo.pageSize
       );
       if (result.success) {
-        this.table = result.list
-        this.pageInfo.page = result.currentPage;
-        this.pageInfo.total = result.total
+        table.value = result.list
+        pageInfo.page = result.currentPage;
+        pageInfo.total = result.total
       }
-    },
-  },
-  mounted() {
-    this.loadData();
-  },
+    }
+    onMounted(() => {
+      if (needLoad.value) {
+        loadData()
+      }
+    })
+    return {
+      prepareEntity, pageInfo, table, search, isShowableInterface, loadData
+    }
+  }
 };
 </script>
 

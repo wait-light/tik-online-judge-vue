@@ -18,7 +18,7 @@
                     {{ new Date(item.createTime).toChineseDateShortString() }}
                 </h6>
             </div>
-            <div class="operate">
+            <div class="operate" v-if="isShowableInterface('auth:ask:process')">
                 <el-button type="danger" size="mini" @click="examine(index, 'FAIL')">拒绝</el-button>
                 <el-button
                     style="margin-right: 10px;"
@@ -35,7 +35,9 @@
 import Email from "@/components/common/Email.vue"
 import { getData, putData } from "@/js/common_data_operation";
 import { ref } from "@vue/reactivity"
-import { onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
+import { useStore } from "vuex";
+const store = useStore()
 const pageInfo = ref({
     page: 1,
     pageSize: 10,
@@ -59,12 +61,24 @@ const loadData = () => {
         }
     })
 }
-onMounted(() => {
-    loadData()
+const isShowableInterface = computed(() => {
+    return store.getters["auth/isShowableInterface"]
 })
+watch(() => {
+    return isShowableInterface.value("auth:ask:view")
+}, (viewAble) => {
+    if (viewAble) {
+        loadData()
+    }
+})
+
+// onMounted(() => {
+//     loadData()
+// })
 </script>
 
 <style lang="sass" scoped>
+
 .content-box
     padding: 10px
     h6

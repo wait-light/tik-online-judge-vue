@@ -107,6 +107,7 @@ const router = createRouter({
     routes,
 })
 store.dispatch("auth/loadDectory")
+store.dispatch("auth/loadInterfaces")
 //登录拦截
 router.beforeEach((to, from, next) => {
     if (!store.getters["user/isLogin"] && isReleasePath(to.fullPath)) {
