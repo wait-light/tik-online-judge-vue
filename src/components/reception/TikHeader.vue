@@ -16,7 +16,7 @@
             <router-link class="primary" to="/groups">群组</router-link>
           </li>
           <li>
-            <router-link class="primary" :to="firstLinkfulDirectoryUrl " v-if="isAdmin">后台管理</router-link>
+            <router-link class="primary" :to="firstLinkfulDirectoryUrl" v-if="isAdmin">后台管理</router-link>
           </li>
         </ul>
         <!-- <ul>asdasd</ul> -->
@@ -42,7 +42,9 @@
             <router-link to="/groups">
               <li>群组</li>
             </router-link>
-
+            <router-link class="primary" :to="firstLinkfulDirectoryUrl" v-if="isAdmin">
+              <li>后台管理</li>
+            </router-link>
             <router-link to="/poster">
               <li>
                 <el-icon>
@@ -63,7 +65,7 @@
         </el-icon>
         <!-- <el-button icon="edit" size="mini" style="color: black;" type="primary" class="button"></el-button> -->
       </router-link>
-      <div class="avater-box">
+      <div class="avater-box" title="个人中心">
         <router-link to="/personCenter">
           <el-avatar :size="30" :src="user.avatar" v-if="user.login"></el-avatar>
         </router-link>

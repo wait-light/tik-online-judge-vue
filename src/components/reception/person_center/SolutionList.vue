@@ -1,6 +1,6 @@
 <template>
     <div style="display:flex; align-items:center;justify-content:space-between">
-        <h1>文章共{{ pageInfo.total }}篇</h1>
+        <h1 v-if="pageInfo.total" >文章共{{ pageInfo.total }}篇</h1>
         <el-button
             v-if="isSelf"
             type="success"
@@ -11,6 +11,7 @@
     </div>
     <!-- v-infinite-scroll="load" :infinite-scroll-disabled="!pageInfo.hasNext" -->
     <div class="post-list">
+        <el-empty v-if="!pageInfo.total" description="未发布任何文章"></el-empty>
         <div class="post-box" @click="goPost(post.id)" v-for="post in solutions" :key="post.id">
             <div class="post-header">
                 <span class="post-user">{{ post.username }}</span>
@@ -72,23 +73,7 @@ const pageInfo = ref({
 const solutions = ref([])
 const uid = ref(0)
 // const user = computed(() => store.state.user.uid);
-const uidChange = (newValue) => {
-    if (newValue) {
-        uid.value = newValue
-    }
-    getSolutions()
-}
-if (props.uid) {
-    uid.value = props.uid
-    watch(() => props.uid, uidChange)
-}
-if (route.params.uid) {
-    uid.value = route.params.uid
-    watch(() => route.params.uid, uidChange)
-} else {
-    uid.value = store.state.user.user.uid
-    watch(() => store.state.user.user.uid, uidChange)
-}
+
 const isSelf = computed(() => {
     if (uid.value == store.state.user.user.uid) {
         return true
@@ -123,6 +108,28 @@ const deletePost = (id) => {
         getSolutions()
     })
 }
+
+
+const uidChange = (newValue) => {
+  if (newValue) {
+    uid.value = newValue
+  } else {
+    uid.value = store.state.user.user.uid
+  }
+  getSolutions()
+}
+const storeUidChange = (newValue, oldValue) => {
+  if (newValue && !route.params.uid && !props.uid) {
+    uid.value = newValue
+    getSolutions()
+  }
+}
+
+uid.value = props.uid || route.params.uid || store.state.user.user.uid
+watch(() => props.uid, uidChange)
+watch(() => route.params.uid, uidChange)
+watch(() => store.state.user.user.uid, storeUidChange)
+
 onMounted(() => {
     getSolutions()
 })

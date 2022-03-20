@@ -3,10 +3,7 @@
   <el-row>
     <el-col :span="4">
       <el-menu class="menu" :router="false">
-        <router-link
-          to="account"
-          active-class="active"
-        >
+        <router-link to="account" active-class="active">
           <el-menu-item>
             <span>账户</span>
           </el-menu-item>
@@ -14,6 +11,11 @@
         <router-link to="solutions" active-class="active">
           <el-menu-item>
             <span>文章</span>
+          </el-menu-item>
+        </router-link>
+        <router-link to="problemInfo" active-class="active">
+          <el-menu-item>
+            <span>问题</span>
           </el-menu-item>
         </router-link>
 
@@ -42,6 +44,7 @@ const route = useRoute()
 </script>
 
 <style lang="sass" scoped>
+
 @import "@/sass/_variables.sass"
 .menu
   padding: 0 10px

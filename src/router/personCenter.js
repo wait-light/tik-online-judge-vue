@@ -13,6 +13,10 @@ export default {
             path: "solutions",
             component: () =>
                 import("@/components/reception/person_center/SolutionList.vue")
+        }, {
+            path: "problemInfo",
+            component: () =>
+                import("@/components/reception/person_center/ProblemInfo.vue")
         }
     ]
 }

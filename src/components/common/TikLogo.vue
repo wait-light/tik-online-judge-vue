@@ -1,5 +1,5 @@
 <template>
-  <div @click="goHome" class="tik-logo">
+  <div @click="goHome" class="tik-logo" title="返回首页">
     <img src="@/assets/judge.png" />
     <span>Tik OJ</span>
   </div>
