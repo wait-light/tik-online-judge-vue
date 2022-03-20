@@ -66,7 +66,7 @@ const directorys = computed(() => {
 
 onMounted(() => {
   document.title = "Tik Online Judge 后台管理系统";
-  activeIndex.value = route.href
+  activeIndex.value = route.path
 })
 </script>
 <style lang="sass" scoped>

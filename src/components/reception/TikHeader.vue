@@ -15,6 +15,9 @@
           <li>
             <router-link class="primary" to="/groups">群组</router-link>
           </li>
+          <li>
+            <router-link class="primary" :to="firstLinkfulDirectoryUrl " v-if="isAdmin">后台管理</router-link>
+          </li>
         </ul>
         <!-- <ul>asdasd</ul> -->
         <ul
@@ -65,7 +68,6 @@
           <el-avatar :size="30" :src="user.avatar" v-if="user.login"></el-avatar>
         </router-link>
       </div>
-
       <router-link to="/login">
         <el-button size="mini" class="button" v-if="!user.login">登录</el-button>
       </router-link>
@@ -80,7 +82,7 @@
 import 'element-plus/theme-chalk/display.css';
 import { Edit, ArrowDown } from "@element-plus/icons";
 import TikLogo from "@/components/common/TikLogo.vue";
-import { mapMutations, mapState, mapActions } from "vuex";
+import { mapMutations, mapState, mapActions, mapGetters } from "vuex";
 import UserTitle from "@/components/common/UserTitle.vue";
 export default {
   methods: {
@@ -91,6 +93,12 @@ export default {
     ...mapState("user", {
       user: (state) => state.user,
     }),
+    isAdmin() {
+      return this.$store.getters["auth/getDirectory"]("/backstage").length != 0
+    },
+    firstLinkfulDirectoryUrl() {
+      return this.$store.getters["auth/firstLinkfulDirectoryUrl"]("/backstage")
+    }
   },
   components: {
     TikLogo,
