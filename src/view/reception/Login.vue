@@ -152,6 +152,7 @@ export default {
             ).then((res) => {
               if (res.success) {
                 this.$router.push("/");
+                this.$store.dispatch("auth/loadDectory")
                 this.login(res.token);
               }
             });
@@ -167,7 +168,9 @@ export default {
             ).then((res) => {
               if (res.success) {
                 this.$router.push("/");
+                this.$store.dispatch("auth/loadDectory")
                 this.login(res.token);
+
               }
             });
           }

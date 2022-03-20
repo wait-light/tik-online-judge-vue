@@ -118,6 +118,7 @@ const uidChange = (newValue) => {
   }
   getSolutions()
 }
+
 const storeUidChange = (newValue, oldValue) => {
   if (newValue && !route.params.uid && !props.uid) {
     uid.value = newValue
