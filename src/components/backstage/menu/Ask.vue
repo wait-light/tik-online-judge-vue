@@ -14,7 +14,9 @@
                 <p class="title-role">我想申请：【 {{ item.name }} 】</p>
                 <p class="content">{{ item.reason }}</p>
                 <h6 class="sign">
-                    <span class="name">{{ item.nickname }}</span>
+                    <a :href="`/personCenter/${item.uid}`" target="_">
+                        <span class="name">{{ item.nickname }}</span>
+                    </a>
                     {{ new Date(item.createTime).toChineseDateShortString() }}
                 </h6>
             </div>
@@ -44,6 +46,7 @@ const pageInfo = ref({
     hasNext: false
 })
 const messages = ref([])
+const needLoad = ref(true)
 const examine = (index, status) => {
     putData(`/auth/role-ask-admin/${messages.value[index].id}/${status}`, null, true).then(res => {
         if (res.success) {
@@ -68,13 +71,16 @@ watch(() => {
     return isShowableInterface.value("auth:ask:view")
 }, (viewAble) => {
     if (viewAble) {
+        needLoad.value = false
         loadData()
     }
 })
 
-// onMounted(() => {
-//     loadData()
-// })
+onMounted(() => {
+    if (needLoad.value) {
+        loadData()
+    }
+})
 </script>
 
 <style lang="sass" scoped>
@@ -90,6 +96,8 @@ watch(() => {
     float: right
     .name
         margin-right: 10px
+        &:hover
+            cursor: pointer
 .title-role
     font-size: 8px
 .operate
