@@ -43,13 +43,12 @@ import { computed, provide, reactive } from "vue";
 export default {
   setup() {
     const store = useStore();
-    store.dispatch("group/createableGet")
     const groupCreatorApply = reactive({
       open: false,
     })
     provide("groupCreatorApply", groupCreatorApply)
     return {
-      createable: computed(() => store.state.group.createable),
+      createable: computed(() => store.getters["auth/isShowableInterface"]('createable')),
       groupCreatorApply
     };
   },

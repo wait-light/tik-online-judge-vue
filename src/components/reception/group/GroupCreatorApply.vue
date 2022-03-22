@@ -20,7 +20,7 @@ import { ref } from "@vue/reactivity";
 import { postData } from "@/js/common_data_operation";
 import { inject } from "@vue/runtime-core";
 const groupCreatorApply = inject("groupCreatorApply")
-const creatorApply = ref({ reason: "", name: "group-creator" });
+const creatorApply = ref({ reason: "", name: "群组创建人" });
 const rules = {
   reason: [
     {

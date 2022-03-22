@@ -6,6 +6,9 @@
         <el-form-item v-if="isNew" label="用户名">
             <el-input v-model="newEntity.username"></el-input>
         </el-form-item>
+        <el-form-item v-if="isNew" label="密码">
+            <el-input v-model="newEntity.password"></el-input>
+        </el-form-item>
         <el-form-item label="昵称">
             <el-input v-model="newEntity.nickname"></el-input>
         </el-form-item>
@@ -93,6 +96,13 @@ export default {
                 })
                 return
             }
+            if (!this.newEntity.password) {
+                ElMessage({
+                    message: '密码不能为空',
+                    type: 'warning',
+                })
+                return
+            }
             let result = await save("/auth/user", this.newEntity)
             if (result.success) {
                 this.$emit("reloadData");
@@ -121,6 +131,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+
 .avatar
     &:hover
         cursor: pointer
