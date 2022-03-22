@@ -1,14 +1,9 @@
 <template>
   <div class="groups" v-if="groups && groups.length > 0">
-    <el-row >
-      <el-col :lg="8" :md="12" :xs="24">
-        <el-card
-          class="group-item"
-          v-for="item in groups"
-          :key="item"
-          :body-style="{ padding: '0px' }"
-        >
-          <div class="image" :style="'background-image: url(\'' + item.avatar + '\');'"></div>
+    <el-row>
+      <el-col class="item-warper" :lg="8" :md="12" :xs="24" v-for="item in groups" :key="item" >
+        <el-card class="group-item" :body-style="{ padding: '0px' }">
+          <div class="group-image" :style="'background-image: url(\'' + item.avatar + '\');'"></div>
           <div style="padding: 14px">
             <div class="bottom">
               <router-link :to="`/group/${item.id}`">{{ item.name }}</router-link>
@@ -44,11 +39,13 @@ export default {
 </script>
 
 <style lang='sass' scoped>
+
 .box
   margin: 10px auto
 .groups
   display: flex
   padding: 10px
+  background: #f9f9f9
   // flex-wrap: wrap
   width: 100%
   box-sizing: border-box
@@ -60,10 +57,12 @@ export default {
       border: 0
       // padding: 20px
       // margin: 0 10px 
+.item-warper
+  padding: 10px
 .group-item
   width: 100%
   text-align: center
-.image
+.group-image
   height: 30vh
   width: 100%
   background-size: cover
