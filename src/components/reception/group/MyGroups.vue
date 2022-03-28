@@ -65,6 +65,6 @@ export default {
 .group-image
   height: 30vh
   width: 100%
-  background-size: cover
+  background-size: 100% auto
   background-repeat: no-repeat
 </style>

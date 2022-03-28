@@ -9,7 +9,7 @@
         class="el-tab-pane-box"
         style="padding: 10px"
         label="提交"
-        v-if="user.login"
+        v-if="user.login && hasSecretKey()"
       >
         <el-button @click="submit" type="success" size="small">提交</el-button>
         <el-button @click="reloadSubmit" type="info" size="small">刷新记录</el-button>
@@ -20,7 +20,7 @@
           :problemId="problem.id"
         ></problem-submit-list>
       </el-tab-pane>
-      <el-tab-pane :lazy="true" label="题解">
+      <el-tab-pane :lazy="true" label="题解"  v-if="hasSecretKey()">
         <div class="el-tab-pane-box" style="padding: 5px 15px">
           <el-button
             v-if="user.login"
@@ -91,6 +91,12 @@ export default {
     };
   },
   methods: {
+    hasSecretKey() {
+      if(this.$route.query.secretKey){
+        return true
+      }
+      return false
+    },
     reloadSubmit() {
       this.$refs.submit.loadSubmitResults();
     },
