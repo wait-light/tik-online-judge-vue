@@ -75,14 +75,25 @@
     </div>
   </el-dialog>
   <el-dialog @close="getDataItem(problemId)" v-model="dataAddOrUpdateShow" title="数据新增/修改">
-    <el-input v-model="dataItem.input" :rows="2" type="textarea" placeholder="输入" />
-    <el-input
-      v-model="dataItem.output"
-      :rows="2"
-      style="margin-top: 10px"
-      type="textarea"
-      placeholder="输出"
-    />
+   <el-form>
+      <el-form-item label="输入">
+        <el-input v-model="dataItem.input" :rows="2" type="textarea" placeholder="输入" />
+      </el-form-item>
+      <el-form-item label="输出">
+        <el-input v-model="dataItem.output" :rows="2" style="margin-top: 10px" type="textarea" placeholder="输出" />
+      </el-form-item>
+      <el-form-item label="分数">
+        <el-input v-model="dataItem.scope" style="margin-top: 10px" type="number" min="1" max="100" placeholder="分数" />
+      </el-form-item>
+      <el-form-item label="时间限制(ms)">
+        <el-input v-model="dataItem.timeLimit" style="margin-top: 10px" type="number" min="1" max="60000"
+          placeholder="时间限制(ms)" />
+      </el-form-item>
+      <el-form-item label="内存限制(kb)">
+        <el-input v-model="dataItem.memoryLimit" style="margin-top: 10px" type="number" min="1" max="131072"
+          placeholder="内存限制(kb)" />
+      </el-form-item>
+    </el-form>
     <el-button
       v-if="!dataItem.problemId"
       size="mini"

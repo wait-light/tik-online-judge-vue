@@ -13,20 +13,11 @@
         </el-input>
       </el-col>
     </el-row>
-    <el-button
-      v-if="isShowableInterface('executor:problem:add')"
-      @click="prepareSave"
-      type="success"
-      size="mini"
-    >添加</el-button>
+    <el-button v-if="isShowableInterface('executor:problem:add')" @click="prepareSave" type="success" size="mini">添加
+    </el-button>
   </div>
-  <el-table
-    :data="table"
-    height="calc( 100% - 101px )"
-    style="width: 100%"
-    :header-cell-style="{ textAlign: 'center' }"
-    :cell-style="{ textAlign: 'center' }"
-  >
+  <el-table :data="table" height="calc( 100% - 101px )" style="width: 100%" :header-cell-style="{ textAlign: 'center' }"
+    :cell-style="{ textAlign: 'center' }">
     <!-- <el-table-column prop="id" label="id"></el-table-column> -->
     <el-table-column prop="name" label="问题名称"></el-table-column>
     <el-table-column prop="uid" label="上传人ID"></el-table-column>
@@ -58,83 +49,64 @@
     </el-table-column>
     <el-table-column label="操作" fixed="right" width="240">
       <template #default="scope">
-        <el-button
-          size="mini"
-          @click="prepareUpdate(scope.row)"
-          type="warning"
-          v-if="isShowableInterface('executor:problem:update')"
-        >修改</el-button>
-        <el-button
-          size="mini"
-          @click="prepareDelete(scope.row)"
-          type="danger"
-          v-if="isShowableInterface('executor:problem:delete')"
-        >删除</el-button>
-        <el-button type="info" size="mini" @click="preDataItem(scope.row.id)" v-if="isShowableInterface('executor:problem:dateItemAdd')">数据项</el-button>
+        <el-button size="mini" @click="prepareUpdate(scope.row)" type="warning"
+          v-if="isShowableInterface('executor:problem:update')">修改</el-button>
+        <el-button size="mini" @click="prepareDelete(scope.row)" type="danger"
+          v-if="isShowableInterface('executor:problem:delete')">删除</el-button>
+        <el-button type="info" size="mini" @click="preDataItem(scope.row.id)"
+          v-if="isShowableInterface('executor:problem:dateItemAdd')">数据项</el-button>
       </template>
     </el-table-column>
   </el-table>
   <el-dialog title="添加/修改" v-model="prepareEntity.open" :fullscreen="true">
     <div style="height: calc( 100vh - 200px );">
-      <ProblemEdit
-        @add-problem="addProblem"
-        @update-problem="updateProblem"
-        :problemId="prepareEntity.entity.id"
-        :secretKey="prepareEntity.entity.secretKey"
-      ></ProblemEdit>
+      <ProblemEdit @add-problem="addProblem" @update-problem="updateProblem" :problemId="prepareEntity.entity.id"
+        :secretKey="prepareEntity.entity.secretKey"></ProblemEdit>
     </div>
   </el-dialog>
   <el-dialog v-model="dataItemShow" title="数据项">
     <div class="dialog-message">
       <el-button @click="prepareDataAddOrUpdate()" size="mini" type="primary">新增</el-button>
       <div style="margin-top: 15px">
-        <el-tag
-          class="tag-clickable"
-          @click="prepareDataAddOrUpdate(item.id)"
-          @close="deleteById(item.id)"
-          style="margin-right: 10px; margin-top: 10px"
-          v-for="(item, index) in dataItems"
-          :key="item.id"
-          :type="itemTypeGenerator(index)"
-          closable
-        >数据{{ index + 1 }}</el-tag>
+        <el-tag class="tag-clickable" @click="prepareDataAddOrUpdate(item.id)" @close="deleteById(item.id)"
+          style="margin-right: 10px; margin-top: 10px" v-for="(item, index) in dataItems" :key="item.id"
+          :type="itemTypeGenerator(index)" closable>数据{{ index + 1 }}</el-tag>
       </div>
     </div>
   </el-dialog>
   <el-dialog @close="getDataItem(problemId)" v-model="dataAddOrUpdateShow" title="数据新增/修改">
-    <el-input v-model="dataItem.input" :rows="2" type="textarea" placeholder="输入" />
-    <el-input
-      v-model="dataItem.output"
-      :rows="2"
-      style="margin-top: 10px"
-      type="textarea"
-      placeholder="输出"
-    />
-    <el-button
-      v-if="!dataItem.problemId"
-      size="mini"
-      style="margin-top: 10px"
-      type="success"
-      @click="dataItemAdd"
-    >添加</el-button>
-    <el-button
-      v-if="dataItem.problemId"
-      size="mini"
-      style="margin-top: 10px"
-      type="success"
-      @click="dataItemUpdate"
-    >修改</el-button>
+    <el-form>
+      <el-form-item label="输入">
+        <el-input v-model="dataItem.input" :rows="2" type="textarea" placeholder="输入" />
+      </el-form-item>
+      <el-form-item label="输出">
+        <el-input v-model="dataItem.output" :rows="2" style="margin-top: 10px" type="textarea" placeholder="输出" />
+      </el-form-item>
+      <el-form-item label="分数">
+        <el-input v-model="dataItem.scope" style="margin-top: 10px" type="number" min="1" max="100" placeholder="分数" />
+      </el-form-item>
+      <el-form-item label="时间限制(ms)">
+        <el-input v-model="dataItem.timeLimit" style="margin-top: 10px" type="number" min="1" max="60000"
+          placeholder="时间限制(ms)" />
+      </el-form-item>
+      <el-form-item label="内存限制(kb)">
+        <el-input v-model="dataItem.memoryLimit" style="margin-top: 10px" type="number" min="1" max="131072"
+          placeholder="内存限制(kb)" />
+      </el-form-item>
+    </el-form>
+
+
+
+
+
+    <el-button v-if="!dataItem.problemId" size="mini" style="margin-top: 10px" type="success" @click="dataItemAdd">添加
+    </el-button>
+    <el-button v-if="dataItem.problemId" size="mini" style="margin-top: 10px" type="success" @click="dataItemUpdate">修改
+    </el-button>
   </el-dialog>
-  <el-pagination
-    :hide-on-single-page="hideOnSinglePage"
-    @size-change="pageSizeChange"
-    @current-change="pageChange"
-    :current-page="pageInfo.page"
-    :page-sizes="pageInfo.pageSizes"
-    :page-size="pageInfo.pageSize"
-    layout="total, sizes, prev, pager, next, jumper"
-    :total="pageInfo.total"
-  ></el-pagination>
+  <el-pagination :hide-on-single-page="hideOnSinglePage" @size-change="pageSizeChange" @current-change="pageChange"
+    :current-page="pageInfo.page" :page-sizes="pageInfo.pageSizes" :page-size="pageInfo.pageSize"
+    layout="total, sizes, prev, pager, next, jumper" :total="pageInfo.total"></el-pagination>
 </template>
 
 <script>

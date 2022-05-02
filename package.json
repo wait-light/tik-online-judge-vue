@@ -2,7 +2,7 @@
     "name": "tik-online-judge",
     "version": "0.0.1",
     "scripts": {
-        "dev": "vite --port 8080",
+        "dev": "vite --port 8085",
         "build": "vite build",
         "serve": "vite preview"
     },
