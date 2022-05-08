@@ -7,3 +7,4 @@ tik-online-vue 的前端实现。使用一个简易的OJ系统。使用Vue3 + el
 npm install
 npm run dev
 ```
+后端地址：https://github.com/wait-light/tik-online-judge
