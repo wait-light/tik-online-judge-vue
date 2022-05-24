@@ -14,7 +14,7 @@
         "element-plus": "^1.1.0-beta.9",
         "jsonlint-mod": "^1.7.6",
         "md-editor-v3": "^1.5.0",
-        "moment": "^2.29.1",
+        "moment": "^2.29.2",
         "qs": "^6.10.1",
         "sass": "^1.32.4",
         "vue": "^3.2.26",
